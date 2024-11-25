@@ -19,7 +19,7 @@ class Listing(db.Model):
     provider_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Provider(db.Model):
-    id = db.Column(db.Integer, primary_key=True, db.ForeignKey('user.id'))
+    id = db.Column(db.Integer, primary_key=True, db.ForeignKey('user.id')) #foutmelding bij foreign key
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 class Customer(db.Model):
