@@ -52,4 +52,4 @@ class Notification(db.Model):
     notification_id = db.Column(db.Integer, primary_key=True)
     viewed = db.Column(db.Boolean, default=False)
     time_of_notification = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #.
