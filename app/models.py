@@ -39,9 +39,9 @@ class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     price_transaction = db.Column(db.Numeric(10, 2))
-    status = db.Column(db.Boolean, default=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'))
-
+    status = db.Column(db.Boolean, default=False)  # Status: voltooid of niet
+    listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'))  # Verwijzing naar de Listing
+    listing = db.relationship('Listing', backref='transactions')  # Relatie voor makkelijke toegang
 class Review(db.Model):
     review_id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
