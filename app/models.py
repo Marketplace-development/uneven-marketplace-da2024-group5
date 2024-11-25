@@ -10,20 +10,28 @@ class User(db.Model):
     phonenumber = db.Column(db.String(15), nullable=True)
     create_date = db.Column(db.DateTime, server_default=db.func.now())
 
+    # Relaties
+    providers = db.relationship('Provider', backref='user', lazy=True)
+    customers = db.relationship('Customer', backref='user', lazy=True)
+    listings = db.relationship('Listing', backref='provider', lazy=True)
+
 class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     listing_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    provider_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # ForeignKey naar User
 
 class Provider(db.Model):
-    id = db.Column(db.Integer, primary_key=True, db.ForeignKey('user.id')) #foutmelding bij foreign key
+    id = db.Column(db.Integer, primary_key=True)  # Autonome primaire sleutel
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # ForeignKey naar user.id
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True, db.ForeignKey('user.id'))
+    id = db.Column(db.Integer, primary_key=True)  # Autonome primaire sleutel
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # ForeignKey naar user.id
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
