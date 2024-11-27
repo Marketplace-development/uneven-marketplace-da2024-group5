@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id']) # haalt alle info op van user aan de hand van user_id
-        listings = Listing.query.filter_by(user_id=user.id).all()  # Fetch listings for logged-in user
+        listings = Listing.query.filter_by(provider_id=User.user_id).all()  # Fetch listings for logged-in user
         return render_template('index.html', username=user.username, listings=listings)
     return render_template('index.html', username=None)
 
@@ -25,14 +25,31 @@ def register():
     
     if request.method == 'POST':
         username = request.form['username']
-        if User.query.filter_by(username=username).first() is None:
-            new_user = User(username=username)
-            db.session.add(new_user)
-            db.session.commit()
-            session['user_id'] = new_user.id
-            return redirect(url_for('main.index'))
-        return 'Username already registered'
+        email = request.form['email']
+        date_of_birth = request.form['date_of_birth']
+        phone_number = request.form['phone_number']
+        
+        # Controleer of de username of email al bestaan
+        if User.query.filter_by(username=username).first() is not None:
+            return 'Username already registered'
+        if User.query.filter_by(email=email).first() is not None:
+            return 'Email already registered'
+        
+        # Maak een nieuwe gebruiker aan
+        new_user = User(
+            username=username,
+            email=email,
+            date_of_birth=date_of_birth,
+            phone_number=phone_number
+        )
+        
+        db.session.add(new_user)
+        db.session.commit()
+        session['user_id'] = new_user.user_id  # Gebruik user_id om sessie op te slaan
+        return redirect(url_for('main.index'))
+
     return render_template('register.html')
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,8 +59,9 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
+        
         if user:
-            session['user_id'] = user.id
+            session['user_id'] = user.user_id  # Bewaar user_id in de sessie
             return redirect(url_for('main.index'))
         return 'User not found'
     return render_template('login.html')

@@ -49,13 +49,15 @@ class Transaction(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     price_transaction = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.Boolean, default=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.user_id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
 
 class Review(db.Model):
     __tablename__ = 'Review'
     review_id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
 
 class Notification(db.Model):
@@ -63,4 +65,5 @@ class Notification(db.Model):
     notification_id = db.Column(db.Integer, primary_key=True)
     viewed = db.Column(db.Boolean, default=False)
     time_of_notification = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
