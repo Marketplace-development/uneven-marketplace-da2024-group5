@@ -25,11 +25,11 @@ class Listing(db.Model):
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    provider_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     url = db.Column(db.String(255), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
 
-    # Relaties
-    transactions = db.relationship('Transaction', backref='Listing', lazy=True)
+    # Relatie naar User
+    provider = db.relationship('User', backref='Listing', lazy=True)
 
 class Provider(db.Model):
     __tablename__ = 'Provider'
