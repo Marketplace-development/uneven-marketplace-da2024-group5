@@ -20,6 +20,9 @@ def index():
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
+    if 'user_id' in session:
+        return redirect(url_for('main.index'))  # Gebruiker is al ingelogd
+    
     if request.method == 'POST':
         username = request.form['username']
         if User.query.filter_by(username=username).first() is None:
@@ -33,6 +36,9 @@ def register():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'user_id' in session:
+        return redirect(url_for('main.index'))  # Gebruiker is al ingelogd
+
     if request.method == 'POST':
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
@@ -41,6 +47,7 @@ def login():
             return redirect(url_for('main.index'))
         return 'User not found'
     return render_template('login.html')
+
 
 @main.route('/logout', methods=['POST'])
 def logout():
