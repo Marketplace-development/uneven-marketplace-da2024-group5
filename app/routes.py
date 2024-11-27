@@ -1,6 +1,6 @@
 # app/routes.py
 
-from flask import Blueprint, request, redirect, url_for, render_template, session
+from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Listing, Provider, Customer, Transaction, Review, Notification
 
 main = Blueprint('main', __name__)
@@ -31,9 +31,11 @@ def register():
         
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
-            return 'Username already registered'
+            flash('Username already registered. You will be redirected to login.', 'error')
+            return redirect(url_for('main.register'))
         if User.query.filter_by(email=email).first() is not None:
-            return 'Email already registered'
+            flash('Email already registered. You will be redirected to login.', 'error')
+            return redirect(url_for('main.register'))
         
         # Maak een nieuwe gebruiker aan
         new_user = User(
@@ -50,7 +52,6 @@ def register():
 
     return render_template('register.html')
 
-
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
@@ -59,12 +60,17 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
-        
+
         if user:
             session['user_id'] = user.user_id  # Bewaar user_id in de sessie
             return redirect(url_for('main.index'))
-        return 'User not found'
+        
+        # Gebruiker bestaat niet: toon melding en een knop naar registratie
+        flash('User not found. Would you like to register?', 'error')
+        return redirect(url_for('main.login'))  # Herlaad login-pagina met melding
+
     return render_template('login.html')
+
 
 
 @main.route('/logout', methods=['POST'])
