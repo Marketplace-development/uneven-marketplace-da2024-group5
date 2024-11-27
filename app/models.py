@@ -3,6 +3,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+#pas op van hoofdletters !!!
 class User(db.Model):
     __tablename__ = 'User'  # Let op hoofdlettergebruik
     user_id = db.Column(db.Integer, primary_key=True)
