@@ -8,7 +8,7 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     if 'user_id' in session:
-        user = User.query.get(session['user_id']) # haalt alle info op van user aan de hand van user_id
+        user = user.query.get(session['user_id']) # haalt alle info op van user aan de hand van user_id
         listings = Listing.query.filter_by(user_id=user.id).all()  # Fetch listings for logged-in user
         return render_template('index.html', username=user.username, listings=listings)
     return render_template('index.html', username=None)
@@ -41,7 +41,7 @@ def login():
 
     if request.method == 'POST':
         username = request.form['username']
-        user = User.query.filter_by(username=username).first()
+        user = user.query.filter_by(username=username).first()
         if user:
             session['user_id'] = user.id
             return redirect(url_for('main.index'))
@@ -79,7 +79,7 @@ def edit_listing(listing_id):
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
     
-    listing = Listing.query.get(listing_id)
+    listing = listing.query.get(listing_id)
     if listing.user_id != session['user_id']:
         return 'Unauthorized', 403  # Alleen de eigenaar mag bewerken
     
