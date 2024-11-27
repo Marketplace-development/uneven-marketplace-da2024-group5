@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ listing.listing_name }}</title>
+</head>
+<body>
+    <h1>{{ listing.listing_name }}</h1>
+    <p>Price: ${{ listing.price }}</p>
+
+    <form method="POST">
+        <button type="submit">Buy Now</button>
+    </form>
+
+    <h2>Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+        <li>
+            <strong>{{ review.user.username }}:</strong> 
+            {{ review.review_text }} - Rating: {{ review.rating }}/5
+        </li>
+        {% else %}
+        <li>No reviews yet.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('main.add_review', listing_id=listing.id) }}">Add a Review</a>
+</body>
+</html>

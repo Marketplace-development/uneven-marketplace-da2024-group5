@@ -114,3 +114,108 @@ def edit_listing(listing_id):
         return redirect(url_for('main.listings'))
     
     return render_template('edit_listing.html', listing=listing)
+
+#This route will allow users to view more details about a specific listing and proceed with a purchase if they want
+@main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
+def view_listing(listing_id):
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    # Handle purchase (this is just a placeholder for actual transaction logic)
+    if request.method == 'POST':
+        if 'user_id' not in session:
+            return redirect(url_for('main.login'))
+        # Simulate a transaction (you can add actual transaction logic here)
+        transaction = Transaction(
+            buyer_id=session['user_id'],
+            listing_id=listing_id,
+            amount=listing.price
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        flash('Purchase successful!', 'success')
+        return redirect(url_for('main.listings'))
+    
+    # Get reviews for the listing
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
+    return render_template('view_listing.html', listing=listing, reviews=reviews)
+
+#Users should be able to leave reviews for listings they have purchased (or perhaps just viewed, depending on your business logic).
+@main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
+def add_review(listing_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    if request.method == 'POST':
+        review_text = request.form['review_text']
+        rating = int(request.form['rating'])
+        
+        # Create a new review
+        new_review = Review(
+            user_id=session['user_id'],
+            listing_id=listing_id,
+            review_text=review_text,
+            rating=rating
+        )
+        db.session.add(new_review)
+        db.session.commit()
+        flash('Review added successfully!', 'success')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+    
+    return render_template('add_review.html', listing=listing)
+
+#To allow users to view reviews of a listing before purchasing, you can display all the reviews related to the listing.
+@main.route('/reviews/<int:listing_id>')
+def view_reviews(listing_id):
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
+    return render_template('view_reviews.html', listing=listing, reviews=reviews)
+
+#Allow users to search for listings based on certain criteria
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    query = request.args.get('query')
+    if query:
+        listings = Listing.query.filter(Listing.listing_name.ilike(f'%{query}%')).all()
+    else:
+        listings = Listing.query.all()
+    return render_template('listings.html', listings=listings)
+
+#Users should be able to filter listings by criteria like price or category
+@main.route('/filter', methods=['GET'])
+def filter_listings():
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
+    category = request.args.get('category')
+
+    query = Listing.query
+
+    if min_price:
+        query = query.filter(Listing.price >= min_price)
+    if max_price:
+        query = query.filter(Listing.price <= max_price)
+    if category:
+        query = query.filter(Listing.category.ilike(f'%{category}%'))
+
+    listings = query.all()
+    return render_template('listings.html', listings=listings)
+
+#You can create a page where users can view their transaction history (i.e., the listings they have bought).
+@main.route('/transactions')
+def transactions():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    
+    transactions = Transaction.query.filter_by(buyer_id=session['user_id']).all()
+    return render_template('transactions.html', transactions=transactions)

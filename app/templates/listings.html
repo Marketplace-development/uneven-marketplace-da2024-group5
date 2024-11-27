@@ -1,7 +1,38 @@
-<!-- templates/listings.html -->
-<h1>All Listings</h1>
-{% for listing in listings %}
-    <p>{{ listing.listing_name }} - ${{ "%.2f"|format(listing.price) }}</p>
-{% else %}
-    <p>No listings available.</p>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listings</title>
+</head>
+<body>
+    <h1>Listings</h1>
+    
+    <form action="{{ url_for('main.search') }}" method="GET">
+        <input type="text" name="query" placeholder="Search Listings" value="{{ request.args.get('query', '') }}">
+        <button type="submit">Search</button>
+    </form>
+    
+    <form action="{{ url_for('main.filter_listings') }}" method="GET">
+        <label for="min_price">Min Price:</label>
+        <input type="number" name="min_price" step="0.01" value="{{ request.args.get('min_price', '') }}">
+        
+        <label for="max_price">Max Price:</label>
+        <input type="number" name="max_price" step="0.01" value="{{ request.args.get('max_price', '') }}">
+        
+        <label for="category">Category:</label>
+        <input type="text" name="category" value="{{ request.args.get('category', '') }}">
+        
+        <button type="submit">Filter</button>
+    </form>
+    
+    <ul>
+        {% for listing in listings %}
+        <li>
+            <a href="{{ url_for('main.view_listing', listing_id=listing.id) }}">{{ listing.listing_name }}</a> - ${{ listing.price }}
+        </li>
+        {% else %}
+        <li>No listings available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
