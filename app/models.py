@@ -3,7 +3,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-#pas op van hoofdletters !!!
+# Pas op van hoofdletters!
 class User(db.Model):
     __tablename__ = 'User'  # Let op hoofdlettergebruik
     user_id = db.Column(db.Integer, primary_key=True)
@@ -14,34 +14,27 @@ class User(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relaties
-    providers = db.relationship('Provider', backref='User', lazy=True)
-    customers = db.relationship('Customer', backref='User', lazy=True)
-    listings = db.relationship('Listing', backref='ProviderUser', lazy=True)
+    listings = db.relationship('Listing', backref='user', lazy=True)
+    transactions = db.relationship('Transaction', backref='user', lazy=True)
+    notifications = db.relationship('Notification', backref='user', lazy=True)
+    reviews = db.relationship('Review', backref='user', lazy=True)
+
 
 class Listing(db.Model):
     __tablename__ = 'Listing'  # Let op hoofdlettergebruik
     listing_id = db.Column(db.Integer, primary_key=True)
     listing_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Numeric(10, 2), nullable=False)
+    price_listing = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     url = db.Column(db.String(255), nullable=False)
-    provider_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-
-    # Relatie naar User
-    provider = db.relationship('User', backref='Listing', lazy=True)
-
-class Provider(db.Model):
-    __tablename__ = 'Provider'
-    provider_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)  # ForeignKey naar User.id
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-class Customer(db.Model):
-    __tablename__ = 'Customer'
-    customer_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relaties
+    transactions = db.relationship('Transaction', backref='listing', lazy=True)
+    reviews = db.relationship('Review', backref='listing', lazy=True)
+    notifications = db.relationship('Notification', backref='listing', lazy=True)
+
 
 class Transaction(db.Model):
     __tablename__ = 'Transaction'
@@ -50,7 +43,8 @@ class Transaction(db.Model):
     price_transaction = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.Boolean, default=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+
 
 class Review(db.Model):
     __tablename__ = 'Review'
@@ -58,12 +52,13 @@ class Review(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+
 
 class Notification(db.Model):
     __tablename__ = 'Notification'
     notification_id = db.Column(db.Integer, primary_key=True)
     viewed = db.Column(db.Boolean, default=False)
     time_of_notification = db.Column(db.DateTime, default=datetime.utcnow)
-    customer_id = db.Column(db.Integer, db.ForeignKey('Customer.customer_id'), nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
