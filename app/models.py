@@ -26,7 +26,7 @@ class Listing(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     provider_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-    pdfUrl = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String(255), nullable=False)
 
     # Relaties
     transactions = db.relationship('Transaction', backref='Listing', lazy=True)
@@ -34,7 +34,7 @@ class Listing(db.Model):
 class Provider(db.Model):
     __tablename__ = 'Provider'
     provider_id = db.Column(db.Integer, primary_key=True)
-    unbound_local_errorser_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)  # ForeignKey naar User.id
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Customer(db.Model):
