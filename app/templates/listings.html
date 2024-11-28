@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Listings</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Home - ViaVia{% endblock %}
+
+{% block content %}
+
     <h1>Listings</h1>
     
     <form action="{{ url_for('main.search') }}" method="GET">
@@ -34,5 +33,4 @@
         <li>No listings available.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}

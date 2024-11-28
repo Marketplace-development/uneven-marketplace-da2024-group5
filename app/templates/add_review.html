@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Review</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Home - ViaVia{% endblock %}
+
+{% block content %}
     <h1>Add Review for {{ listing.listing_name }}</h1>
     <form method="POST">
         <label for="review_text">Review:</label>
@@ -15,5 +13,4 @@
         
         <button type="submit">Submit Review</button>
     </form>
-</body>
-</html>
+{% endblock %}

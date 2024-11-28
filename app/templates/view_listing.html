@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ listing.listing_name }}</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Home - ViaVia{% endblock %}
+
+{% block content %}
+
     <h1>{{ listing.listing_name }}</h1>
     <p>Price: ${{ listing.price }}</p>
 
@@ -25,5 +24,4 @@
     </ul>
 
     <a href="{{ url_for('main.add_review', listing_id=listing.id) }}">Add a Review</a>
-</body>
-</html>
+{% endblock %}

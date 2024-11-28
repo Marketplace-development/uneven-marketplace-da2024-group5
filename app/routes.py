@@ -60,8 +60,8 @@ def login():
             session['user_id'] = user.user_id  # Bewaar user_id in de sessie
             return redirect(url_for('main.index'))
         
-        flash('User not found. Would you like to register?', 'error')
-        return redirect(url_for('main.login'))
+        flash('User not found. Would you like to <a href="/register">register</a>?', 'error')
+        return render_template('login.html')
 
     return render_template('login.html')
 
