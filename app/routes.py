@@ -79,11 +79,12 @@ def logout():
     if request.method == 'POST':
         # Verwijder de user_id uit de sessie
         session.pop('user_id', None)
-        # Redirect naar de logout-pagina (GET request)
-        return redirect(url_for('main.logout'))
-    
-    # Bij een GET request tonen we de logout-pagina
+        # Redirect naar de homepagina na succesvolle logout
+        return redirect(url_for('main.index'))  # Verwijs naar de homepagina
+
+    # Bij een GET-verzoek tonen we een bevestigingspagina
     return render_template('logout.html')  # Toon de logout-pagina met een boodschap
+
 
 @main.route('/add-listing', methods=['GET', 'POST'])
 def add_listing():
