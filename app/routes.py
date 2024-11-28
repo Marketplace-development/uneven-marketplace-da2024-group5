@@ -190,3 +190,12 @@ def filter_listings():
 
     listings = query.all()
     return render_template('listings.html', listings=listings)
+
+@main.route('/account')
+def account():
+    if 'user_id' not in session:
+        flash('You need to log in to access your account.', 'warning')
+        return redirect('/login')
+    
+    user = User.query.get(session['user_id'])
+    return render_template('account.html', user=user)
