@@ -74,14 +74,15 @@ def account():
     user = User.query.get(session['user_id'])
     return render_template('account.html', user=user)
 
-@main.route('/logout', methods=['POST'])
+@main.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop('user_id', None)  # Verwijder de user_id uit de sessie
-    return redirect(url_for('main.logout_page'))  # Redirect naar de logout pagina
-
-# Route voor de logout pagina
-@main.route('/logout_page', methods=['GET'])  # Alleen GET voor de logout-pagina
-def logout_page():
+    if request.method == 'POST':
+        # Verwijder de user_id uit de sessie
+        session.pop('user_id', None)
+        # Redirect naar de logout-pagina (GET request)
+        return redirect(url_for('main.logout'))
+    
+    # Bij een GET request tonen we de logout-pagina
     return render_template('logout.html')  # Toon de logout-pagina met een boodschap
 
 @main.route('/add-listing', methods=['GET', 'POST'])
