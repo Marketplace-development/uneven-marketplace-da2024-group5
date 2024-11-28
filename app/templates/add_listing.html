@@ -1,7 +1,31 @@
-<!-- templates/add_listing.html -->
-<h1>Add Listing</h1>
-<form method="post">
-    Listing Name: <input type="text" name="listing_name" required><br>
-    Price: <input type="number" step="0.01" name="price" required><br>
-    <input type="submit" value="Add Listing">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Listing</title>
+</head>
+<body>
+    <h1>Add New Listing</h1>
+    <form method="POST" action="/add-listing">
+        <!-- Listing Name -->
+        <label for="listing_name">Listing Name:</label>
+        <input type="text" id="listing_name" name="listing_name" placeholder="Enter listing name" required><br><br>
+
+        <!-- Description -->
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50" placeholder="Enter a description for the listing" required></textarea><br><br>
+
+        <!-- Price -->
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" placeholder="Enter the price" required><br><br>
+
+        <!-- URL -->
+        <label for="url">URL:</label>
+        <input type="text" id="url" name="url" placeholder="Enter the URL for the listing" required><br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Add Listing</button>
+    </form>
+</body>
+</html>

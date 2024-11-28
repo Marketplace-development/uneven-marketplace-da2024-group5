@@ -1,22 +1,17 @@
 # app/routes.py
 
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Provider, Customer, Transaction, Review, Notification
+from .models import db, User, Listing, Transaction, Review, Notification
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
     if 'user_id' in session:
-        user = User.query.get(session['user_id']) # haalt alle info op van user aan de hand van user_id
-        listings = Listing.query.filter_by(provider_id=User.user_id).all()  # Fetch listings for logged-in user
+        user = User.query.get(session['user_id'])  # Haal user info op via user_id
+        listings = Listing.query.filter_by(user_id=User.user_id).all()  # Fetch listings for logged-in user
         return render_template('index.html', username=user.username, listings=listings)
     return render_template('index.html', username=None)
-
-#Nee, alle informatie over de gebruiker wordt niet opgeslagen in de sessie. Wat jouw code doet, is alleen de primary key (user_id) opslaan in de sessie. 
-#De sessie wordt hier gebruikt als een manier om een referentie te bewaren naar de ingelogde gebruiker. 
-# Wanneer je vervolgens informatie over de gebruiker nodig hebt, wordt deze opgehaald uit de database aan de hand van die user_id. 
-# Dit bespaart geheugen en maakt de applicatie efficiënter.
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -65,13 +60,10 @@ def login():
             session['user_id'] = user.user_id  # Bewaar user_id in de sessie
             return redirect(url_for('main.index'))
         
-        # Gebruiker bestaat niet: toon melding en een knop naar registratie
         flash('User not found. Would you like to register?', 'error')
-        return redirect(url_for('main.login'))  # Herlaad login-pagina met melding
+        return redirect(url_for('main.login'))
 
     return render_template('login.html')
-
-
 
 @main.route('/logout', methods=['POST'])
 def logout():
@@ -86,7 +78,7 @@ def add_listing():
     if request.method == 'POST':
         listing_name = request.form['listing_name']
         price = float(request.form['price'])
-        new_listing = Listing(listing_name=listing_name, price=price, user_id=session['user_id'])
+        new_listing = Listing(listing_name=listing_name, price_listing=price, user_id=session['user_id'])
         db.session.add(new_listing)
         db.session.commit()
         return redirect(url_for('main.listings'))
@@ -109,8 +101,92 @@ def edit_listing(listing_id):
     
     if request.method == 'POST':
         listing.listing_name = request.form['listing_name']
-        listing.price = float(request.form['price'])
+        listing.price_listing = float(request.form['price'])
         db.session.commit()
         return redirect(url_for('main.listings'))
     
     return render_template('edit_listing.html', listing=listing)
+
+@main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
+def view_listing(listing_id):
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    if request.method == 'POST':
+        if 'user_id' not in session:
+            return redirect(url_for('main.login'))
+        transaction = Transaction(user_id=session['user_id'], listing_id=listing_id,price_transaction=listing.price_listing)
+        db.session.add(transaction)
+        db.session.commit()
+        flash('Purchase successful!', 'success')
+        return redirect(url_for('main.listings'))
+    
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
+    return render_template('view_listing.html', listing=listing, reviews=reviews)
+
+@main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
+def add_review(listing_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    if request.method == 'POST':
+        content = request.form['review_text']
+        new_review = Review( user_id=session['user_id'],listing_id=listing_id,content=content)
+        db.session.add(new_review)
+        db.session.commit()
+        flash('Review added successfully!', 'success')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+    
+    return render_template('add_review.html', listing=listing)
+
+@main.route('/reviews/<int:listing_id>')
+def view_reviews(listing_id):
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
+    return render_template('view_reviews.html', listing=listing, reviews=reviews)
+
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    query = request.args.get('query')
+    if query:
+        listings = Listing.query.filter(Listing.listing_name.ilike(f'%{query}%')).all()
+    else:
+        listings = Listing.query.all()
+    return render_template('listings.html', listings=listings)
+
+@main.route('/transactions')
+def transactions():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    
+    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
+    return render_template('transactions.html', transactions=user_transactions)
+
+@main.route('/filter', methods=['GET'])
+def filter_listings():
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
+
+    # Let op: de 'category'-kolom lijkt niet meer te bestaan in de huidige structuur,
+    # dus we verwijderen die filteroptie. Laat het weten als je deze wilt toevoegen.
+
+    query = Listing.query
+
+    if min_price:
+        query = query.filter(Listing.price_listing >= min_price)  # Aangepast naar 'price_listing'
+    if max_price:
+        query = query.filter(Listing.price_listing <= max_price)
+
+    listings = query.all()
+    return render_template('listings.html', listings=listings)

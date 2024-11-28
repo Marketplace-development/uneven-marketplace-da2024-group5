@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Review</title>
+</head>
+<body>
+    <h1>Add Review for {{ listing.listing_name }}</h1>
+    <form method="POST">
+        <label for="review_text">Review:</label>
+        <textarea id="review_text" name="review_text" required></textarea><br><br>
+        
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
+        
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>
