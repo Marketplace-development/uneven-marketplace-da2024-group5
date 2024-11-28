@@ -9,7 +9,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    date_of_birth = db.Column(db.Date, nullable=True)
+    date_of_birth = db.Column(db.Date, nullable=False)
     phone_number = db.Column(db.String(15), nullable=True)
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
 
