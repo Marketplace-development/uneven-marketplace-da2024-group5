@@ -199,3 +199,12 @@ def account():
     
     user = User.query.get(session['user_id'])
     return render_template('account.html', user=user)
+
+@main.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('main.logout_page'))
+
+@main.route('/logout_page', methods=['GET'])
+def logout_page():
+    return render_template('logout.html')
