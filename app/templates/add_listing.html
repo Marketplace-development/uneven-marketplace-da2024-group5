@@ -1,28 +1,68 @@
 {% extends "base.html" %}
 
-{% block title %}Home - ViaVia{% endblock %}
+{% block title %}Add New Listing - ViaVia{% endblock %}
 
 {% block content %}
+<div class="container mt-5">
+    <!-- Header -->
+    <h1 class="text-primary text-center mb-4">Add New Listing</h1>
 
-    <h1>Add New Listing</h1>
-    <form method="POST" action="/add-listing">
+    <!-- Form -->
+    <form method="POST" action="/add-listing" class="bg-white p-4 rounded shadow-sm">
+        
         <!-- Listing Name -->
-        <label for="listing_name">Listing Name:</label>
-        <input type="text" id="listing_name" name="listing_name" placeholder="Enter listing name" required><br><br>
+        <div class="mb-3">
+            <label for="listing_name" class="form-label">Listing Name:</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="listing_name" 
+                name="listing_name" 
+                placeholder="Enter listing name" 
+                required>
+        </div>
 
         <!-- Description -->
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description" rows="4" cols="50" placeholder="Enter a description for the listing" required></textarea><br><br>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                class="form-control" 
+                rows="4" 
+                placeholder="Enter a description for the listing" 
+                required></textarea>
+        </div>
 
         <!-- Price -->
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" placeholder="Enter the price" required><br><br>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input 
+                type="number" 
+                class="form-control" 
+                id="price" 
+                name="price" 
+                step="0.5" 
+                placeholder="Enter the price" 
+                required>
+        </div>
 
         <!-- URL -->
-        <label for="url">URL:</label>
-        <input type="text" id="url" name="url" placeholder="Enter the URL for the listing" required><br><br>
+        <div class="mb-3">
+            <label for="url" class="form-label">URL:</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="url" 
+                name="url" 
+                placeholder="Enter the URL for the listing" 
+                required>
+        </div>
 
         <!-- Submit Button -->
-        <button type="submit">Add Listing</button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Add Listing</button>
+        </div>
     </form>
+</div>
 {% endblock %}
