@@ -3,39 +3,58 @@
 {% block title %}Home - ViaVia{% endblock %}
 
 {% block content %}
+<div class="container mt-5">
 
-    <!-- Zoekbalk -->
-    <div class="search-bar">
-        <input type="text" id="search" placeholder="Search listings...">
-        <select id="filter-price">
-            <option value="all">Filter by Price</option>
-            <option value="low-to-high">Low to High</option>
-            <option value="high-to-low">High to Low</option>
-        </select>
-        <select id="filter-date">
-            <option value="all">Filter by Date</option>
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-        </select>
-        <button type="button" onclick="filterListings()">Search</button>
+    <!-- Search Bar Section with Green Theme -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <form class="d-flex align-items-center gap-2">
+                <!-- Search Input -->
+                <input type="text" class="form-control" id="search" placeholder="Search listings..." style="border-color: #3D875F;">
+
+                <!-- Filter by Price Dropdown -->
+                <select class="form-select" id="filter-price" style="border-color: #3D875F;">
+                    <option value="all">Filter by Price</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+
+                <!-- Filter by Date Dropdown -->
+                <select class="form-select" id="filter-date" style="border-color: #3D875F;">
+                    <option value="all">Filter by Date</option>
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+
+                <!-- Search Button with Green Theme -->
+                <button type="button" onclick="filterListings()" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Hoofdcontent -->
-    <div class="content">
-        <h2>Welcome to ViaVia</h2>
-        <p>Discover, buy, and sell unique listings.</p>
+    <!-- Main Content -->
+    <div class="content text-center">
+        <h2 class="mb-4" style="color: #3D875F;">Welcome to ViaVia</h2>
+        <p class="lead" style="color: #3D875F;">Discover, buy, and sell unique listings.</p>
+
         {% if listings %}
-            <h3>Available Listings</h3>
-            <div class="listings">
+            <h3 class="mt-5" style="color: #3D875F;">Available Listings</h3>
+            <div class="listings row mt-4">
                 {% for listing in listings %}
-                    <div class="listing-item">
-                        <strong>{{ listing.listing_name }}</strong> - ${{ listing.price }}
-                        <p>Posted on {{ listing.date_posted }}</p>
+                    <div class="listing-item col-md-4 mb-4">
+                        <div class="card" style="border-color: #3D875F;">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: #3D875F;"><strong>{{ listing.listing_name }}</strong></h5>
+                                <p class="card-text">Price: ${{ listing.price }}</p>
+                                <p class="text-muted">Posted on {{ listing.date_posted }}</p>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p>No listings found. Start by adding your first listing!</p>
+            <p class="text-muted mt-5">No listings found. Be the first person to post a listing!</p>
         {% endif %}
     </div>
+</div>
 {% endblock %}

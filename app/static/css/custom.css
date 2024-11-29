@@ -1,0 +1,37 @@
+/* Override Bootstrap primary button color */
+.btn-primary {
+    background-color: #3D875F !important;  /* Green color */
+    border-color: #3D875F !important;
+}
+
+.btn-primary:hover {
+    background-color: #2A5B3D !important;  /* Darker green for hover */
+    border-color: #2A5B3D !important;
+}
+
+
+/* For outline buttons (if you use outline buttons for "Login") */
+.btn-outline-light {
+    color: white !important;               /* Text color for the button */
+    border-color: white !important;        /* Border color */
+}
+
+.btn-outline-light:hover {
+    background-color: white !important;    /* Background color for hover */
+    color: #3D875F !important;             /* Text color turns green on hover */
+}
+
+/* Override link color */
+a {
+    color: #3D875F !important;  /* Green color for links */
+}
+
+a:hover {
+    color: #2A5B3D !important;  /* Darker green on hover for links */
+}
+
+/* Update any other Bootstrap elements as needed */
+.alert-info {
+    background-color: #3D875F !important;  /* Green alerts */
+    color: white !important;
+}
