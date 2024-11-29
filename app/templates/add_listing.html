@@ -8,7 +8,7 @@
     <h1 class="text-primary text-center mb-4">Add New Listing</h1>
 
     <!-- Form -->
-    <form method="POST" action="/add-listing" class="bg-white p-4 rounded shadow-sm">
+    <form method="POST" action="/add-listing" enctype= 'multipart/form-data' class="bg-white p-4 rounded shadow-sm">
         
         <!-- Listing Name -->
         <div class="mb-3">
@@ -57,6 +57,20 @@
                 name="url" 
                 placeholder="Enter the URL for the listing" 
                 required>
+        </div>
+
+        <div class="mb-3">
+            <label for="inputGroupFile02" class="form-label">Upload a PDF:</label>
+            <div class="input-group">
+                <input 
+                    type="file" 
+                    class="form-control" 
+                    id="inputGroupFile02" 
+                    name="pdf_file" 
+                    accept=".pdf" 
+                    required>
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            </div>
         </div>
 
         <!-- Submit Button -->
