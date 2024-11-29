@@ -5,78 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>{% block title %}ViaVia{% endblock %}</title>
-    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white; /* Witte achtergrondkleur */
+        }
+        .navbar {
+            background-color: #4a90e2; /* Consistente blauwe kleur */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .navbar-brand {
+            font-weight: bold;
+            font-size: 24px;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #e3f2fd !important;
+        }
+        .btn-outline-light {
+            color: white !important;
+            border-color: white !important;
+        }
+        .btn-outline-light:hover {
+            background-color: white !important;
+            color: #4a90e2 !important;
+        }
+        .btn-light {
+            color: #4a90e2 !important;
+            font-weight: bold;
+        }
+        .dropdown-menu {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #f8f9fa; /* Lichte achtergrondkleur voor de footer */
+            color: #6c757d; /* Neutrale grijstint voor tekst */
+        }
+        footer small {
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-          <!-- Logo -->
-          <a class="navbar-brand" href="{{ url_for('main.index') }}">ViaVia</a>
-      
-          <!-- Toggler for Mobile -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-      
-          <!-- Navbar Content -->
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav me-auto">
-              <!-- Find Listings Button -->
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('main.listings') }}">Find Listings</a>
-              </li>
-      
-              <!-- Your Listings Dropdown -->
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Your Listings
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Manage Your Existing Listings</a></li>
-                  <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">Create New Listing</a></li>
+            <!-- Logo -->
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">ViaVia</a>
+
+            <!-- Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto">
+                    <!-- Find Listings Button -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.listings') }}">Find Listings</a>
+                    </li>
+
+                    <!-- Your Listings Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Your Listings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Manage Your Existing Listings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">Create New Listing</a></li>
+                        </ul>
+                    </li>
                 </ul>
-              </li>
-            </ul>
-      
-            <!-- Right-aligned Profile Section -->
-            <div class="d-flex">
-              {% if username %}
-                <div class="dropdown">
-                  <a class="nav-link dropdown-toggle text-white" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://via.placeholder.com/24" alt="Profile" class="rounded-circle me-2">
-                    {{ username }}
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/account">My Account</a></li>
-                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                  </ul>
+
+                <!-- Right-aligned Profile Section -->
+                <div class="d-flex">
+                    {% if username %}
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://via.placeholder.com/24" alt="Profile" class="rounded-circle me-2">
+                                {{ username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="/account">My Account</a></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-outline-light me-2" href="/login">Login</a>
+                        <a class="btn btn-light" href="/register">Register</a>
+                    {% endif %}
                 </div>
-              {% else %}
-                <a class="btn btn-outline-light me-2" href="/login">Login</a>
-                <a class="btn btn-light" href="/register">Register</a>
-              {% endif %}
             </div>
-          </div>
         </div>
-      </nav>
-      
+    </nav>
+
     <!-- Content Block -->
     <div class="container mt-4">
         {% block content %}
         <!-- Default content if not overridden -->
         {% endblock %}
-        
-        
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     </div>
 
-    <footer class="bg-light text-center py-3 mt-5">
+    <!-- Footer -->
+    <footer class="text-center py-3 mt-5">
         <div class="container">
             <small>&copy; {{ current_year if current_year else "2024" }} ViaVia. All rights reserved.</small>
         </div>
     </footer>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
