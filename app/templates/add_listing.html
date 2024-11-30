@@ -4,6 +4,20 @@
 
 {% block content %}
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
 <!-- Background Image -->
 <div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
 </div>

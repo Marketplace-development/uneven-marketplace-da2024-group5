@@ -103,13 +103,24 @@ def add_listing():
     if request.method == 'POST':
         try:
             # Collect form data
-            listing_name = request.form['listing_name']
-            description = request.form['description']
-            price = float(request.form['price'])
+            listing_name = request.form.get('listing_name', '').strip()
+            description = request.form.get('description', '').strip()
+            price = request.form.get('price', '').strip()
             file = request.files.get('file')
 
+            # Validate form inputs
+            if not listing_name or not description or not price:
+                flash("All fields are required (name, description, price).", "error")
+                return redirect(request.url)
+            
             if not file:
-                flash("File is required.", "error")
+                flash("A file is required.", "error")
+                return redirect(request.url)
+
+            try:
+                price = float(price)  # Convert price to a float
+            except ValueError:
+                flash("Price must be a valid number.", "error")
                 return redirect(request.url)
 
             # Secure the file name
@@ -117,8 +128,10 @@ def add_listing():
 
             # Upload the file to Supabase
             response = supabase.storage.from_("pdfs").upload(filename, file.stream.read())
-            if response.get("error"):
-                flash(f"Error uploading file: {response['error']['message']}", "error")
+
+            # Handle the response
+            if hasattr(response, "raw_response") and response.raw_response.status_code != 200:
+                flash(f"Error uploading file to Supabase: {response.raw_response.text}", "error")
                 return redirect(request.url)
 
             # Get the public URL of the file
@@ -140,10 +153,11 @@ def add_listing():
 
         except Exception as e:
             db.session.rollback()  # Roll back any database changes if an error occurs
-            flash(f"An error occurred: {str(e)}", "error")
+            flash(f"An error occurred while adding the listing: {str(e)}", "error")
             return redirect(request.url)
 
     return render_template('add_listing.html')
+
 
 
 @main.route('/listings')
