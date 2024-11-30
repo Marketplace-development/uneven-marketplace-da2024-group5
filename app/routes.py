@@ -4,7 +4,7 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from .models import db, User, Listing, Transaction, Review, Notification
 from supabase import create_client
 from .config import Config
-#from flask import jsonify, request
+from flask import jsonify, request
 """
 request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
 Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
@@ -111,6 +111,20 @@ def add_listing():
 def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
+
+@main.route('/my-purchased-listings')
+def my_purchased_listings():
+    if 'user_id' not in session:
+        flash('You need to log in to access your purchased listings.', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Fetch transactions linked to the current user
+    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
+    
+    # Get the listings related to those transactions
+    purchased_listings = [transaction.listing for transaction in user_transactions]
+
+    return render_template('my_purchased_listings.html', listings=purchased_listings)
 
 @main.route('/edit-listing/<int:listing_id>', methods=['GET', 'POST'])
 def edit_listing(listing_id):
