@@ -92,32 +92,59 @@ def logout():
     return render_template('logout.html')  # Toon de logout-pagina met een boodschap
 
 
+from werkzeug.utils import secure_filename
+import os
+
 @main.route('/add-listing', methods=['GET', 'POST'])
 def add_listing():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
-    
+
     if request.method == 'POST':
-        listing_name = request.form['listing_name']
-        description = request.form['description']  # Added description field
-        price = float(request.form['price'])
-        url = request.form['url']  # Get the URL from the form
+        try:
+            # Collect form data
+            listing_name = request.form['listing_name']
+            description = request.form['description']
+            price = float(request.form['price'])
+            file = request.files.get('file')
 
-        # Create a new listing object, including the URL
-        new_listing = Listing(
-            listing_name=listing_name,
-            description=description,
-            price_listing=price,
-            url=url,  # Include the URL here
-            user_id=session['user_id']
-        )
+            if not file:
+                flash("File is required.", "error")
+                return redirect(request.url)
 
-        # Add and commit the new listing to the database
-        db.session.add(new_listing)
-        db.session.commit()
-        return redirect(url_for('main.listings'))
+            # Secure the file name
+            filename = secure_filename(file.filename)
+
+            # Upload the file to Supabase
+            response = supabase.storage.from_("pdfs").upload(filename, file.stream.read())
+            if response.get("error"):
+                flash(f"Error uploading file: {response['error']['message']}", "error")
+                return redirect(request.url)
+
+            # Get the public URL of the file
+            file_url = f"{supabase_url}/storage/v1/object/public/pdfs/{filename}"
+
+            # Save listing details to the database
+            new_listing = Listing(
+                listing_name=listing_name,
+                description=description,
+                price_listing=price,
+                url=file_url,  # Save the file URL
+                user_id=session['user_id']
+            )
+            db.session.add(new_listing)  # Add the listing to the session
+            db.session.commit()  # Commit the changes to the database
+
+            flash("Listing added successfully.", "success")
+            return redirect(url_for('main.listings'))
+
+        except Exception as e:
+            db.session.rollback()  # Roll back any database changes if an error occurs
+            flash(f"An error occurred: {str(e)}", "error")
+            return redirect(request.url)
 
     return render_template('add_listing.html')
+
 
 @main.route('/listings')
 def listings():
@@ -245,20 +272,23 @@ supabase_url = Config.SUPABASE_URL
 supabase_key = Config.SUPABASE_KEY
 supabase = create_client(supabase_url, supabase_key)
 
-# Gebruik de client in een route
 @main.route('/upload-pdf', methods=['POST'])
 def upload_pdf():
     if 'file' not in request.files:
-        return jsonify({'error': 'No file provided'}), 400 #jsonify wordt gebruikt om Python-objecten (zoals dictionaries of lijsten) om te zetten in een JSON-respons. Automatisch instellen van correcte headers.
-    
+        return jsonify({'error': 'No file provided'}), 400
+
     file = request.files['file']
-    file_name = file.filename
+    filename = secure_filename(file.filename)  # Secure the file name
 
     try:
-        response = supabase.storage.from_("pdfs").upload(file_name, file)
+        # Upload the file directly to Supabase
+        response = supabase.storage.from_("pdfs").upload(filename, file.stream.read())
         if response.get("error"):
             return jsonify({'error': response.get("error").get("message")}), 500
-        file_url = f"{supabase_url}/storage/v1/object/public/pdfs/{file_name}"
+        
+        # Get the public URL of the file
+        file_url = f"{supabase_url}/storage/v1/object/public/pdfs/{filename}"
         return jsonify({'file_url': file_url}), 200
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
