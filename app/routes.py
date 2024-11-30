@@ -15,9 +15,11 @@ main = Blueprint('main', __name__)
 def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])  # Haal user info op via user_id
-        listings = Listing.query.filter_by(user_id=User.user_id).all()  # Fetch listings for logged-in user
+        listings = Listing.query.filter(Listing.user_id != user.user_id).all()  # Fetch listings for logged-in user
         return render_template('index.html', username=user.username, listings=listings)
-    return render_template('index.html', username=None)
+    # If not logged in, show all listings
+    listings = Listing.query.all()
+    return render_template('index.html', username=None, listings=listings)
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():

@@ -100,15 +100,15 @@
                 <!-- Default Navbar Content -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.listings') }}">Find Listings</a>
+                        <a class="nav-link" href="{{ url_for('main.listings') }}">Listings</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Your Listings
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Manage Your Existing Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">Create New Listing</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">add_Listing</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -116,8 +116,8 @@
                             Past Listings
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">View your purchased Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.my_purchased_listings') }}">Give Reviews for Purchased Listings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.my_purchased_listings') }}">my Purchased Listings</a></li>
 
                         </ul>
                     </li>
