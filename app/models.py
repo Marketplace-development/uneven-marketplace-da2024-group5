@@ -13,6 +13,8 @@ class User(db.Model):
     phone_number = db.Column(db.String(15), nullable=True)
     #profile_pic = db.Column(db.String(255), nullable = True, default='static/images/default.jpg') #default pic.
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
+    wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0.0)  # Add this line
+
 
     # Relaties
     listings = db.relationship('Listing', backref='user', lazy=True)

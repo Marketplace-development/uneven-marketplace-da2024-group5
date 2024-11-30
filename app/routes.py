@@ -32,10 +32,10 @@ def register():
         
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
-            flash('Username already registered. You will be redirected to login.', 'error')
+            flash('Username already registered. You will be redirected to login.', 'register')
             return redirect(url_for('main.register'))
         if User.query.filter_by(email=email).first() is not None:
-            flash('Email already registered. You will be redirected to login.', 'error')
+            flash('Email already registered. You will be redirected to login.', 'register')
             return redirect(url_for('main.register'))
         
         # Maak een nieuwe gebruiker aan
@@ -306,6 +306,40 @@ def upload_pdf():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@main.route('/wallet', methods=['GET'])
+def wallet():
+    if 'user_id' not in session:
+        flash('You need to log in to view your wallet.', 'warning')
+        return redirect(url_for('main.login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('wallet.html', wallet_balance=user.wallet_balance)
+
+from decimal import Decimal
+
+@main.route('/wallet/recharge', methods=['POST'])
+def recharge_wallet():
+    if 'user_id' not in session:
+        flash('You need to log in to recharge your wallet.', 'walleterror')
+        return redirect(url_for('main.login'))
+    
+    user = User.query.get(session['user_id'])
+    amount = request.form.get('amount', type=float)
+    
+    if not amount:
+        flash('Invalid amount.', 'walleterror')
+        return redirect(url_for('main.wallet'))
+    
+    if amount <= 0:
+        flash('Invalid amount.', 'walleterror')
+        return redirect(url_for('main.wallet'))
+
+    user.wallet_balance += Decimal(str(amount))
+    db.session.commit()
+    flash('Wallet recharged successfully!', 'walletsuccess')
+    return redirect(url_for('main.wallet'))
 
 #i hate my life because this doesn't work
 '''
