@@ -2,11 +2,13 @@
 .btn-primary {
     background-color: #3D875F !important;  /* Green color */
     border-color: #3D875F !important;
+    color: white !important;
 }
 
 .btn-primary:hover {
     background-color: #2A5B3D !important;  /* Darker green for hover */
     border-color: #2A5B3D !important;
+    color: white !important;
 }
 
 
@@ -34,4 +36,20 @@ a:hover {
 .alert-info {
     background-color: #3D875F !important;  /* Green alerts */
     color: white !important;
+}
+
+/* Secondary button with a green border and gray background */
+.btn-secondary {
+    background-color: #6c757d !important; /* Gray color */
+    border-color: #3D875F !important;    /* Green border */
+    color: white !important;             /* White text */
+    border-width: 2px;                   /* Slightly thicker border for emphasis */
+    border-radius: 8px;                  /* Rounded corners */
+}
+
+/* Hover effect for secondary button */
+.btn-secondary:hover {
+    background-color: #5a6268 !important; /* Darker gray for hover */
+    border-color: #2A5B3D !important;    /* Darker green border on hover */
+    color: white !important;             /* Keep text white */
 }

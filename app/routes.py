@@ -319,6 +319,15 @@ def wallet():
 
 from decimal import Decimal
 
+@main.route('/wallet/recharge', methods=['GET'])
+def recharge_page():
+    if 'user_id' not in session:
+        flash('You need to log in to recharge your wallet.', 'walleterror')
+        return redirect(url_for('main.login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('recharge_wallet.html', wallet_balance=user.wallet_balance)
+
 @main.route('/wallet/recharge', methods=['POST'])
 def recharge_wallet():
     if 'user_id' not in session:
@@ -330,16 +339,16 @@ def recharge_wallet():
     
     if not amount:
         flash('Invalid amount.', 'walleterror')
-        return redirect(url_for('main.wallet'))
+        return redirect(url_for('main.recharge_page'))
     
     if amount <= 0:
         flash('Invalid amount.', 'walleterror')
-        return redirect(url_for('main.wallet'))
+        return redirect(url_for('main.recharge_page'))
 
     user.wallet_balance += Decimal(str(amount))
     db.session.commit()
     flash('Wallet recharged successfully!', 'walletsuccess')
-    return redirect(url_for('main.wallet'))
+    return redirect(url_for('main.recharge_page'))
 
 #i hate my life because this doesn't work
 '''
