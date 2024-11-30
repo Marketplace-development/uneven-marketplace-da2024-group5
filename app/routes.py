@@ -101,14 +101,14 @@ def add_listing():
         listing_name = request.form['listing_name']
         description = request.form['description']  # Added description field
         price = float(request.form['price'])
-        url = request.form['url']  # Get the URL from the form
+        pdf = request.form['pdf']  # Get the URL from the form
 
         # Create a new listing object, including the URL
         new_listing = Listing(
             listing_name=listing_name,
             description=description,
             price_listing=price,
-            url=url,  # Include the URL here
+            pdf=pdf,  # Include the URL here
             user_id=session['user_id']
         )
 

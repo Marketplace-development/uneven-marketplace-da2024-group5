@@ -28,7 +28,7 @@ class Listing(db.Model):
     description = db.Column(db.Text, nullable=False)
     price_listing = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    pdf = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
 
     # Relaties
