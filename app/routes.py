@@ -99,8 +99,20 @@ def add_listing():
     
     if request.method == 'POST':
         listing_name = request.form['listing_name']
+        description = request.form['description']  # Added description field
         price = float(request.form['price'])
-        new_listing = Listing(listing_name=listing_name, price_listing=price, user_id=session['user_id'])
+        url = request.form['url']  # Get the URL from the form
+
+        # Create a new listing object, including the URL
+        new_listing = Listing(
+            listing_name=listing_name,
+            description=description,
+            price_listing=price,
+            url=url,  # Include the URL here
+            user_id=session['user_id']
+        )
+
+        # Add and commit the new listing to the database
         db.session.add(new_listing)
         db.session.commit()
         return redirect(url_for('main.listings'))

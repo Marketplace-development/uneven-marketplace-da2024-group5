@@ -5,17 +5,22 @@
     <h2>Your Purchased Listings</h2>
     <div class="row mt-4">
         {% if listings %}
-            <ul class="list-group">
-                {% for listing in listings %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>{{ listing.listing_name }}</h5>
-                            <p>Price: ${{ listing.price_listing }}</p>
+            <!-- Loop through each purchased listing -->
+            {% for listing in listings %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h1 class="card-title text-primary">{{ listing.listing_name }}</h1>
+                            <p class="card-text fs-5">Price: <strong>${{ listing.price_listing }}</strong></p>
+
+                            <!-- Add Review Button -->
+                            <a href="{{ url_for('main.add_review', listing_id=listing.id) }}" class="btn btn-outline-primary w-100">
+                                Add a Review
+                            </a>
                         </div>
-                        <a class="btn btn-primary" href="{{ url_for('main.add_review', listing_id=listing.id) }}">Add Review</a>
-                    </li>
-                {% endfor %}
-            </ul>
+                    </div>
+                </div>
+            {% endfor %}
         {% else %}
             <p>You have not purchased any listings yet.</p>
         {% endif %}
