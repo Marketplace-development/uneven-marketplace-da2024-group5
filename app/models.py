@@ -11,7 +11,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
     phone_number = db.Column(db.String(15), nullable=True)
-    #profile_pic = db.Column(db.String(255), nullable = True, default='static/images/default.jpg') #default pic
+    #profile_pic = db.Column(db.String(255), nullable = True, default='static/images/default.jpg') #default pic.
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relaties
