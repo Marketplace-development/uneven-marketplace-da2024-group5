@@ -306,3 +306,20 @@ def upload_pdf():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+#i hate my life because this doesn't work
+'''
+@main.route('/update-profile-pic', methods=['POST'])
+def update_profile_pic():
+    if 'user_id' not in session:
+        flash('You need to log in to update your profile picture.', 'error')
+        return redirect(url_for('main.login'))
+    
+    user = User.query.get(session['user_id'])
+    profile_pic_url = request.form.get('profile_pic_url', '/static/images/male default pic.jpg')
+    user.profile_pic = profile_pic_url
+    db.session.commit()
+    flash('Profile picture updated successfully.', 'success')
+    return redirect(url_for('main.account'))
+
+'''

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Profile Picture - ViaVia{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2 style="color: #3D875F;">Choose Your Profile Picture</h2>
+    <form action="{{ url_for('main.choose_profile_pic') }}" method="POST" class="mt-4">
+        <div class="d-flex justify-content-center">
+            <!-- Male Avatar -->
+            <div class="me-4">
+                <img src="{{ url_for('static', filename='images/male default pic.jpg') }}" alt="Male Avatar" style="width: 150px; height: 150px; border-radius: 50%; cursor: pointer;" onclick="selectOption('male default pic.jpg')">
+                <div>
+                    <input type="radio" id="male" name="profile_pic" value="/static/images/male default pic.jpg" required>
+                    <label for="male">Male Default</label>
+                </div>
+            </div>
+        
+            <!-- Female Avatar -->
+            <div>
+                <img src="{{ url_for('static', filename='images/female default pic.jpg') }}" alt="Female Avatar" style="width: 150px; height: 150px; border-radius: 50%; cursor: pointer;" onclick="selectOption('female default pic.jpg')">
+                <div>
+                    <input type="radio" id="female" name="profile_pic" value="/static/images/female default pic.jpg" required>
+                    <label for="female">Female Default</label>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-4" style="background-color: #3D875F;">Save</button>
+    </form>
+</div>
+{% endblock %}
