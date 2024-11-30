@@ -3,73 +3,127 @@
 {% block title %}Listings - ViaVia{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <!-- Header -->
-    <h1 class="text-primary text-center mb-4">Listings</h1>
 
-    <!-- Search Form -->
-    <form action="{{ url_for('main.search') }}" method="GET" class="mb-4">
-        <div class="input-group">
-            <input 
-                type="text" 
-                class="form-control" 
-                name="query" 
-                placeholder="Search Listings" 
-                value="{{ request.args.get('query', '') }}" 
-                aria-label="Search Listings">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </form>
+<!-- Background Image -->
+<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+</div>
 
-    <!-- Filter Form -->
-    <form action="{{ url_for('main.filter_listings') }}" method="GET" class="mb-4 p-3 bg-light rounded shadow-sm">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label for="min_price" class="form-label">Min Price:</label>
-                <input 
-                    type="number" 
-                    class="form-control" 
-                    name="min_price" 
-                    step="0.5" 
-                    value="{{ request.args.get('min_price', '') }}">
-            </div>
-            <div class="col-md-4">
-                <label for="max_price" class="form-label">Max Price:</label>
-                <input 
-                    type="number" 
-                    class="form-control" 
-                    name="max_price" 
-                    step="0.5" 
-                    value="{{ request.args.get('max_price', '') }}">
-            </div>
-            <div class="col-md-4">
-                <label for="category" class="form-label">Category:</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    name="category" 
-                    value="{{ request.args.get('category', '') }}">
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 1px;">
+
+
+    <!-- Semi-Transparent Box Wrapper -->
+    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 2000px; margin: 0 auto;">
+        
+        <!-- Title Section -->
+        <div class="row mb-4">
+            <div class="col-lg-12 text-center">
+                <h2 class="mb-4" style="color: #3D875F;">Listings</h2>
             </div>
         </div>
-        <div class="mt-3 text-end">
-            <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-    </form>
 
-    <!-- Listings -->
-    <div class="list-group">
-        {% for listing in listings %}
-        <a 
-            href="{{ url_for('main.view_listing', listing_id=listing.id) }}" 
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <span>{{ listing.listing_name }}</span>
-            <span class="badge bg-primary">${{ listing.price }}</span>
-        </a>
-        {% else %}
-        <div class="alert alert-danger text-center" role="alert">
-            No listings available.
+        <!-- Search Bar and Filter Section -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <form class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
+                    <!-- Search Bar -->
+                    <div class="d-flex flex-column">
+                        <label for="search" class="form-label" style="color: #3D875F;">Search Listings:</label>
+                        <input type="text" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
+                    </div>
+
+                    <!-- Min Price Filter -->
+                    <div class="d-flex flex-column">
+                        <label for="min-price" class="form-label" style="color: #3D875F;">Min Price:</label>
+                        <input type="number" class="form-control" id="min-price" placeholder="Min Price" style="border-color: #3D875F;">
+                    </div>
+
+                    <!-- Max Price Filter -->
+                    <div class="d-flex flex-column">
+                        <label for="max-price" class="form-label" style="color: #3D875F;">Max Price:</label>
+                        <input type="number" class="form-control" id="max-price" placeholder="Max Price" style="border-color: #3D875F;">
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="d-flex flex-column">
+                        <label for="category" class="form-label" style="color: #3D875F;">Category:</label>
+                        <select class="form-select" id="category" style="border-color: #3D875F;">
+                            <option value="all">All Categories</option>
+                            <option value="category1">Category 1</option>
+                            <option value="category2">Category 2</option>
+                            <option value="category3">Category 3</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Button with Green Theme -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label" style="visibility: hidden;">Search</label>
+                        <button type="button" onclick="filterListings()" class="btn btn-primary w-100" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        {% endfor %}
-    </div>
+
+        <!-- Listings and Categories Section -->
+        <div class="row mt-4">
+            {% if listings %}
+                <!-- If listings are available, show them -->
+                {% for listing in listings %}
+                    <div class="listing-item col-md-4 mb-4">
+                        <div class="card" style="border-color: #3D875F;">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: #3D875F;"><strong>{{ listing.listing_name }}</strong></h5>
+                                <p class="card-text">Price: ${{ listing.price }}</p>
+                                <p class="text-muted">Category: {{ listing.category }}</p>
+                                <p class="text-muted">Posted on {{ listing.date_posted }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- If no listings are found, show categories or empty cards -->
+                <h3 class="text-center mb-4" style="color: #3D875F;">Explore Categories</h3>
+                <div class="categories row mt-4">
+                    <!-- Example Categories (you can adjust these as needed) -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="border-color: #3D875F;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="color: #3D875F;">Category 1</h5>
+                                <p class="text-muted">Explore amazing listings in this category.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="border-color: #3D875F;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="color: #3D875F;">Category 2</h5>
+                                <p class="text-muted">Find unique listings for this category.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="border-color: #3D875F;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="color: #3D875F;">Category 3</h5>
+                                <p class="text-muted">Find unique listings for this category.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty card to maintain the layout even if no content -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="border: 2px dashed #3D875F;">
+                            <div class="card-body text-center">
+                                <p class="text-muted">No listings available. Be the first to add something here!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div> <!-- End of Content Box -->
+
 </div>
 {% endblock %}

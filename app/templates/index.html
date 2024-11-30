@@ -4,38 +4,68 @@
 
 {% block content %}
 
-    <!-- Zoekbalk -->
-    <div class="search-bar">
-        <input type="text" id="search" placeholder="Search listings...">
-        <select id="filter-price">
-            <option value="all">Filter by Price</option>
-            <option value="low-to-high">Low to High</option>
-            <option value="high-to-low">High to Low</option>
-        </select>
-        <select id="filter-date">
-            <option value="all">Filter by Date</option>
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-        </select>
-        <button type="button" onclick="filterListings()">Search</button>
-    </div>
+<!-- Background Image -->
+<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+</div>
 
-    <!-- Hoofdcontent -->
-    <div class="content">
-        <h2>Welcome to ViaVia</h2>
-        <p>Discover, buy, and sell unique listings.</p>
-        {% if listings %}
-            <h3>Available Listings</h3>
-            <div class="listings">
-                {% for listing in listings %}
-                    <div class="listing-item">
-                        <strong>{{ listing.listing_name }}</strong> - ${{ listing.price }}
-                        <p>Posted on {{ listing.date_posted }}</p>
-                    </div>
-                {% endfor %}
+<!-- Container for Content Box -->
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 0px;">
+    <!-- Semi-Transparent Box Wrapper with Improved Visibility -->
+    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max width:2000px; min-width: 1300px; margin: 0 auto;">
+
+        <!-- Search Bar Section with Green Theme -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <form class="d-flex align-items-center gap-2">
+                    <!-- Search Input -->
+                    <input type="text" class="form-control" id="search" placeholder="Search listings..." style="border-color: #3D875F;">
+
+                    <!-- Filter by Price Dropdown -->
+                    <select class="form-select" id="filter-price" style="border-color: #3D875F;">
+                        <option value="all">Filter by Price</option>
+                        <option value="low-to-high">Low to High</option>
+                        <option value="high-to-low">High to Low</option>
+                    </select>
+
+                    <!-- Filter by Date Dropdown -->
+                    <select class="form-select" id="filter-date" style="border-color: #3D875F;">
+                        <option value="all">Filter by Date</option>
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+
+                    <!-- Search Button with Green Theme -->
+                    <button type="button" onclick="filterListings()" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                </form>
             </div>
-        {% else %}
-            <p>No listings found. Start by adding your first listing!</p>
-        {% endif %}
-    </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content text-center">
+            <h2 class="mb-4" style="color: #3D875F;">Welcome to ViaVia</h2>
+            <p class="lead" style="color: #3D875F;">Discover, buy, and sell unique listings.</p>
+
+            {% if listings %}
+                <h3 class="mt-5" style="color: #3D875F;">Available Listings</h3>
+                <div class="listings row mt-4">
+                    {% for listing in listings %}
+                        <div class="listing-item col-md-4 mb-4">
+                            <div class="card" style="border-color: #3D875F;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: #3D875F;"><strong>{{ listing.listing_name }}</strong></h5>
+                                    <p class="card-text">Price: ${{ listing.price }}</p>
+                                    <p class="text-muted">Posted on {{ listing.date_posted }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mt-5">No listings found. Be the first person to post a listing!</p>
+            {% endif %}
+        </div>
+
+    </div> <!-- End of Content Box -->
+
+</div>
 {% endblock %}
