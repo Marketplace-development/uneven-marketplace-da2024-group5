@@ -28,24 +28,48 @@
         }
 
         .navbar {
-            background-color: #3D875F; /* Consistent blue color */
+            background-color: #3D875F; /* Consistent green color */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+            padding: 1rem;
         }
 
         .navbar .navbar-brand {
             font-weight: bold;
-            font-size: 24px;
+            font-size: 28px;
             color: white !important;
         }
 
         .navbar-nav .nav-link {
+            font-size: 20px; 
+            padding: 10px 15px;
             color: white !important;
             font-weight: 500;
+        }
+
+        .navbar .dropdown-toggle {
+            font-size: 20px; /* Increase font size for the username dropdown toggle */
+            font-weight: bold; /* Make it a bit more prominent if needed */
+            color: white !important; /* Ensures the color stays consistent with other links */
+        }
+
+        .dropdown-menu .dropdown-item {
+            font-size: 18px; /* Increase font size for dropdown items */
+            padding: 8px 16px; /* Add padding for more comfortable clicking */
         }
 
         .navbar-nav .nav-link:hover {
             color: #e3f2fd !important;
         }
+
+        .profile-img {
+            width: 48px; /* Adjust the width to make it larger */
+            height: 48px; /* Adjust the height to make it larger */
+            object-fit: cover; /* Ensures the content is cropped to fill the container */
+            object-position: center; /* Keeps the focus in the middle of the image */
+            border-radius: 50%; /* Ensures the image remains a perfect circle */
+            margin-right: 10px; /* Adds space between the image and the username */
+        }
+
 
         footer {
             background-color: #3D875F; /* Matching blue color for footer */
@@ -93,7 +117,7 @@
                     {% if username %}
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://via.placeholder.com/24" alt="Profile" class="rounded-circle me-2">
+                                <img src="{{ url_for('static', filename='images/default picture.jpg') }}" alt="Profile" class="profile-img me-2" >
                                 {{ username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
