@@ -24,10 +24,13 @@
         <!-- Search Bar and Filter Section -->
         <div class="row mb-4">
             <div class="col-lg-12">
-                <form class="d-flex align-items-center gap-3 flex-wrap">
+                <form class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
                     <!-- Search Bar -->
-                    <input type="text" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
-                    
+                    <div class="d-flex flex-column">
+                        <label for="search" class="form-label" style="color: #3D875F;">Search Listings:</label>
+                        <input type="text" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
+                    </div>
+
                     <!-- Min Price Filter -->
                     <div class="d-flex flex-column">
                         <label for="min-price" class="form-label" style="color: #3D875F;">Min Price:</label>
@@ -47,12 +50,15 @@
                             <option value="all">All Categories</option>
                             <option value="category1">Category 1</option>
                             <option value="category2">Category 2</option>
-                            <option value="category2">Category 3</option>
+                            <option value="category3">Category 3</option>
                         </select>
                     </div>
 
                     <!-- Search Button with Green Theme -->
-                    <button type="button" onclick="filterListings()" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                    <div class="d-flex flex-column">
+                        <label class="form-label" style="visibility: hidden;">Search</label>
+                        <button type="button" onclick="filterListings()" class="btn btn-primary w-100" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                    </div>
                 </form>
             </div>
         </div>
