@@ -2,7 +2,13 @@
 
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Listing, Transaction, Review, Notification
-
+from supabase import create_client
+from .config import Config
+#from flask import jsonify, request
+"""
+request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
+Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
+"""
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -208,3 +214,25 @@ def filter_listings():
     return render_template('listings.html', listings=listings)
 
 
+# Stel de Supabase-client in
+supabase_url = Config.SUPABASE_URL
+supabase_key = Config.SUPABASE_KEY
+supabase = create_client(supabase_url, supabase_key)
+
+# Gebruik de client in een route
+@main.route('/upload-pdf', methods=['POST'])
+def upload_pdf():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400 #jsonify wordt gebruikt om Python-objecten (zoals dictionaries of lijsten) om te zetten in een JSON-respons. Automatisch instellen van correcte headers.
+    
+    file = request.files['file']
+    file_name = file.filename
+
+    try:
+        response = supabase.storage.from_("pdfs").upload(file_name, file)
+        if response.get("error"):
+            return jsonify({'error': response.get("error").get("message")}), 500
+        file_url = f"{supabase_url}/storage/v1/object/public/pdfs/{file_name}"
+        return jsonify({'file_url': file_url}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
