@@ -80,6 +80,4 @@ class Like(db.Model):
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relationships
-    user = db.relationship('User', backref='like', lazy=True)
-    listing = db.relationship('Listing', backref='like', lazy=True)
+   

@@ -35,7 +35,22 @@
         <p><strong>Description:</strong> {{ listing.description }}</p>
         <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
         <p><strong>Place:</strong> {{ listing.place }}</p>
-
+        
+        <!-- Like/Unlike Button -->
+        {% if session.get('user_id') %}
+            <form method="POST" action="{{ url_for('main.like_listing', listing_id=listing.listing_id) }}">
+                {% set liked = listing.likes|selectattr('user_id', 'equalto', session.user_id)|list|length > 0 %}
+                {% if liked %}
+                    <button type="submit" formaction="{{ url_for('main.unlike_listing', listing_id=listing.listing_id) }}" class="btn btn-danger w-100">
+                        Unlike
+                    </button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary w-100">Like</button>
+                {% endif %}
+            </form>
+        {% else %}
+            <p>Please <a href="{{ url_for('main.login') }}">log in</a> to like this listing.</p>
+        {% endif %}
 
         <!-- Buy Now Button -->
         <form method="POST">
