@@ -1,7 +1,7 @@
 # app/routes.py
 
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Transaction, Review, Notification
+from .models import db, User, Listing, Transaction, Review, Notification, Like
 from supabase import create_client
 from .config import Config
 from flask import jsonify, request
