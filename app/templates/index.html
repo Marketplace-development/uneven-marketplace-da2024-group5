@@ -49,15 +49,20 @@
                 <h3 class="mt-5" style="color: #3D875F;">Available Listings</h3>
                 <div class="listings row mt-4">
                     {% for listing in listings %}
-                        <div class="listing-item col-md-4 mb-4">
-                            <div class="card" style="border-color: #3D875F;">
+                    <div class="listing-item col-md-4 mb-4">
+                        <a href="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}" style="text-decoration: none; color: inherit;">
+                            <div class="card" style="border-color: #3D875F; cursor: pointer;">
                                 <div class="card-body">
-                                    <h5 class="card-title" style="color: #3D875F;"><strong>{{ listing.listing_name }}</strong></h5>
+                                    <h5 class="card-title" style="color: #3D875F;">
+                                        <strong>{{ listing.listing_name }}</strong>
+                                    </h5>
                                     <p class="card-text">Price: ${{ listing.price }}</p>
                                     <p class="text-muted">Posted on {{ listing.date_posted }}</p>
                                 </div>
                             </div>
-                        </div>
+                        </a>
+                    </div>
+                    
                     {% endfor %}
                 </div>
             {% else %}

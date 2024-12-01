@@ -3,40 +3,64 @@
 {% block title %}{{ listing.listing_name }} - ViaVia{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <!-- Listing Details -->
-    <div class="card">
-        <div class="card-body">
-            <h1 class="card-title text-primary">{{ listing.listing_name }}</h1>
-            <p class="card-text fs-5">Price: <strong>${{ listing.price }}</strong></p>
 
-            <!-- Buy Now Button -->
-            <form method="POST">
-                <button type="submit" class="btn btn-primary w-100">Buy Now</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Reviews Section -->
-    <div class="mt-4">
-        <h2 class="text-secondary">Reviews</h2>
-        <ul class="list-group">
-            {% for review in reviews %}
-            <li class="list-group-item">
-                <strong>{{ review.user.username }}:</strong> 
-                {{ review.review_text }} - Rating: <span class="text-warning">{{ review.rating }}/5</span>
-            </li>
-            {% else %}
-            <li class="list-group-item">No reviews yet.</li>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3" style="max-width: 600px;">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" style="font-size: 14px;">
+                    {{ message }}
+                    {% if category == 'danger' %}
+                        <a href="{{ url_for('main.wallet') }}" class="alert-link">Go to your wallet to recharge.</a>
+                    {% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
+    {% endif %}
+{% endwith %}
 
-        <!-- Add Review Link -->
-        <div class="mt-3">
-            <a href="{{ url_for('main.add_review', listing_id=listing.id) }}" class="btn btn-outline-primary">
-                Add a Review
-            </a>
+
+<!-- Background Image -->
+<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+</div>
+
+<!-- Container for Content Box -->
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 0px;">
+    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 800px; margin: 0 auto;">
+        
+        <!-- Listing Details Section -->
+        <h1 style="color: #3D875F;">{{ listing.listing_name }}</h1>
+        <p><strong>Price:</strong> €{{ listing.price_listing }}</p>
+        <p><strong>Description:</strong> {{ listing.description }}</p>
+        <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+
+        <!-- Buy Now Button -->
+        <form method="POST">
+            <button type="submit" class="btn btn-success w-100">Buy Now</button>
+        </form>
+
+        <!-- Reviews Section -->
+        <div class="mt-4">
+            <h2 style="color: #3D875F;">Reviews</h2>
+            <ul class="list-group">
+                {% for review in reviews %}
+                <li class="list-group-item">
+                    <strong>{{ review.user.username }}:</strong> {{ review.content }}
+                </li>
+                {% else %}
+                <li class="list-group-item">No reviews yet.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Add Review Button -->
+            <div class="mt-3 text-center">
+                <a href="{{ url_for('main.add_review', listing_id=listing.listing_id) }}" class="btn btn-secondary">
+                    Add a Review
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

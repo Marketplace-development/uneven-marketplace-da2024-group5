@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History - ViaVia{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #3D875F;">Transaction History</h1>
+    
+    {% if transactions %}
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Listing</th>
+                    <th scope="col">Amount (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ transaction.listing.listing_name }}</td>
+                    <td>{{ transaction.price_transaction }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center text-muted mt-5">No transactions found.</p>
+    {% endif %}
+</div>
+{% endblock %}

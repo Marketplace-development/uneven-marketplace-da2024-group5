@@ -167,19 +167,54 @@ def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
 
-@main.route('/my-purchased-listings')
-def my_purchased_listings():
+
+@main.route('/transactions')
+def transactions():
     if 'user_id' not in session:
-        flash('You need to log in to access your purchased listings.', 'warning')
+        flash('You need to log in to view your transaction history.', 'warning')
         return redirect(url_for('main.login'))
 
-    # Fetch transactions linked to the current user
-    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
-    
-    # Get the listings related to those transactions
-    purchased_listings = [transaction.listing for transaction in user_transactions]
+    # Transactions where the user is the buyer
+    purchased_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
 
-    return render_template('my_purchased_listings.html', listings=purchased_listings)
+    # Transactions where the user is the seller
+    sold_transactions = Transaction.query.join(Listing).filter(Listing.user_id == session['user_id']).all()
+
+    # Mark transactions as 'purchase' or 'sale'
+    combined_transactions = [
+        {'type': 'purchase', 'transaction': t} for t in purchased_transactions
+    ] + [
+        {'type': 'sale', 'transaction': t} for t in sold_transactions
+    ]
+
+    # Sort all transactions by date
+    combined_transactions.sort(key=lambda x: x['transaction'].created_at, reverse=True)
+
+    return render_template('combined_transactions.html', transactions=combined_transactions)
+
+
+@main.route('/bought_transactions')
+def bought_transactions():
+    if 'user_id' not in session:
+        flash('You need to log in to view your transaction history.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
+    return render_template('bought_transactions.html', transactions=user_transactions)
+
+
+@main.route('/sold-transactions')
+def sold_transactions():
+    if 'user_id' not in session:
+        flash('You need to log in to view your sold listings.', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Get listings where the logged-in user is the seller
+    user_sold_transactions = Transaction.query.join(Listing).filter(Listing.user_id == session['user_id']).all()
+
+    return render_template('sold_transactions.html', transactions=user_sold_transactions)
+
+
 
 @main.route('/edit-listing/<int:listing_id>', methods=['GET', 'POST'])
 def edit_listing(listing_id):
@@ -205,17 +240,36 @@ def view_listing(listing_id):
         flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
     
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
+    
     if request.method == 'POST':
         if 'user_id' not in session:
             return redirect(url_for('main.login'))
-        transaction = Transaction(user_id=session['user_id'], listing_id=listing_id,price_transaction=listing.price_listing)
+        
+        buyer = User.query.get(session['user_id'])
+        seller = User.query.get(listing.user_id)
+        
+        if buyer.wallet_balance < listing.price_listing:
+            flash('Insufficient wallet balance to make this purchase.', 'danger')
+            return redirect(url_for('main.view_listing', listing_id=listing_id))
+        
+        # Deduct from buyer and add to seller
+        buyer.wallet_balance -= listing.price_listing
+        seller.wallet_balance += listing.price_listing
+
+        # Record the transaction
+        transaction = Transaction(user_id=buyer.user_id, listing_id=listing_id, price_transaction=listing.price_listing)
         db.session.add(transaction)
+
+        # Commit the changes to the database
         db.session.commit()
-        flash('Purchase successful!', 'success')
-        return redirect(url_for('main.listings'))
+
+        flash('Purchase successful! Your wallet has been debited.', 'success')
+        return render_template('view_listing.html', listing=listing, reviews=reviews)
+
     
-    reviews = Review.query.filter_by(listing_id=listing_id).all()
     return render_template('view_listing.html', listing=listing, reviews=reviews)
+
 
 @main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
 def add_review(listing_id):
@@ -245,7 +299,7 @@ def view_reviews(listing_id):
         return redirect(url_for('main.listings'))
     
     reviews = Review.query.filter_by(listing_id=listing_id).all()
-    return render_template('view_reviews.html', listing=listing, reviews=reviews)
+    return render_template('view_reviews.html', listing_id=listing_id, reviews=reviews)
 
 @main.route('/search', methods=['GET', 'POST'])
 def search():
@@ -256,13 +310,6 @@ def search():
         listings = Listing.query.all()
     return render_template('listings.html', listings=listings)
 
-@main.route('/transactions')
-def transactions():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    
-    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
-    return render_template('transactions.html', transactions=user_transactions)
 
 @main.route('/filter', methods=['GET'])
 def filter_listings():
