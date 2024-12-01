@@ -92,38 +92,71 @@
             <script>
                 const placeInput = document.getElementById('place');
                 const suggestionsList = document.getElementById('place-suggestions');
-            
+
+                let validPlace = false; // Track if the selected place is valid
+                let suggestions = [];  // Keep track of fetched suggestions
+                let isClickingSuggestion = false; // Prevent blur event during click on suggestion
+
                 placeInput.addEventListener('input', () => {
                     const query = placeInput.value.trim();
+                    validPlace = false; // Reset validity when the input changes
                     if (query.length < 3) {
                         suggestionsList.innerHTML = ''; // Clear suggestions if input is too short
                         return;
                     }
-            
+
                     // Fetch suggestions from GeoNames API
                     fetch(`/search_places?q=${query}`)
                         .then(response => response.json())
                         .then(data => {
+                            suggestions = data; // Store fetched suggestions
                             suggestionsList.innerHTML = ''; // Clear previous suggestions
                             data.forEach(place => {
                                 const suggestion = document.createElement('li');
                                 suggestion.textContent = `${place.name}, ${place.country}`;
                                 suggestion.style.cursor = "pointer";
-                                suggestion.addEventListener('click', () => {
+
+                                // Add click event to select suggestion
+                                suggestion.addEventListener('mousedown', () => {
+                                    isClickingSuggestion = true; // Set flag to prevent blur clearing
                                     placeInput.value = `${place.name}, ${place.country}`;
+                                    validPlace = true; // Mark as valid
                                     suggestionsList.innerHTML = ''; // Clear suggestions
                                 });
+
                                 suggestionsList.appendChild(suggestion);
                             });
                         });
                 });
-            
-                // Clear suggestions when input loses focus
+
+                // Prevent blur from clearing suggestions if a suggestion is clicked
                 placeInput.addEventListener('blur', () => {
                     setTimeout(() => {
-                        suggestionsList.innerHTML = '';
-                    }, 100); // Delay to allow click event on suggestion to register
+                        if (!isClickingSuggestion) {
+                            const typedValue = placeInput.value.trim();
+                            validPlace = suggestions.some(
+                                suggestion => `${suggestion.name}, ${suggestion.country}` === typedValue
+                            );
+
+                            // If not valid, clear the input
+                            if (!validPlace && typedValue.length > 0) {
+                                alert("Please select a valid place from the suggestions.");
+                                placeInput.value = ""; // Reset input if invalid
+                            }
+                            suggestionsList.innerHTML = ''; // Clear suggestions
+                        }
+                        isClickingSuggestion = false; // Reset flag
+                    }, 150); // Short delay to allow click to process
                 });
+
+                // Prevent form submission if the place is not valid
+                document.querySelector('form').addEventListener('submit', (e) => {
+                    if (!validPlace) {
+                        e.preventDefault();
+                        alert('Please select a valid place from the suggestions.');
+                    }
+                });
+
             </script>
             
 
