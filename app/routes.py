@@ -176,6 +176,17 @@ def add_listing():
     return render_template('add_listing.html')
 
 
+@main.route('/my_listings')
+def my_listings():
+    if 'user_id' not in session:
+        flash('You need to log in to view your listings.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    user_listings = Listing.query.filter_by(user_id=user_id).all()
+
+    return render_template('my_listings.html', listings=user_listings)
+
 
 @main.route('/listings')
 def listings():
