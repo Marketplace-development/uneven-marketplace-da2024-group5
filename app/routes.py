@@ -593,3 +593,25 @@ def liked_listings():
 
     return render_template('liked_listings.html', listings=liked_listings)
 
+
+
+from flask import request, redirect, url_for, session
+
+@main.before_request
+def store_last_visited_url():
+    # Store the current URL before processing the next request
+    if request.endpoint != 'main.go_back':  # Avoid storing the 'go-back' route itself
+        session['last_page'] = request.url
+
+@main.route('/go-back', methods=['GET'])
+def go_back():
+    # Attempt to get the referrer first
+    previous_page = request.referrer
+
+    # Fallback to session-stored last visited page or index
+    if not previous_page:
+        previous_page = session.get('last_page', url_for('main.index'))
+
+    return redirect(previous_page)
+
+
