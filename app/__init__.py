@@ -24,8 +24,9 @@ def create_app():
         if 'user_id' in session:
             user = db.session.get(User, session['user_id'])
             if user:
-                return {'username': user.username}
-        return {'username': None}
+                wallet_balance = user.wallet_balance if user.wallet_balance is not None else 0
+                return {'username': user.username, 'wallet_balance': wallet_balance}
+        return {'username': None, 'wallet_balance': 0}
 
 
     return app

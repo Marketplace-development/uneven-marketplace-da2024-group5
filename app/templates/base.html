@@ -80,6 +80,14 @@
         footer small {
             color: white; /* Ensure text inside footer remains white for contrast */
         }
+
+        .wallet-info {
+            display: flex;
+            align-items: center; /* Aligns content vertically */
+            margin-right: 15px; /* Space between wallet and profile dropdown */
+            color: white; /* Keeps the text color consistent */
+            font-size: 20px; /* Ensures consistent font size */
+        }
     </style>
 </head>
 <body>
@@ -129,6 +137,9 @@
 
                 <div class="d-flex">
                     {% if username %}
+                        <div class="wallet-info">
+                            Wallet: €{{ wallet_balance }}
+                        </div>
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ url_for('static', filename='images/default picture.jpg') }}" alt="Profile" class="profile-img me-2" >
