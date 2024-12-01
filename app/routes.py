@@ -471,3 +471,125 @@ def update_profile_pic():
     return redirect(url_for('main.account'))
 
 '''
+@main.route('/get_pdf/<int:listing_id>', methods=['GET'])
+def get_pdf(listing_id):
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('You need to log in to access this PDF.', 'warning')
+        return redirect(url_for('main.login'))
+    
+    user_id = session['user_id']
+    
+    # Check if the listing exists
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.listings'))
+    
+    # Check if the user has purchased the listing
+    transaction = Transaction.query.filter_by(user_id=user_id, listing_id=listing_id).first()
+    if not transaction:
+        flash('You need to purchase this listing to access its PDF.', 'warning')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+    
+    # Retrieve the PDF URL from the listing
+    pdf_url = listing.url
+    if not pdf_url:
+        flash('This listing does not have an associated PDF.', 'error')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+    
+    # Redirect to the PDF URL
+    return redirect(pdf_url)
+
+
+@main.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session:
+        flash('You need to log in to edit your profile.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        user.username = request.form.get('username', user.username)
+        user.email = request.form.get('email', user.email)
+        user.phone_number = request.form.get('phone_number', user.phone_number)
+        db.session.commit()
+
+        flash('Profile updated successfully.', 'success')
+        return redirect(url_for('main.account'))
+
+    return render_template('edit_profile.html', user=user)
+
+@main.route('/delete-account', methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        flash('You need to log in to delete your account.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    # Verwijder alle afhankelijkheden (bijv. listings, likes, reviews)
+    Listing.query.filter_by(user_id=user_id).delete()
+    Like.query.filter_by(user_id=user_id).delete()
+    Review.query.filter_by(user_id=user_id).delete()
+    db.session.delete(user)
+    db.session.commit()
+
+    session.pop('user_id', None)
+    flash('Your account has been deleted.', 'success')
+    return redirect(url_for('main.index'))
+
+@main.route('/like/<int:listing_id>', methods=['POST'])
+def like_listing(listing_id):
+    if 'user_id' not in session:
+        flash('You need to log in to like a listing.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    existing_like = Like.query.filter_by(user_id=user_id, listing_id=listing_id).first()
+
+    if existing_like:
+        flash('You already liked this listing.', 'info')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+    # Add a new like
+    new_like = Like(user_id=user_id, listing_id=listing_id)
+    db.session.add(new_like)
+    db.session.commit()
+
+    flash('You liked this listing!', 'success')
+    return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+@main.route('/unlike/<int:listing_id>', methods=['POST'])
+def unlike_listing(listing_id):
+    if 'user_id' not in session:
+        flash('You need to log in to unlike a listing.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    existing_like = Like.query.filter_by(user_id=user_id, listing_id=listing_id).first()
+
+    if not existing_like:
+        flash('You have not liked this listing yet.', 'info')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+    # Remove the like
+    db.session.delete(existing_like)
+    db.session.commit()
+
+    flash('You unliked this listing.', 'success')
+    return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+@main.route('/liked-listings')
+def liked_listings():
+    if 'user_id' not in session:
+        flash('You need to log in to view your liked listings.', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+    liked_listings = Listing.query.join(Like).filter(Like.user_id == user_id).all()
+
+    return render_template('liked_listings.html', listings=liked_listings)
+

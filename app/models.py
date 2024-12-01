@@ -21,6 +21,8 @@ class User(db.Model):
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     notifications = db.relationship('Notification', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
+    likes = db.relationship('Like', backref='user', lazy=True)
+
 
 
 class Listing(db.Model):
@@ -39,6 +41,8 @@ class Listing(db.Model):
     transactions = db.relationship('Transaction', backref='listing', lazy=True)
     reviews = db.relationship('Review', backref='listing', lazy=True)
     notifications = db.relationship('Notification', backref='listing', lazy=True)
+    likes = db.relationship('Like', backref='listing', lazy=True)
+
 
 
 class Transaction(db.Model):
@@ -67,3 +71,15 @@ class Notification(db.Model):
     time_of_notification = db.Column(db.DateTime, default=datetime.utcnow)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+
+
+class Like(db.Model):
+    __tablename__ = 'Like'
+    like_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = db.relationship('User', backref='like', lazy=True)
+    listing = db.relationship('Listing', backref='like', lazy=True)
