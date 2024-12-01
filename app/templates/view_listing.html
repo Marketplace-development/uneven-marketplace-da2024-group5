@@ -34,6 +34,8 @@
         <p><strong>Price:</strong> €{{ listing.price_listing }}</p>
         <p><strong>Description:</strong> {{ listing.description }}</p>
         <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Place:</strong> {{ listing.place }}</p>
+
 
         <!-- Buy Now Button -->
         <form method="POST">

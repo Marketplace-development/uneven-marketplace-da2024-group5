@@ -108,12 +108,26 @@ def add_listing():
             listing_name = request.form.get('listing_name', '').strip()
             description = request.form.get('description', '').strip()
             price = request.form.get('price', '').strip()
+            place = request.form.get('place', '').strip()
             file = request.files.get('file')
 
             # Validate form inputs
-            if not listing_name or not description or not price:
-                flash("All fields are required (name, description, price).", "error")
+            if not listing_name or not description or not price or not place:
+                flash("All fields are required (name, description, price,place).", "error")
                 return redirect(request.url)
+            
+             # Check if place is in the format "place, country"
+            if ',' not in place:
+                flash("Invalid place format. Please select a valid place from the suggestions.", "error")
+                return redirect(request.url)
+            # Validate the place with GeoNames API
+            username = 'bertdr1'  # Replace with your GeoNames username
+            validation_url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={place}&maxRows=1'
+            validation_response = requests.get(validation_url)
+            if validation_response.status_code != 200 or not validation_response.json().get('geonames'):
+                flash("Invalid place. Please select a valid place from the suggestions.", "error")
+                return redirect(request.url)
+            
             
             if not file:
                 flash("A file is required.", "error")
@@ -145,13 +159,14 @@ def add_listing():
                 description=description,
                 price_listing=price,
                 url=file_url,  # Save the file URL
+                place=place,
                 user_id=session['user_id']
             )
             db.session.add(new_listing)  # Add the listing to the session
             db.session.commit()  # Commit the changes to the database
 
             flash("Listing added successfully.", "success")
-            return redirect(url_for('main.listings'))
+            return redirect(url_for('main.add_listing'))
 
         except Exception as e:
             db.session.rollback()  # Roll back any database changes if an error occurs
@@ -166,6 +181,35 @@ def add_listing():
 def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
+
+import requests
+
+@main.route('/search_places', methods=['GET'])
+def search_places():
+    query = request.args.get('q', '')
+    username = 'bertdr1'  # Replace with your GeoNames username
+    if not query:
+        return jsonify([])
+
+    url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={query}&maxRows=10'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        # Extract relevant data
+        suggestions = [
+            {
+                'name': place['name'],
+                'country': place.get('countryName', ''),
+                'lat': place.get('lat'),
+                'lng': place.get('lng')
+            }
+            for place in data.get('geonames', [])
+        ]
+        return jsonify(suggestions)
+    else:
+        return jsonify({'error': 'Failed to fetch places from GeoNames'}), 500
+
 
 
 @main.route('/transactions')

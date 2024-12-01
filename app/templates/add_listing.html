@@ -6,9 +6,9 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div class="container mt-4">
+        <div class="container mt-3">
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -17,6 +17,31 @@
     {% endif %}
 {% endwith %}
 
+
+<style>
+    /* Style the suggestions dropdown */
+    .suggestions {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        width: calc(100% - 20px); /* Match the input field width */
+    }
+
+    .suggestions li {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    .suggestions li:hover {
+        background-color: #f0f0f0;
+    }
+</style>
 
 <!-- Background Image -->
 <div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
@@ -56,6 +81,52 @@
                 <label for="file">Upload PDF:</label>
                 <input type="file" id="file" name="file" accept="application/pdf" required><br><br> 
              </div>
+
+             <div style="position: relative;">
+                <label for="place">Place:</label>
+                <input type="text" id="place" name="place" placeholder="Search for a place..." autocomplete="off" style="width: 100%;">
+                <ul id="place-suggestions" class="suggestions"></ul>
+            </div>
+
+
+            <script>
+                const placeInput = document.getElementById('place');
+                const suggestionsList = document.getElementById('place-suggestions');
+            
+                placeInput.addEventListener('input', () => {
+                    const query = placeInput.value.trim();
+                    if (query.length < 3) {
+                        suggestionsList.innerHTML = ''; // Clear suggestions if input is too short
+                        return;
+                    }
+            
+                    // Fetch suggestions from GeoNames API
+                    fetch(`/search_places?q=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsList.innerHTML = ''; // Clear previous suggestions
+                            data.forEach(place => {
+                                const suggestion = document.createElement('li');
+                                suggestion.textContent = `${place.name}, ${place.country}`;
+                                suggestion.style.cursor = "pointer";
+                                suggestion.addEventListener('click', () => {
+                                    placeInput.value = `${place.name}, ${place.country}`;
+                                    suggestionsList.innerHTML = ''; // Clear suggestions
+                                });
+                                suggestionsList.appendChild(suggestion);
+                            });
+                        });
+                });
+            
+                // Clear suggestions when input loses focus
+                placeInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        suggestionsList.innerHTML = '';
+                    }, 100); // Delay to allow click event on suggestion to register
+                });
+            </script>
+            
+
 
             <!-- Submit Button -->
             <div class="text-end">

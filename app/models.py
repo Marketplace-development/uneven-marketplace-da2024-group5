@@ -32,6 +32,8 @@ class Listing(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    place = db.Column(db.String(100), nullable=True)  # New field for place as a string
+
 
     # Relaties
     transactions = db.relationship('Transaction', backref='listing', lazy=True)
