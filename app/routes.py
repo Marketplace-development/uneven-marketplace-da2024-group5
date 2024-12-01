@@ -318,12 +318,24 @@ def view_listing(listing_id):
 @main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
 def add_review(listing_id):
     if 'user_id' not in session:
+        flash('You need to log in to leave a review.', 'warning')
+
         return redirect(url_for('main.login'))
     
     listing = Listing.query.get(listing_id)
     if not listing:
         flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
+    
+    transaction = Transaction.query.filter_by(
+        user_id=session['user_id'],
+        listing_id=listing_id,
+        status=True  
+    ).first()
+    
+    if not transaction:
+        flash('You can only review listings you have purchased.', 'error')
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
     
     if request.method == 'POST':
         content = request.form['review_text']
