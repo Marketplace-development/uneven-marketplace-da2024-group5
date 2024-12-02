@@ -68,16 +68,16 @@
             {% if listings %}
                 <!-- If listings are available, show them -->
                 {% for listing in listings %}
-                    <div class="listing-item col-md-4 mb-4">
-                        <div class="card" style="border-color: #3D875F;">
-                            <div class="card-body">
-                                <h5 class="card-title" style="color: #3D875F;"><strong>{{ listing.listing_name }}</strong></h5>
-                                <p class="card-text">Price: ${{ listing.price }}</p>
-                                <p class="text-muted">Category: {{ listing.category }}</p>
-                                <p class="text-muted">Posted on {{ listing.date_posted }}</p>
-                            </div>
-                        </div>
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        {% for listing in listings %}
+                            {% set show_location = True %}
+                            {% set show_provider = True %}
+                            {% set show_heart_button = True %}
+                            {% set additional_class = '' %}
+                            {% include 'listing_card.html' %}
+                        {% endfor %}
                     </div>
+
                 {% endfor %}
             {% else %}
                 <!-- If no listings are found, show categories or empty cards -->
