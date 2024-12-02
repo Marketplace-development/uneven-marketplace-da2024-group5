@@ -72,9 +72,14 @@
 
             <!-- Add Review Button -->
             <div class="mt-3 text-center">
+            {% if session.get('user_id') and transaction_exists(session['user_id'], listing.listing_id) %}
                 <a href="{{ url_for('main.add_review', listing_id=listing.listing_id) }}" class="btn btn-secondary">
                     Add a Review
                 </a>
+            {% else %}
+                <p>You can only review listings you have purchased.</p>
+            {% endif %}
+                    
             </div>
         </div>
     </div>

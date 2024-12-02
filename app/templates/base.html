@@ -118,6 +118,8 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">add_Listing</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.my_listings') }}">My Listings</a></li>
+
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -126,7 +128,6 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.my_listings') }}">My Listings</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('main.bought_transactions') }}">bought transactions</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('main.sold_transactions') }}">sold transactions</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('main.transactions') }}">transactions</a></li>

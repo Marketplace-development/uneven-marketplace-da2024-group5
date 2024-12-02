@@ -339,9 +339,8 @@ def add_review(listing_id):
         return redirect(url_for('main.listings'))
     
     transaction = Transaction.query.filter_by(
-        user_id=session['user_id'],
-        listing_id=listing_id,
-        status=True  
+    user_id=session['user_id'],
+    listing_id=listing_id
     ).first()
     
     if not transaction:
@@ -357,6 +356,10 @@ def add_review(listing_id):
         return redirect(url_for('main.view_listing', listing_id=listing_id))
     
     return render_template('add_review.html', listing=listing)
+
+def transaction_exists(user_id, listing_id):
+    return Transaction.query.filter_by(user_id=user_id, listing_id=listing_id).first() is not None
+
 
 @main.route('/reviews/<int:listing_id>')
 def view_reviews(listing_id):
