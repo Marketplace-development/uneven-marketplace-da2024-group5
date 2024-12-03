@@ -16,9 +16,13 @@ def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])  # Haal user info op via user_id
         listings = Listing.query.filter(Listing.user_id != user.user_id).all()  # Fetch listings for logged-in user
+        for listing in listings:
+            listing.price_listing = round(listing.price_listing,2)
         return render_template('index.html', username=user.username, listings=listings)
     # If not logged in, show all listings
     listings = Listing.query.all()
+    for listing in listings:
+        listing.price_listing = round(listing.price_listing,2)
     return render_template('index.html', username=None, listings=listings)
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -195,6 +199,8 @@ def my_listings():
 @main.route('/listings')
 def listings():
     all_listings = Listing.query.all()
+    for listing in all_listings:
+        listing.price_listing = round(listing.price_listing,2)
     return render_template('listings.html', listings=all_listings)
 
 import requests
@@ -298,6 +304,8 @@ def view_listing(listing_id):
     if not listing:
         flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
+    
+    listing.price_listing = round(listing.price_listing,2)
     
     reviews = Review.query.filter_by(listing_id=listing_id).all()
     
