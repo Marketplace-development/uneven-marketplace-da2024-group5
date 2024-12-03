@@ -78,10 +78,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="listing_categorie" class="form-label" style="color: #3D875F;">Category:</label>
-                <input type="text" class="form-control" id="listing_categorie" name="listing_categorie" placeholder="Enter category" required style="border-color: #3D875F;">
+                <label for="listing_categorie" class="form-label">Category:</label>
+                <select class="form-control" id="listing_categorie" name="listing_categorie" required>
+                    <option value="">Kies een categorie...</option>
+                    <option value="avontuur">Avontuur</option>
+                    <option value="natuur">Natuur</option>
+                    <option value="cultuur">Cultuur</option>
+                </select>
             </div>
-
+            
             <div class="mb-3">
                 <label for="file">Upload PDF:</label>
                 <input type="file" id="file" name="file" accept="application/pdf" required><br><br> 
