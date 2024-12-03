@@ -621,6 +621,9 @@ def liked_listings():
     user_id = session['user_id']
     liked_listings = Listing.query.join(Like).filter(Like.user_id == user_id).all()
 
+    for listing in liked_listings:
+        listing.like_count = len(listing.likes)
+
     return render_template('liked_listings.html', listings=liked_listings)
 
 
