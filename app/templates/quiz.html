@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>User Preferences Quiz</title>
+</head>
+<body>
+    <h1>Wat spreekt je meer aan?</h1>
+    <form action="{{ url_for('main.quiz') }}" method="post">
+        <p>Kies een voorkeur voor natuur:</p>
+        <input type="radio" id="natuur_high" name="natuur" value="3">
+        <label for="natuur_high">Hoog</label><br>
+        <input type="radio" id="natuur_medium" name="natuur" value="2">
+        <label for="natuur_medium">Middel</label><br>
+        <input type="radio" id="natuur_low" name="natuur" value="1">
+        <label for="natuur_low">Laag</label><br>
+        
+        <p>Kies een voorkeur voor cultuur:</p>
+        <input type="radio" id="cultuur_high" name="cultuur" value="3">
+        <label for="cultuur_high">Hoog</label><br>
+        <input type="radio" id="cultuur_medium" name="cultuur" value="2">
+        <label for="cultuur_medium">Middel</label><br>
+        <input type="radio" id="cultuur_low" name="cultuur" value="1">
+        <label for="cultuur_low">Laag</label><br>
+
+        <p>Kies een voorkeur voor avontuur:</p>
+        <input type="radio" id="avontuur_high" name="avontuur" value="3">
+        <label for="avontuur_high">Hoog</label><br>
+        <input type="radio" id="avontuur_medium" name="avontuur" value="2">
+        <label for="avontuur_medium">Middel</label><br>
+        <input type="radio" id="avontuur_low" name="avontuur" value="1">
+        <label for="avontuur_low">Laag</label><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

@@ -15,7 +15,16 @@ main = Blueprint('main', __name__)
 def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])  # Haal user info op via user_id
-        listings = Listing.query.filter(Listing.user_id != user.user_id).all()  # Fetch listings for logged-in user
+        
+        # Check of de gebruiker voorkeuren heeft ingesteld
+        if user.preferences and any(user.preferences.values()):
+            # Bepaal de voorkeur met de hoogste score
+            top_preference = max(user.preferences, key=user.preferences.get)
+            # Filter de listings op basis van deze voorkeur
+            listings = Listing.query.filter(Listing.tags.contains(top_preference), Listing.user_id != user.user_id).all()
+        else:
+            # Haal listings op die niet van de gebruiker zijn als er geen voorkeuren zijn ingesteld
+            listings = Listing.query.filter(Listing.user_id != user.user_id).all()
     else:
         # Als gebruiker niet is ingelogd, toon alle listings
         listings = Listing.query.all()
@@ -26,7 +35,6 @@ def index():
         listing.like_count = len(listing.likes)  # Tel aantal likes met de relatie
 
     return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
-
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -652,3 +660,17 @@ def go_back():
         previous_page = session.get('last_page', url_for('main.index'))
 
     return redirect(previous_page)
+
+@main.route('/quiz', methods=['GET', 'POST'])
+def quiz():
+    if request.method == 'POST':
+        user_id = session['user_id']
+        user = User.query.get(user_id)
+        user.preferences = {
+            "natuur": int(request.form['natuur']),
+            "cultuur": int(request.form['cultuur']),
+            "avontuur": int(request.form['avontuur'])
+        }
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    return render_template('quiz.html')
