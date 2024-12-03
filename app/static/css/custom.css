@@ -11,6 +11,13 @@
     color: white !important;
 }
 
+.btn-primary:active {
+    background-color: #1e3d28 !important;  /* Nog donkerder groen bij klik */
+    border-color: #1a3322 !important;      /* Donkerdere randkleur */
+    color: white !important;               /* Tekst blijft wit */
+    transform: scale(0.96);                /* Kleinere schaal om indrukken te simuleren */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Lichte schaduw voor diepte */
+}
 
 /* For outline buttons (if you use outline buttons for "Login") */
 .btn-outline-light {
@@ -38,20 +45,31 @@ a:hover {
     color: white !important;
 }
 
-/* Secondary button with a green border and gray background */
+/* Secondary button with enhanced contrast and green border */
 .btn-secondary {
-    background-color: #6c757d !important; /* Gray color */
-    border-color: #3D875F !important;    /* Green border */
-    color: white !important;             /* White text */
-    border-width: 2px;                   /* Slightly thicker border for emphasis */
-    border-radius: 8px;                  /* Rounded corners */
+    background-color: #f4f4f4 !important;  /* Light gray for better contrast */
+    border-color: #3D875F !important;      /* Green border */
+    color: #3D875F !important;             /* Green text */
+    border-width: 2px;                     /* Slightly thicker border */
+    border-radius: 8px;                    /* Rounded corners */
+    font-weight: bold;                     /* Bold text for emphasis */
+    transition: all 0.3s ease;             /* Smooth transition effect */
 }
 
 /* Hover effect for secondary button */
 .btn-secondary:hover {
-    background-color: #5a6268 !important; /* Darker gray for hover */
-    border-color: #2A5B3D !important;    /* Darker green border on hover */
-    color: white !important;             /* Keep text white */
+    background-color: #3D875F !important;  /* Green background */
+    color: white !important;               /* White text */
+    border-color: #2A5B3D !important;      /* Darker green border */
+}
+
+/* Active state for secondary button */
+.btn-secondary:active {
+    background-color: #2A5B3D !important;  /* Darker green for active state */
+    border-color: #1d3a28 !important;      /* Even darker border */
+    color: white !important;               /* Keep text white */
+    transform: scale(0.96);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 
