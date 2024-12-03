@@ -51,10 +51,12 @@ As a [User], I want to [receive notifications], so that [I am updated on activit
 https://www.figma.com/
 
 => we made the following concepts using figma: 
-We initially developed a smartphone application prototype but later created a second prototype optimized for PC screens, as it was easier to code and run on our laptops.
+We began by developing a prototype for a smartphone application. However, we later created a second prototype optimized for PC screens, as this approach was more practical for coding and testing on our laptops. 
+Eventually, we discovered that using Bootstrap could effectively address the challenge of ensuring compatibility across different devices. 
+Despite this, we chose to include both prototypes in our project to provide comprehensive insight into our development process
 
-    link to figma  app: https://www.figma.com/design/CNVRhfUgGT0jt9BXYxdb3Z/ViaVia?t=e13yYlsNfRfsA2DL-1
-    link to figa website: https://www.figma.com/design/1H1IEsqoBhuFYVQFmsojAB/Untitled?t=XYoykXR5RwmS8Rvv-1
+    link to figma app prototype: https://www.figma.com/design/CNVRhfUgGT0jt9BXYxdb3Z/ViaVia?t=e13yYlsNfRfsA2DL-1
+    link to figa website prototype: https://www.figma.com/design/1H1IEsqoBhuFYVQFmsojAB/Untitled?t=XYoykXR5RwmS8Rvv-1
 
 
 # Database Design
