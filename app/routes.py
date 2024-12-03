@@ -16,14 +16,17 @@ def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])  # Haal user info op via user_id
         listings = Listing.query.filter(Listing.user_id != user.user_id).all()  # Fetch listings for logged-in user
-        for listing in listings:
-            listing.price_listing = round(listing.price_listing,2)
-        return render_template('index.html', username=user.username, listings=listings)
-    # If not logged in, show all listings
-    listings = Listing.query.all()
+    else:
+        # Als gebruiker niet is ingelogd, toon alle listings
+        listings = Listing.query.all()
+
+    # Voeg aantal likes toe en rond prijzen af
     for listing in listings:
-        listing.price_listing = round(listing.price_listing,2)
-    return render_template('index.html', username=None, listings=listings)
+        listing.price_listing = round(listing.price_listing, 2)
+        listing.like_count = len(listing.likes)  # Tel aantal likes met de relatie
+
+    return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
+
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -201,6 +204,7 @@ def listings():
     all_listings = Listing.query.all()
     for listing in all_listings:
         listing.price_listing = round(listing.price_listing,2)
+        listing.like_count = len(listing.likes)
     return render_template('listings.html', listings=all_listings)
 
 import requests

@@ -18,10 +18,11 @@
                 <p class="card-text listing-card-price">€{{ listing.price_listing }}</p>
             </div>
             {% if show_heart_button %}
-            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-center">
+            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-center align-items-center">
                 <button class="btn btn-light" style="border: none;" onclick="likeListing({{ listing.listing_id }})">
-                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart" style="color: #3D875F;"></i>
                 </button>
+                <span style="margin-left: 5px; color: #3D875F; font-weight: bold;">{{ listing.like_count }}</span>
             </div>
             {% endif %}
         </div>
