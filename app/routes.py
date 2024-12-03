@@ -592,25 +592,30 @@ def like_listing(listing_id):
     flash('You liked this listing!', 'success')
     return redirect(url_for('main.view_listing', listing_id=listing_id))
 
+
 @main.route('/unlike/<int:listing_id>', methods=['POST'])
 def unlike_listing(listing_id):
     if 'user_id' not in session:
-        flash('You need to log in to unlike a listing.', 'warning')
+        flash('You need to be logged in to unlike a listing.', 'error')
         return redirect(url_for('main.login'))
-
+    
     user_id = session['user_id']
-    existing_like = Like.query.filter_by(user_id=user_id, listing_id=listing_id).first()
 
-    if not existing_like:
-        flash('You have not liked this listing yet.', 'info')
-        return redirect(url_for('main.view_listing', listing_id=listing_id))
+    # Zoek de like in de database
+    like = Like.query.filter_by(user_id=user_id, listing_id=listing_id).first()
+    if like:
+        db.session.delete(like)
+        db.session.commit()
+        flash('Listing unliked successfully.', 'success')
+    else:
+        flash('You have not liked this listing.', 'error')
 
-    # Remove the like
-    db.session.delete(existing_like)
-    db.session.commit()
+    # Verwerk 'next' parameter
+    next_page = request.args.get('next', url_for('main.index'))  # Default naar de homepagina
+    return redirect(next_page)
 
-    flash('You unliked this listing.', 'success')
-    return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+
 
 @main.route('/liked-listings')
 def liked_listings():
