@@ -135,6 +135,10 @@ def add_listing():
 
             try:
                 price = float(price)  # Convert price to a float
+                if price < 0:   #Check if price is negative
+                    flash("Price cannot be negative.","error")
+                    return redirect(request.url)
+                price = round(price,2)  #Round price to two decimal places
             except ValueError:
                 flash("Price must be a valid number.", "error")
                 return redirect(request.url)
