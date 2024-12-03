@@ -23,7 +23,7 @@
         </div>
 
         <!-- Update Account Info -->
-        <a href="/update-account" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Update Account Info</a>
+        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Edit account info</a>
 
         <!-- Logout Option -->
         <form action="/logout" method="POST" class="mt-4">

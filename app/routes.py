@@ -543,8 +543,7 @@ def get_pdf(listing_id):
     # Redirect to the PDF URL
     return redirect(pdf_url)
 
-
-@main.route('/edit-profile', methods=['GET', 'POST'])
+@main.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     if 'user_id' not in session:
         flash('You need to log in to edit your profile.', 'warning')
