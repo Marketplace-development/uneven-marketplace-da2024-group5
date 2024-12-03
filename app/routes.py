@@ -41,11 +41,11 @@ def register():
         
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
-            flash('Username already registered. You will be redirected to login.', 'register')
-            return redirect(url_for('main.register'))
+            flash('Username already registered. Please login.', 'register')
+            return redirect(url_for('main.login'))  # Redirect naar de login-pagina
         if User.query.filter_by(email=email).first() is not None:
-            flash('Email already registered. You will be redirected to login.', 'register')
-            return redirect(url_for('main.register'))
+            flash('Email already registered. Please login.', 'register')
+            return redirect(url_for('main.login'))  # Redirect naar de login-pagina
         
         # Maak een nieuwe gebruiker aan
         new_user = User(
@@ -58,9 +58,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         session['user_id'] = new_user.user_id  # Gebruik user_id om sessie op te slaan
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.index'))  # Succesvolle registratie, ga naar index
 
     return render_template('register.html')
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
