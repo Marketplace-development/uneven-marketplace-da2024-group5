@@ -11,6 +11,11 @@
         
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" step="0.01" value="{{ listing.price }}" required><br><br>
+        <div class="mb-3">
+            <label for="listing_categorie" class="form-label">Category:</label>
+            <input type="text" class="form-control" id="listing_categorie" name="listing_categorie" placeholder="Enter category" value="{{ listing.listing_categorie }}" required>
+        </div>
+        
         
         <button type="submit">Save Changes</button>
     </form>

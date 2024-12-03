@@ -308,6 +308,7 @@ def edit_listing(listing_id):
     if request.method == 'POST':
         listing.listing_name = request.form['listing_name']
         listing.price_listing = float(request.form['price'])
+        listing.listing_categorie = request.form['listing_categorie']
         db.session.commit()
         return redirect(url_for('main.listings'))
     
