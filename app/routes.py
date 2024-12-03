@@ -627,5 +627,3 @@ def go_back():
         previous_page = session.get('last_page', url_for('main.index'))
 
     return redirect(previous_page)
-
-

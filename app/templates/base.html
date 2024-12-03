@@ -163,6 +163,16 @@
         </div>
     </nav>
 
+    <!-- Buttons Below Navigation Bar -->
+    <div class="container mt-3">
+        <div class="d-flex flex-column align-items-start">
+            <!-- Go to Home Page Button (Placed Above) -->
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary mb-2">Go to Home Page</a>
+            <!-- Go to Previous Page Button -->
+            <a href="{{ url_for('main.go_back') }}" class="btn btn-secondary">Go to Previous Page</a>
+        </div>
+    </div>
+
     <!-- Content Block -->
     <div class="content container mt-4">
         {% block content %}
