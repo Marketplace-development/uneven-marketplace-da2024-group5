@@ -126,10 +126,11 @@ def add_listing():
             price = request.form.get('price', '').strip()
             place = request.form.get('place', '').strip()
             file = request.files.get('file')
+            listing_categorie = request.form.get('listing_categorie', '').strip()  # Nieuwe categorie veld
 
             # Validate form inputs
-            if not listing_name or not description or not price or not place:
-                flash("All fields are required (name, description, price,place).", "error")
+            if not listing_name or not description or not price or not place or not listing_categorie:
+                flash("All fields are required (name, description, price,place, category).", "error")
                 return redirect(request.url)
             
              # Check if place is in the format "place, country"
@@ -180,6 +181,7 @@ def add_listing():
                 price_listing=price,
                 url=file_url,  # Save the file URL
                 place=place,
+                listing_categorie = listing_categorie,
                 user_id=session['user_id']
             )
             db.session.add(new_listing)  # Add the listing to the session

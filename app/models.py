@@ -36,6 +36,7 @@ class Listing(db.Model):
     url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     place = db.Column(db.String(100), nullable=True)  # New field for place as a string
+    listing_categorie = db.Column(db.String(255))
 
 
     # Relaties
