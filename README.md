@@ -34,9 +34,15 @@ To power/develop our platform and deliver a seamless user experience/smooth oper
 
     The use of Flask-SQLAlchemy: Flask-SQLAlchemy is the bridge between our Python code and the database. It simplifies the management of user data, travel itineraries, and reviews with a clean and intuitive way to interact with the database.
 
+    The use of buckets in our database on supabase: Supabase buckets provide a secure and scalable solution for storing and managing files like PDFs on our platform. Each PDF is uploaded to a designated bucket and linked to a specific listing in the database, with the file’s URL securely stored and hidden until a successful purchase is made. Buyers can only access their purchased files through a "Download" button, enabled after transaction verification. Supabase policies and backend validation ensure strict access control, allowing only authenticated and eligible users to retrieve the files. This setup ensures seamless integration, robust security, and a user-friendly experience for both sellers and buyers.
+
     The use of psycopg2-binary: Psycopg2-binary is the key to our connection with the PostgreSQL database. It ensures secure, reliable, and efficient storage and retrieval of essential platform data, forming the backbone of data-driven features.
 
     The use of Bootstrap: Bootstrap ensures the platform looks great on all devices with its responsive, modern design components. From buttons to layouts, it provides a polished user interface that enhances navigation and usability.
+
+    The use of flash en flash errors: In our project, Flash messages are used to provide users with instant feedback about their actions, such as successful form submissions, account updates, or errors during interactions. They help enhance the user experience by delivering clear and concise notifications directly on the interface.
+
+    Flash Errors are specifically employed to alert users about issues, such as invalid input, failed authentication, or incomplete forms. This ensures users understand what went wrong and can take corrective action. Together, these tools improve communication and interactivity, making the platform more intuitive and user-friendly.
 
     The use of Jinja: Jinja powers the dynamic generation of HTML pages by merging server-side logic with templates. It ensures users see customized content like tailored travel suggestions and filtered search results in a visually appealing format.
 
