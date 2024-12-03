@@ -1,24 +1,30 @@
 ### Marketplace Ideation
 
-Platform name: 
+Platform name: ViaVia
 
-Short description: 
+Short description: Our platform is a marketplace where travelers can share their personalized travel plans and tips, offering an alternative to expensive travel agencies. 
+                   The goal is to make travel more affordable, varied, and tailored to each person’s needs. 
+                   This platform is perfect for coming up with ideas for your own group or solo travel. 
+                   It can also help you discover amazing locations you may never have thought of before.
+                   Users can find travel suggestions based on their preferences, whether they want adventure, luxury, culture, relaxation,...
+                   By using the experiences of others, the platform helps offer real, well-planned trips, with the option of local guides for a more personal touch. 
+                   It’s a community-focused approach that values trust, ease, and unique experiences.
 
 # Taxonomy: Business Model
 
-User Type: Person | Organization
-Listing Kind: Good Transfer |Service
-Listing Type: Physical Good | Digital Good | Offline Serviced | Online Serviced
-Frequency: One-Time | Recurring
-Quantity: One | Many
-Price Discovery: Set by Provider | Set by Customer | Set by Market
-Price Calculation: By Quantity | By Feature | Auction | Quote
-Conversation System: Listing Conversation | Transaction Conversation
-Review by: By Customer | By Provider
-Review of: Of Listing | Of Provider
-Trust and Safety: ID Verification | Badges | In-app reporting
-Revenue Stream: Subscription | Commission | Fixed Fee | Listing Fee
-Revenue Source: Customer | Provider
+User Type: Person
+Listing Kind: Good Transfer 
+Listing Type: Digital Good (pdf)
+Frequency: N/A (Not Applicable)
+Quantity: One
+Price Discovery: Set by Provider
+Price Calculation: By Quantity (no feature-based pricing, as our platform does not separate premium listings).
+Conversation System: Transaction Conversation
+Review by: By Customer
+Review of: Of Listing
+Trust and Safety: N/A (Not Applicable)
+Revenue Stream: Commission
+Revenue Source: Provider (Customers use the platform to purchase, but the providers are the ones paying the commission, making them the direct revenue source.)
 
 # Ontology model
 
@@ -26,19 +32,38 @@ Revenue Source: Customer | Provider
 2. Install the OntoUML plugin: https://github.com/OntoUML/ontouml-vp-plugin
 3. Develop a platform-specific ontology: https://model-a-platform.com/applying-the-ontology/
 
+=> see the README.md file for our platform ontology
+
 # User stories
 
-As a [], I want to [], so that []. Prio
-As a [Customer], I want to [buy a product], so that [I can use it]. 2
-As a [provider], I want to [sell a product], so that [I earn money]. 1
+As a [Platform visitor], I want to [register], so that [I become a user] | Prio 1
+As a [User], I want to [login], so that [I can make a transaction/booking]. | Prio 2
+As a [User], I want to [add a listing/itinerary], so that [I can offer/sell itineraries]. | Prio 3
+As a [Platform visitor], I want to [search lsitings/itineraries], so that [I can find itineraries based on my preferences]. | Prio 4
+As a [User], I want to [search lsitings/itineraries], so that [I can buy itineraries]. | Prio 4
+As a [User], I want to [write a review], so that [I can express my feelings]. | Prio 5
+As a [Platform visitor], I want to [read other people's reviews], so that [I know that I can trust the provider and get a qualitative itinerary]. | Prio 5
+As a [User], I want to [contact the provider], so that [I can get extra details of the itinerary]. | Prio 6
+As a [User], I want to [receive notifications], so that [I am updated on activity's]. | Prio 7
 
 # UI Prototype
 
 https://www.figma.com/
 
+=> we made the following concepts using figma: 
+We initially developed a smartphone application prototype but later created a second prototype optimized for PC screens, as it was easier to code and run on our laptops.
+
+    link to figma  app: https://www.figma.com/design/CNVRhfUgGT0jt9BXYxdb3Z/ViaVia?t=e13yYlsNfRfsA2DL-1
+    link to figa website: https://www.figma.com/design/1H1IEsqoBhuFYVQFmsojAB/Untitled?t=XYoykXR5RwmS8Rvv-1
+
+
 # Database Design
 
 https://supabase.com/
+
+In the following link you can find our database design
+=> https://supabase.com/dashboard/project/irclunkbejkxlouvqwxm
+
 
 # Software Development
 
