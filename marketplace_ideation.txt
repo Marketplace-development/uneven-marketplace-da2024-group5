@@ -32,7 +32,8 @@ Revenue Source: Provider (Customers use the platform to purchase, but the provid
 2. Install the OntoUML plugin: https://github.com/OntoUML/ontouml-vp-plugin
 3. Develop a platform-specific ontology: https://model-a-platform.com/applying-the-ontology/
 
-=> see the README.md file for our platform ontology
+=> for our first schema: see GitHub/uneven-marketplace-da2024-group5/app/static/images/Digital Platform Ontology Class Diagram copy.jpg
+=> for our second schema: see GitHub/uneven-marketplace-da2024-group5/app/static/images/Entity-Relationship Diagram (ERD).jpg
 
 # User stories
 

@@ -11,6 +11,7 @@ We did not implement trust and safety features like ID verification, badges, or 
 We considered adding a revenue stream through advertisements, but implementing this proved to be quite complex. Instead, we chose to focus solely on generating revenue through commissions, allowing us to keep our platform simple and streamlined.
 
 To make sure our platform runs: we followed the following steps
+    
     # Create and activate virtual environment
     python -m venv venv        # or python3 on macOS
     source venv/bin/activate   # macOS
@@ -28,6 +29,7 @@ To make sure our platform runs: we followed the following steps
     flask run
 
 To power/develop our platform and deliver a seamless user experience/smooth operation of our platform, we rely on a combination of tools and technologies , including:
+    
     The use of Flask: Flask is the heart of our platform, providing a lightweight yet powerful framework for developing the website. It handles routing, server-side logic, and the integration of various components, ensuring smooth and efficient operation.
 
     The use of Flask-SQLAlchemy: Flask-SQLAlchemy is the bridge between our Python code and the database. It simplifies the management of user data, travel itineraries, and reviews with a clean and intuitive way to interact with the database.
