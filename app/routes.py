@@ -2,7 +2,7 @@
 
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Listing, Transaction, Review, Notification, Like
-from supabase import create_client
+from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
 """
@@ -805,3 +805,18 @@ def filter_listings2():
 
     # Render the template with filtered results
     return render_template('listings.html', listings=filtered_listings)
+
+
+supabase: Client = create_client(supabase_url, supabase_key)
+
+@main.route('/view-pdf/<int:listing_id>')
+def view_pdf(listing_id):
+    listing = Listing.query.get(listing_id)
+    if not listing:
+        return "Listing not found.", 404
+
+    pdf_url = listing.url  # Ensure this contains the correct public URL
+    if not pdf_url:
+        return "No PDF available for this listing.", 404
+
+    return render_template('view_pdf.html', pdf_url=pdf_url)

@@ -59,10 +59,8 @@
         <div class="text-center">
             {% if session.get('user_id') %}
                 {% if transaction_exists %}
-                    <!-- Disabled Download PDF Button -->
-                    <button class="btn btn-secondary w-100" type="button" style="cursor: not-allowed;">
-                        Download PDF
-                    </button>
+                <a href="{{ url_for('main.view_pdf', listing_id=listing.listing_id) }}">View PDF</a>
+
                 {% else %}
                     <!-- Buy Now Button -->
                     <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">

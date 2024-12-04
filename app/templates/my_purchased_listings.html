@@ -12,6 +12,8 @@
                         <div class="card-body">
                             <h1 class="card-title text-primary">{{ listing.listing_name }}</h1>
                             <p class="card-text fs-5">Price: <strong>${{ listing.price_listing }}</strong></p>
+                            
+                            
 
                             <!-- Add Review Button -->
                             <a href="{{ url_for('main.add_review', listing_id=listing.id) }}" class="btn btn-outline-primary w-100">
