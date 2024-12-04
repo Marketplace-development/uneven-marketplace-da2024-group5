@@ -16,26 +16,27 @@
         <!-- Search Bar Section with Green Theme -->
         <div class="row mb-4">
             <div class="col-lg-12">
-                <form class="d-flex align-items-center gap-2">
+                <!-- Form: Added action and method attributes -->
+                <form action="{{ url_for('main.filter_listings') }}" method="get" class="d-flex align-items-center gap-2">
                     <!-- Search Input -->
-                    <input type="text" class="form-control" id="search" placeholder="Search listings..." style="border-color: #3D875F;">
+                    <input type="text" name="search" class="form-control" id="search" placeholder="Search listings..." style="border-color: #3D875F;">
 
                     <!-- Filter by Price Dropdown -->
-                    <select class="form-select" id="filter-price" style="border-color: #3D875F;">
-                        <option value="all">Filter by Price</option>
+                    <select name="filter-price" class="form-select" id="filter-price" style="border-color: #3D875F;">
+                        <option value="">Filter by Price</option>
                         <option value="low-to-high">Low to High</option>
                         <option value="high-to-low">High to Low</option>
                     </select>
 
                     <!-- Filter by Date Dropdown -->
-                    <select class="form-select" id="filter-date" style="border-color: #3D875F;">
-                        <option value="all">Filter by Date</option>
+                    <select name="filter-date" class="form-select" id="filter-date" style="border-color: #3D875F;">
+                        <option value="">Filter by Date</option>
                         <option value="newest">Newest First</option>
                         <option value="oldest">Oldest First</option>
                     </select>
 
-                    <!-- Search Button with Green Theme -->
-                    <button type="button" onclick="filter_listings()" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                    <!-- Search Button -->
+                    <button type="submit" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
                 </form>
             </div>
         </div>

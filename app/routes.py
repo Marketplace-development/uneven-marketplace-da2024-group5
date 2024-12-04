@@ -688,9 +688,8 @@ def quiz():
 def filter_listings():
     # Get filter and search parameters from the request
     search_query = request.args.get('search', '').strip()
-    sort_by_price = request.args.get('filter-price')  # "low_to_high" or "high_to_low"
-    sort_by_date = request.args.get('filter-date')  # "newest_first" or "oldest_first"
-    
+    sort_by_price = request.args.get('filter-price')  # "low-to-high" or "high-to-low"
+    sort_by_date = request.args.get('filter-date')  # "newest" or "oldest"
 
     # Base query
     query = Listing.query
@@ -699,14 +698,25 @@ def filter_listings():
     if search_query:
         query = query.filter(Listing.listing_name.ilike(f"%{search_query}%"))
 
-
     # Apply sorting
     if sort_by_price:
+        # Price sorting takes priority
         if sort_by_price == 'low-to-high':
-            query = query.order_by(Listing.price_listing.asc(), Listing.created_at.desc())
+            if sort_by_date == 'newest':
+                query = query.order_by(Listing.price_listing.asc(), Listing.created_at.desc())
+            elif sort_by_date == 'oldest':
+                query = query.order_by(Listing.price_listing.asc(), Listing.created_at.asc())
+            else:
+                query = query.order_by(Listing.price_listing.asc())
         elif sort_by_price == 'high-to-low':
-            query = query.order_by(Listing.price_listing.desc(), Listing.created_at.desc())
+            if sort_by_date == 'newest':
+                query = query.order_by(Listing.price_listing.desc(), Listing.created_at.desc())
+            elif sort_by_date == 'oldest':
+                query = query.order_by(Listing.price_listing.desc(), Listing.created_at.asc())
+            else:
+                query = query.order_by(Listing.price_listing.desc())
     elif sort_by_date:
+        # Apply date sorting only if price sorting is not specified
         if sort_by_date == 'newest':
             query = query.order_by(Listing.created_at.desc())
         elif sort_by_date == 'oldest':
@@ -717,6 +727,7 @@ def filter_listings():
 
     # Render the listings page with filtered results
     return render_template('index.html', listings=filtered_listings)
+
 
 
 @main.route('/filter_listings2', methods=['GET'])

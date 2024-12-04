@@ -24,29 +24,34 @@
         <!-- Search Bar and Filter Section -->
         <div class="row mb-4">
             <div class="col-lg-12">
-                <form class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
+                <!-- Added `action` and `method` attributes to the form -->
+                <form action="{{ url_for('main.filter_listings2') }}" method="get" class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
                     <!-- Search Bar -->
                     <div class="d-flex flex-column">
                         <label for="search" class="form-label" style="color: #3D875F;">Search Listings:</label>
-                        <input type="text" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
+                        <!-- Added `name` attribute -->
+                        <input type="text" name="search" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
                     </div>
 
                     <!-- Min Price Filter -->
                     <div class="d-flex flex-column">
                         <label for="min-price" class="form-label" style="color: #3D875F;">Min Price:</label>
-                        <input type="number" class="form-control" id="min-price" placeholder="Min Price" style="border-color: #3D875F;">
+                        <!-- Added `name` attribute -->
+                        <input type="number" name="min-price" class="form-control" id="min-price" placeholder="Min Price" style="border-color: #3D875F;">
                     </div>
 
                     <!-- Max Price Filter -->
                     <div class="d-flex flex-column">
                         <label for="max-price" class="form-label" style="color: #3D875F;">Max Price:</label>
-                        <input type="number" class="form-control" id="max-price" placeholder="Max Price" style="border-color: #3D875F;">
+                        <!-- Added `name` attribute -->
+                        <input type="number" name="max-price" class="form-control" id="max-price" placeholder="Max Price" style="border-color: #3D875F;">
                     </div>
 
                     <!-- Category Filter -->
                     <div class="d-flex flex-column">
                         <label for="category" class="form-label" style="color: #3D875F;">Category:</label>
-                        <select class="form-select" id="category" style="border-color: #3D875F;">
+                        <!-- Added `name` attribute -->
+                        <select name="category" class="form-select" id="category" style="border-color: #3D875F;">
                             <option value="all">All Categories</option>
                             <option value="category1">Category 1</option>
                             <option value="category2">Category 2</option>
@@ -57,7 +62,8 @@
                     <!-- Search Button with Green Theme -->
                     <div class="d-flex flex-column">
                         <label class="form-label" style="visibility: hidden;">Search</label>
-                        <button type="button" onclick="filter_listings2()" class="btn btn-primary w-100" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                        <!-- Changed `type` from `button` to `submit` -->
+                        <button type="submit" class="btn btn-primary w-100" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
                     </div>
                 </form>
             </div>
@@ -77,7 +83,6 @@
                             {% include 'listing_card.html' %}
                         {% endfor %}                        
                     </div>
-
                 {% endfor %}
             {% else %}
                 <!-- If no listings are found, show categories or empty cards -->
