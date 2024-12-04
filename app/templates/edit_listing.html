@@ -4,51 +4,37 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="container mt-3">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
-
 <!-- Background Image -->
 <div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
 </div>
 
 <!-- Container -->
-<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 140px); margin-top: -50px; margin-bottom: 1px;">
+<div class="container-fluid d-flex justify-content-center align-items-start" style="min-height: calc(100vh - 120px); margin-top: 30px;">
     <!-- Semi-Transparent Box Wrapper -->
-    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); min-width: 1200px; max-width: 1200px; margin: 0 auto;">
-        
+    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 800px; width: 100%; text-align: center;">
+
         <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-lg-12 text-center">
-                <h2 class="mb-4" style="color: #3D875F;">Edit Listing: {{ listing.listing_name }}</h2>
-            </div>
-        </div>
+        <h2 class="mb-4" style="color: #3D875F;">Edit Listing: {{ listing.listing_name }}</h2>
 
         <!-- Form -->
-        <form method="POST" action="/edit-listing/{{ listing.id }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('main.edit_listing', listing_id=listing.listing_id) }}">
+            <!-- Listing Name -->
             <div class="mb-3">
                 <label for="listing_name" class="form-label" style="color: #3D875F;">Listing Name:</label>
                 <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" required style="border-color: #3D875F;">
             </div>
 
+            <!-- Price -->
             <div class="mb-3">
                 <label for="price" class="form-label" style="color: #3D875F;">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ listing.price_listing }}" required style="border-color: #3D875F;">
+                <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" required style="border-color: #3D875F;">
             </div>
 
+            <!-- Category -->
             <div class="mb-3">
-                <label for="listing_categorie" class="form-label">Category:</label>
-                <select class="form-control" id="listing_categorie" name="listing_categorie" required>
-                    <option value="">Kies een categorie...</option>
+                <label for="listing_categorie" class="form-label" style="color: #3D875F;">Category:</label>
+                <select class="form-control" id="listing_categorie" name="listing_categorie" required style="border-color: #3D875F;">
+                    <option value="">Choose a category...</option>
                     <option value="avontuur" {% if listing.listing_categorie == "avontuur" %}selected{% endif %}>Avontuur</option>
                     <option value="natuur" {% if listing.listing_categorie == "natuur" %}selected{% endif %}>Natuur</option>
                     <option value="cultuur" {% if listing.listing_categorie == "cultuur" %}selected{% endif %}>Cultuur</option>
@@ -62,6 +48,7 @@
         </form>
 
     </div> <!-- End of Content Box -->
+
 </div> <!-- End of Container -->
 
 {% endblock %}
