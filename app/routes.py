@@ -399,8 +399,8 @@ def view_reviews(listing_id):
     reviews = Review.query.filter_by(listing_id=listing_id).all()
     return render_template('view_reviews.html', listing_id=listing_id, reviews=reviews)
 
-@main.route('/search', methods=['GET', 'POST'])
-def search():
+#@main.route('/search', methods=['GET', 'POST'])
+#def search():
     query = request.args.get('query')
     if query:
         listings = Listing.query.filter(Listing.listing_name.ilike(f'%{query}%')).all()
@@ -409,8 +409,8 @@ def search():
     return render_template('listings.html', listings=listings)
 
 
-@main.route('/filter', methods=['GET'])
-def filter_listings():
+#@main.route('/filter', methods=['GET'])
+#def filter_listings():
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
 
@@ -677,3 +677,71 @@ def quiz():
         return redirect(url_for('main.index'))
     return render_template('quiz.html')
 
+
+@main.route('/filter_listings', methods=['GET', 'POST'])
+def filter_listings():
+    # Get filter and search parameters from the request
+    search_query = request.args.get('search', '').strip()
+    sort_by_price = request.args.get('filter-price')  # "low_to_high" or "high_to_low"
+    sort_by_date = request.args.get('filter-date')  # "newest_first" or "oldest_first"
+    
+
+    # Base query
+    query = Listing.query
+
+    # Apply search query (if provided)
+    if search_query:
+        query = query.filter(Listing.listing_name.ilike(f"%{search_query}%"))
+
+
+    # Apply sorting
+    if sort_by_price:
+        if sort_by_price == 'low-to-high':
+            query = query.order_by(Listing.price_listing.asc(), Listing.created_at.desc())
+        elif sort_by_price == 'high-to-low':
+            query = query.order_by(Listing.price_listing.desc(), Listing.created_at.desc())
+    elif sort_by_date:
+        if sort_by_date == 'newest':
+            query = query.order_by(Listing.created_at.desc())
+        elif sort_by_date == 'oldest':
+            query = query.order_by(Listing.created_at.asc())
+
+    # Get the filtered listings
+    filtered_listings = query.all()
+
+    # Render the listings page with filtered results
+    return render_template('index.html', listings=filtered_listings)
+
+
+@main.route('/filter_listings2', methods=['GET'])
+def filter_listings2():
+    # Get filter parameters from the request
+    search_query = request.args.get('search', '').strip()
+    min_price = request.args.get('min-price', type=float)
+    max_price = request.args.get('max-price', type=float)
+    category = request.args.get('category', '').strip()
+
+    # Base query
+    query = Listing.query
+
+    # Apply search query (if provided)
+    if search_query:
+        query = query.filter(Listing.listing_name.ilike(f"%{search_query}%"))
+
+    # Apply minimum price filter (if provided)
+    if min_price is not None:
+        query = query.filter(Listing.price_listing >= min_price)
+
+    # Apply maximum price filter (if provided)
+    if max_price is not None:
+        query = query.filter(Listing.price_listing <= max_price)
+
+    # Apply category filter (if provided and not 'all')
+    if category and category != 'all':
+        query = query.filter(Listing.listing_categorie.ilike(f"%{category}%"))
+
+    # Fetch the filtered listings
+    filtered_listings = query.all()
+
+    # Render the template with filtered results
+    return render_template('listings.html', listings=filtered_listings)
