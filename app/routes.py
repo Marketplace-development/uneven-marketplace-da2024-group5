@@ -145,7 +145,6 @@ def add_listing():
                 flash("Invalid place. Please select a valid place from the suggestions.", "error")
                 return redirect(request.url)
             
-            
             if not file:
                 flash("A file is required.", "error")
                 return redirect(request.url)
@@ -322,42 +321,62 @@ def edit_listing(listing_id):
 
 @main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
 def view_listing(listing_id):
+    # Haal de listing op
     listing = Listing.query.get(listing_id)
     if not listing:
         flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
-    
-    listing.price_listing = round(listing.price_listing,2)
-    
+
+    listing.price_listing = round(listing.price_listing, 2)
+
+    # Haal reviews op
     reviews = Review.query.filter_by(listing_id=listing_id).all()
-    
+
+    # Controleer of de gebruiker is ingelogd en of de listing is gekocht
+    transaction_exists = None
+    if 'user_id' in session:
+        transaction_exists = Transaction.query.filter_by(
+            user_id=session['user_id'], 
+            listing_id=listing_id, 
+            status=True
+        ).first()
+
     if request.method == 'POST':
+        # Controleer of de gebruiker is ingelogd
         if 'user_id' not in session:
+            flash("Please log in to purchase this listing.", 'error')
             return redirect(url_for('main.login'))
-        
+
+        # Haal koper en verkoper op
         buyer = User.query.get(session['user_id'])
         seller = User.query.get(listing.user_id)
-        
+
+        # Controleer of de koper voldoende saldo heeft
         if buyer.wallet_balance < listing.price_listing:
             flash('Insufficient wallet balance to make this purchase.', 'danger')
             return redirect(url_for('main.view_listing', listing_id=listing_id))
-        
+
         # Deduct from buyer and add to seller
         buyer.wallet_balance -= listing.price_listing
         seller.wallet_balance += listing.price_listing
 
         # Record the transaction
-        transaction = Transaction(user_id=buyer.user_id, listing_id=listing_id, price_transaction=listing.price_listing)
+        transaction = Transaction(
+            user_id=buyer.user_id, 
+            listing_id=listing_id, 
+            price_transaction=listing.price_listing,
+            status=True
+        )
         db.session.add(transaction)
 
         # Commit the changes to the database
         db.session.commit()
 
         flash('Purchase successful! Your wallet has been debited.', 'success')
-        return render_template('view_listing.html', listing=listing, reviews=reviews)
+        return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-    
-    return render_template('view_listing.html', listing=listing, reviews=reviews)
+    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists)
+
 
 
 @main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
