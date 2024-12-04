@@ -29,29 +29,29 @@
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-lg-12 text-center">
-                <h2 class="mb-4" style="color: #3D875F;">Edit Listing: {{ listing_name }}</h2>
+                <h2 class="mb-4" style="color: #3D875F;">Edit Listing: {{ listing.listing_name }}</h2>
             </div>
         </div>
 
         <!-- Form -->
-        <form method="POST" action="/edit-listing/{{ listing_id }}" enctype='multipart/form-data'>
+        <form method="POST" action="/edit-listing/{{ listing.id }}" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="listing_name" class="form-label" style="color: #3D875F;">Listing Name:</label>
-                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing_name }}" required style="border-color: #3D875F;">
+                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" required style="border-color: #3D875F;">
             </div>
 
             <div class="mb-3">
                 <label for="price" class="form-label" style="color: #3D875F;">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ price }}" required style="border-color: #3D875F;">
+                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ listing.price_listing }}" required style="border-color: #3D875F;">
             </div>
 
             <div class="mb-3">
                 <label for="listing_categorie" class="form-label">Category:</label>
                 <select class="form-control" id="listing_categorie" name="listing_categorie" required>
                     <option value="">Kies een categorie...</option>
-                    <option value="avontuur" {% if category == "avontuur" %}selected{% endif %}>Avontuur</option>
-                    <option value="natuur" {% if category == "natuur" %}selected{% endif %}>Natuur</option>
-                    <option value="cultuur" {% if category == "cultuur" %}selected{% endif %}>Cultuur</option>
+                    <option value="avontuur" {% if listing.listing_categorie == "avontuur" %}selected{% endif %}>Avontuur</option>
+                    <option value="natuur" {% if listing.listing_categorie == "natuur" %}selected{% endif %}>Natuur</option>
+                    <option value="cultuur" {% if listing.listing_categorie == "cultuur" %}selected{% endif %}>Cultuur</option>
                 </select>
             </div>
 

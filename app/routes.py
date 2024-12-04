@@ -207,6 +207,10 @@ def my_listings():
     user_id = session['user_id']
     user_listings = Listing.query.filter_by(user_id=user_id).all()
 
+    for listing in user_listings:
+        listing.price_listing = f"{round(listing.price_listing, 2):.2f}"  # Format price to 2 decimal places
+        listing.like_count = len(Like.query.filter_by(listing_id=listing.listing_id).all())  # Count likes
+
     return render_template('my_listings.html', listings=user_listings)
 
 
@@ -313,6 +317,8 @@ def edit_listing(listing_id):
         return redirect(url_for('main.listings'))
     
     return render_template('edit_listing.html', listing=listing)
+
+
 
 @main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
 def view_listing(listing_id):

@@ -40,9 +40,12 @@
                         <div class="col-md-2 d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}" class="btn btn-primary" style="width: 80%;">View</a>
                             <a href="{{ url_for('main.edit_listing', listing_id=listing.listing_id) }}" class="btn btn-secondary" style="width: 80%;">Edit</a>
-                            <button class="btn btn-light mt-2" style="border: none;" onclick="likeListing({{ listing.listing_id }})">
-                                <i class="fas fa-heart" style="color: #3D875F;"></i>
-                            </button>
+                            <div class="d-flex align-items-center mt-2">
+                                <span style="display: inline-flex; align-items: center;">
+                                    <i class="fas fa-heart" style="color: #3D875F; font-size: 1.5rem;"></i>
+                                    <span style="margin-left: 5px; font-weight: bold;">{{ listing.like_count }}</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
