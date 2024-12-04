@@ -327,12 +327,13 @@ def view_listing(listing_id):
         flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
 
+    # Ronde de prijs naar twee decimalen
     listing.price_listing = round(listing.price_listing, 2)
 
     # Haal reviews op
     reviews = Review.query.filter_by(listing_id=listing_id).all()
 
-    # Controleer of de gebruiker is ingelogd en of de listing is gekocht
+    # Controleer of de gebruiker is ingelogd en of de listing al is gekocht
     transaction_exists = None
     if 'user_id' in session:
         transaction_exists = Transaction.query.filter_by(
@@ -340,6 +341,11 @@ def view_listing(listing_id):
             listing_id=listing_id, 
             status=True
         ).first()
+
+    # Check if the user is trying to like their own listing
+    can_like = True
+    if 'user_id' in session and listing.user_id == session['user_id']:
+        can_like = False  # Disable like if it's the user's own listing
 
     if request.method == 'POST':
         # Controleer of de gebruiker is ingelogd
@@ -351,16 +357,26 @@ def view_listing(listing_id):
         buyer = User.query.get(session['user_id'])
         seller = User.query.get(listing.user_id)
 
+        # Controleer of de gebruiker probeert zijn eigen listing te kopen
+        if buyer.user_id == seller.user_id:
+            flash("You cannot purchase your own listing.", 'error')
+            return redirect(url_for('main.view_listing', listing_id=listing_id))
+
         # Controleer of de koper voldoende saldo heeft
         if buyer.wallet_balance < listing.price_listing:
             flash('Insufficient wallet balance to make this purchase.', 'danger')
             return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-        # Deduct from buyer and add to seller
+        # Controleer of de listing al is gekocht
+        if transaction_exists:
+            flash('You have already purchased this listing.', 'info')
+            return redirect(url_for('main.view_listing', listing_id=listing_id))
+
+        # Trek saldo af bij koper en voeg toe bij verkoper
         buyer.wallet_balance -= listing.price_listing
         seller.wallet_balance += listing.price_listing
 
-        # Record the transaction
+        # Registreer de transactie
         transaction = Transaction(
             user_id=buyer.user_id, 
             listing_id=listing_id, 
@@ -369,13 +385,15 @@ def view_listing(listing_id):
         )
         db.session.add(transaction)
 
-        # Commit the changes to the database
+        # Commit de wijzigingen in de database
         db.session.commit()
 
         flash('Purchase successful! Your wallet has been debited.', 'success')
         return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists)
+    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists, can_like=can_like)
+
+
 
 
 

@@ -37,25 +37,29 @@
 
         <!-- Like/Unlike Button -->
         {% if session.get('user_id') %}
-        <form method="POST" action="{{ url_for('main.like_listing', listing_id=listing.listing_id) }}">
-            {% set liked = listing.likes|selectattr('user_id', 'equalto', session.user_id)|list|length > 0 %}
-            {% if liked %}
-                <button type="submit" formaction="{{ url_for('main.unlike_listing', listing_id=listing.listing_id) }}" class="btn btn-danger w-100 mb-3">
-                    Unlike
-                </button>
+            {% if listing.user_id != session.user_id %}  <!-- Prevent liking own listing -->
+                <form method="POST" action="{{ url_for('main.like_listing', listing_id=listing.listing_id) }}">
+                    {% set liked = listing.likes|selectattr('user_id', 'equalto', session.user_id)|list|length > 0 %}
+                    {% if liked %}
+                        <button type="submit" formaction="{{ url_for('main.unlike_listing', listing_id=listing.listing_id) }}" class="btn btn-danger w-100 mb-3">
+                            Unlike
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Like</button>
+                    {% endif %}
+                </form>
             {% else %}
-                <button type="submit" class="btn btn-primary w-100 mb-3">Like</button>
+                <p>You cannot like your own listing.</p>  <!-- Prevent owner from liking their own listing -->
             {% endif %}
-        </form>
         {% else %}
-        <p>Please <a href="{{ url_for('main.login') }}">log in</a> to like this listing.</p>
+            <p>Please <a href="{{ url_for('main.login') }}">log in</a> to like this listing.</p>
         {% endif %}
 
         <!-- Buy Now or Download Button -->
         <div class="text-center">
             {% if session.get('user_id') %}
                 {% if transaction_exists %}
-                    <!-- Disabled-Like Download PDF Button -->
+                    <!-- Disabled Download PDF Button -->
                     <button class="btn btn-secondary w-100" type="button" style="cursor: not-allowed;">
                         Download PDF
                     </button>
@@ -70,17 +74,16 @@
             {% endif %}
         </div>
 
-
         <!-- Reviews Section -->
         <div class="mt-4">
             <h2 style="color: #3D875F;">Reviews</h2>
             <ul class="list-group">
                 {% for review in reviews %}
-                <li class="list-group-item">
-                    <strong>{{ review.user.username }}:</strong> {{ review.content }}
-                </li>
+                    <li class="list-group-item">
+                        <strong>{{ review.user.username }}:</strong> {{ review.content }}
+                    </li>
                 {% else %}
-                <li class="list-group-item">No reviews yet.</li>
+                    <li class="list-group-item">No reviews yet.</li>
                 {% endfor %}
             </ul>
 
