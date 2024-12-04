@@ -1,6 +1,4 @@
 <form action="{{ url_for('main.edit_profile') }}" method="POST">
-    <!-- Verwijder de CSRF-tokenregel -->
-    
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" value="{{ user.username }}" required>
     
@@ -9,6 +7,9 @@
     
     <label for="phone_number">Phone Number:</label>
     <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+    
+    <label for="date_of_birth">Date of Birth:</label>
+    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default('', true) }}">
 
     <button type="submit">Update Profile</button>
 </form>
