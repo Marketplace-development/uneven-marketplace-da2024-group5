@@ -9,11 +9,17 @@
             z-index: -1;">
 </div>
 
-<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 140px);">
-    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 800px; margin: 0 auto;">
+<div class="container-fluid d-flex justify-content-center align-items-start" 
+     style="min-height: calc(100vh - 140px); padding-top: 50px;">
+    <div class="content-box p-5" 
+         style="background: rgba(255, 255, 255, 0.85); 
+                border-radius: 10px; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                max-width: 800px; 
+                margin: 0 auto;">
         <h1 class="mb-4" style="color: #3D875F;">Your Wallet</h1>
         <p>Balance: {{ wallet_balance }}</p>
-        <a href="{{ url_for('main.recharge_page') }}" class="btn btn-primary" >
+        <a href="{{ url_for('main.recharge_page') }}" class="btn btn-primary">
             Recharge Wallet
         </a>
     </div>
