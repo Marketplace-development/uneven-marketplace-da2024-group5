@@ -555,12 +555,18 @@ def edit_profile():
         user.username = request.form.get('username', user.username)
         user.email = request.form.get('email', user.email)
         user.phone_number = request.form.get('phone_number', user.phone_number)
+
+        # Update date_of_birth
+        user.date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
+       
+       
         db.session.commit()
 
         flash('Profile updated successfully.', 'success')
         return redirect(url_for('main.account'))
 
     return render_template('edit_profile.html', user=user)
+
 
 @main.route('/delete-account', methods=['POST'])
 def delete_account():
