@@ -22,7 +22,7 @@
                 max-width: 2000px; min-width: 700px; margin: 0 auto;">
 
         <!-- Page Title -->
-        <h2 class="text-center mb-4" style="color: #3D875F;">Liked Listings</h2>
+        <h2 class="text-center mb-4" style="color: #3D875F;">Favourites</h2>
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -98,7 +98,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="text-muted mt-5 text-center">You have not liked any listings yet.</p>
+            <p class="text-muted mt-5 text-center">You have not liked any itineraries yet.</p>
         {% endif %}
 
     </div>

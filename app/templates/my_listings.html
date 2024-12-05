@@ -22,7 +22,7 @@
                 max-width: 2000px; min-width: 700px; margin: 0 auto;">
 
         <!-- Page Title -->
-        <h2 class="text-center mb-4" style="color: #3D875F;">My Listings</h2>
+        <h2 class="text-center mb-4" style="color: #3D875F;">My Itineraries</h2>
 
         <!-- Listings Section -->
         {% if listings %}
@@ -41,6 +41,10 @@
                             <p class="card-text">
                                 <i class="fas fa-map-marker-alt" style="color: #3D875F;"></i> 
                                 {{ listing.place if listing.place else "None" }}
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-tags" style="color: #3D875F;"></i> 
+                                {{ listing.listing_categorie if listing.listing_categorie else "None" }}
                             </p>
                             <p class="card-text">
                                 <i class="fas fa-user" style="color: #3D875F;"></i> 
@@ -77,4 +81,3 @@
 </div>
 
 {% endblock %}
-
