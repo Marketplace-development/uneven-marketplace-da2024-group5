@@ -5,6 +5,9 @@ from .models import db, User, Listing, Transaction, Review, Notification, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
+import re
+from flask import render_template, request, redirect, flash, session, url_for
+from .models import db, User
 """
 request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
 Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
@@ -36,6 +39,8 @@ def index():
 
     return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
 
+
+
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if 'user_id' in session:
@@ -47,7 +52,13 @@ def register():
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
         
-        #Start met de basisvoorkeuren
+        # Validatie van e-mail met accenten
+        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        if not re.match(email_pattern, email):
+            flash('Invalid email address. Please enter a valid email.', 'register')
+            return redirect(url_for('main.register'))
+        
+        # Start met de basisvoorkeuren
         preferences = {"natuur": 0, "cultuur": 0, "avontuur": 0}
 
         # Update voorkeuren op basis van keuze in de eerste vraag
@@ -57,7 +68,7 @@ def register():
         elif preference_choice == "natuur":
             preferences["natuur"] += 1
 
-         # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
+        # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
         photo_preference = request.form.get('photo_preference')
         if photo_preference == "natuur":
             preferences["natuur"] += 1
@@ -615,21 +626,30 @@ def edit_profile():
     user = User.query.get(session['user_id'])
 
     if request.method == 'POST':
-        user.username = request.form.get('username', user.username)
-        user.email = request.form.get('email', user.email)
-        user.phone_number = request.form.get('phone_number', user.phone_number)
+        # Haal de ingevoerde gegevens op
+        username = request.form.get('username', user.username)
+        email = request.form.get('email', user.email)
+        phone_number = request.form.get('phone_number', user.phone_number)
+        date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
 
-        # Update date_of_birth
-        user.date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
-       
-       
+        # Validatie van e-mail met accenten
+        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        if not re.match(email_pattern, email):
+            flash('Invalid email address. Please enter a valid email.', 'error')
+            return redirect(url_for('main.edit_profile'))
+
+        # Update de gebruiker met de nieuwe gegevens
+        user.username = username
+        user.email = email
+        user.phone_number = phone_number
+        user.date_of_birth = date_of_birth
+        
         db.session.commit()
 
         flash('Profile updated successfully.', 'success')
-        return redirect(url_for('main.account'))
+        return redirect(url_for('main.account'))  # Of de gewenste pagina na succes
 
     return render_template('edit_profile.html', user=user)
-
 
 @main.route('/delete-account', methods=['POST'])
 def delete_account():
