@@ -5,14 +5,22 @@
 {% block content %}
 
 <!-- Background Image -->
-<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+<div class="background position-fixed w-100 vh-100 top-0 start-0" 
+     style="background-image: url('/static/images/green road.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            z-index: -1;">
 </div>
 
-<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 1px;">
-
+<div class="container-fluid d-flex justify-content-center align-items-center" 
+     style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 1px;">
 
     <!-- Semi-Transparent Box Wrapper -->
-    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 2000px; margin: 0 auto;">
+    <div class="content-box p-5" 
+         style="background: rgba(255, 255, 255, 0.85); 
+                border-radius: 10px; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                max-width: 2000px; margin: 0 auto;">
         
         <!-- Title Section -->
         <div class="row mb-4">
@@ -24,111 +32,113 @@
         <!-- Search Bar and Filter Section -->
         <div class="row mb-4">
             <div class="col-lg-12">
-                <!-- Added `action` and `method` attributes to the form -->
-                <form action="{{ url_for('main.filter_listings2') }}" method="get" class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
+                <!-- Search and Filter Form -->
+                <form action="{{ url_for('main.filter_listings2') }}" method="get" 
+                      class="d-flex align-items-end gap-3 flex-wrap justify-content-center">
                     <!-- Search Bar -->
                     <div class="d-flex flex-column">
                         <label for="search" class="form-label" style="color: #3D875F;">Search Listings:</label>
-                        <!-- Added `name` attribute -->
-                        <input type="text" name="search" class="form-control" id="search" placeholder="Search Listings..." style="border-color: #3D875F;">
+                        <input type="text" name="search" class="form-control" id="search" 
+                               placeholder="Search Listings..." style="border-color: #3D875F;">
                     </div>
-
-                    <!-- Min Price Filter -->
+                    <!-- Min Price -->
                     <div class="d-flex flex-column">
                         <label for="min-price" class="form-label" style="color: #3D875F;">Min Price:</label>
-                        <!-- Added `name` attribute -->
-                        <input type="number" name="min-price" class="form-control" id="min-price" placeholder="Min Price" style="border-color: #3D875F;">
+                        <input type="number" name="min-price" class="form-control" id="min-price" 
+                               placeholder="Min Price" style="border-color: #3D875F;">
                     </div>
-
-                    <!-- Max Price Filter -->
+                    <!-- Max Price -->
                     <div class="d-flex flex-column">
                         <label for="max-price" class="form-label" style="color: #3D875F;">Max Price:</label>
-                        <!-- Added `name` attribute -->
-                        <input type="number" name="max-price" class="form-control" id="max-price" placeholder="Max Price" style="border-color: #3D875F;">
+                        <input type="number" name="max-price" class="form-control" id="max-price" 
+                               placeholder="Max Price" style="border-color: #3D875F;">
                     </div>
-
                     <!-- Category Filter -->
                     <div class="d-flex flex-column">
                         <label for="category" class="form-label" style="color: #3D875F;">Category:</label>
-                        <!-- Added `name` attribute -->
-                        <select name="category" class="form-select" id="category" style="border-color: #3D875F;">
+                        <select name="category" class="form-select" id="category" 
+                                style="border-color: #3D875F;">
                             <option value="all">All Categories</option>
                             <option value="category1">Category 1</option>
                             <option value="category2">Category 2</option>
                             <option value="category3">Category 3</option>
                         </select>
                     </div>
-
-                    <!-- Search Button with Green Theme -->
+                    <!-- Search Button -->
                     <div class="d-flex flex-column">
                         <label class="form-label" style="visibility: hidden;">Search</label>
-                        <!-- Changed `type` from `button` to `submit` -->
-                        <button type="submit" class="btn btn-primary w-100" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
+                        <button type="submit" class="btn btn-primary w-100" 
+                                style="background-color: #3D875F; border-color: #3D875F;">
+                            Search
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Listings and Categories Section -->
+        <!-- Listings Section -->
         <div class="row mt-4">
             {% if listings %}
-                <!-- If listings are available, show them -->
+            <!-- If listings are available, display them -->
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for listing in listings %}
-                    <div class="row row-cols-1 row-cols-md-3 g-4">
-                        {% for listing in listings %}
-                            {% set show_location = True %}
-                            {% set show_provider = True %}
-                            {% set show_heart_button = True %}
-                            {% set additional_class = '' %}
-                            {% include 'listing_card.html' %}
-                        {% endfor %}                        
-                    </div>
-                {% endfor %}
-            {% else %}
-                <!-- If no listings are found, show categories or empty cards -->
-                <h3 class="text-center mb-4" style="color: #3D875F;">Explore Categories</h3>
-                <div class="categories row mt-4">
-                    <!-- Example Categories (you can adjust these as needed) -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="border-color: #3D875F;">
-                            <div class="card-body text-center">
-                                <h5 class="card-title" style="color: #3D875F;">Category 1</h5>
-                                <p class="text-muted">Explore amazing listings in this category.</p>
+                <div class="col">
+                    <!-- Make the entire card clickable -->
+                    <a href="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}" 
+                       class="text-decoration-none" 
+                       style="color: inherit;">
+                        <div class="card h-100" 
+                             style="border: 1px solid #3D875F; 
+                                    border-radius: 15px; 
+                                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                            <div class="card-body">
+                                <h5 class="card-title text-center" 
+                                    style="color: #3D875F; 
+                                           font-size: 1.5rem; 
+                                           font-weight: bold;">
+                                    {{ listing.listing_name }}
+                                </h5>
+                                <p class="card-text text-center">
+                                    <i class="fas fa-map-marker-alt" style="color: #3D875F;"></i> 
+                                    {{ listing.place if listing.place else "None" }}
+                                </p>
+                                <p class="card-text text-center">
+                                    <i class="fas fa-tags" style="color: #3D875F;"></i> 
+                                    {{ listing.listing_categorie if listing.listing_categorie else "None" }}
+                                </p>
+                                <p class="card-text text-center">
+                                    <i class="fas fa-user" style="color: #3D875F;"></i> 
+                                    {{ listing.user.username }}
+                                </p>
+                                <p class="card-text text-center" 
+                                   style="color: #3D875F; 
+                                          font-size: 1.2rem; 
+                                          font-weight: bold;">
+                                    €{{ listing.price_listing }}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-light" style="border: none;" 
+                                        onclick="likeListing({{ listing.listing_id }})">
+                                    <i class="fas fa-heart" style="color: #3D875F;"></i>
+                                </button>
+                                <span style="margin-left: 5px; color: #3D875F; font-weight: bold;">
+                                    {{ listing.like_count }}
+                                </span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="border-color: #3D875F;">
-                            <div class="card-body text-center">
-                                <h5 class="card-title" style="color: #3D875F;">Category 2</h5>
-                                <p class="text-muted">Find unique listings for this category.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="border-color: #3D875F;">
-                            <div class="card-body text-center">
-                                <h5 class="card-title" style="color: #3D875F;">Category 3</h5>
-                                <p class="text-muted">Find unique listings for this category.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Empty card to maintain the layout even if no content -->
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="border: 2px dashed #3D875F;">
-                            <div class="card-body text-center">
-                                <p class="text-muted">No listings available. Be the first to add something here!</p>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- No listings found -->
+            <p class="text-center mt-5" style="color: #3D875F;">No listings found. Be the first to add one!</p>
             {% endif %}
         </div>
 
     </div> <!-- End of Content Box -->
 
 </div>
+
 {% endblock %}
