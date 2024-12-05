@@ -21,7 +21,7 @@ def index():
             # Bepaal de voorkeur met de hoogste score
             top_preference = max(user.preferences, key=user.preferences.get)
             # Filter de listings op basis van deze voorkeur
-            listings = Listing.query.filter(Listing.tags.contains(top_preference), Listing.user_id != user.user_id).all()
+            listings = Listing.query.filter(Listing.listing_categorie.contains(top_preference), Listing.user_id != user.user_id).all()
         else:
             # Haal listings op die niet van de gebruiker zijn als er geen voorkeuren zijn ingesteld
             listings = Listing.query.filter(Listing.user_id != user.user_id).all()
@@ -47,6 +47,25 @@ def register():
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
         
+        #Start met de basisvoorkeuren
+        preferences = {"natuur": 0, "cultuur": 0, "avontuur": 0}
+
+        # Update voorkeuren op basis van keuze in de eerste vraag
+        preference_choice = request.form.get('preference')
+        if preference_choice == "cultuur":
+            preferences["cultuur"] += 1
+        elif preference_choice == "natuur":
+            preferences["natuur"] += 1
+
+         # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
+        photo_preference = request.form.get('photo_preference')
+        if photo_preference == "natuur":
+            preferences["natuur"] += 1
+        elif photo_preference == "avontuur":
+            preferences["avontuur"] += 1
+        elif photo_preference == "cultuur":
+            preferences["cultuur"] += 1
+
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
             flash('Username already registered. Please login.', 'register')
@@ -60,7 +79,8 @@ def register():
             username=username,
             email=email,
             date_of_birth=date_of_birth,
-            phone_number=phone_number
+            phone_number=phone_number,
+            preferences=preferences
         )
         
         db.session.add(new_user)

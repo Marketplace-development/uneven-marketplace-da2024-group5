@@ -37,26 +37,26 @@
         <form action="{{ url_for('main.edit_profile') }}" method="POST">
             <!-- Username Field -->
             <div class="mb-3">
-                <label for="username" class="form-label" style="color: #3D875F;">Username:</label>
+                <label for="username" class="form-label" style="color: #3D875F;">Username: <span style="color: red;">*</span></label>
                 <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required style="border-color: #3D875F;">
             </div>
 
             <!-- Email Field -->
             <div class="mb-3">
-                <label for="email" class="form-label" style="color: #3D875F;">Email:</label>
+                <label for="email" class="form-label" style="color: #3D875F;">Email: <span style="color: red;">*</span></label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required style="border-color: #3D875F;">
+            </div>
+
+            <!-- Date of Birth Field -->
+            <div class="mb-3">
+                <label for="date_of_birth" class="form-label" style="color: #3D875F;">Date of Birth: <span style="color: red;">*</span></label>
+                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default('', true) }}" required style="border-color: #3D875F;">
             </div>
 
             <!-- Phone Number Field -->
             <div class="mb-3">
                 <label for="phone_number" class="form-label" style="color: #3D875F;">Phone Number:</label>
                 <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}" style="border-color: #3D875F;">
-            </div>
-
-            <!-- Date of Birth Field -->
-            <div class="mb-3">
-                <label for="date_of_birth" class="form-label" style="color: #3D875F;">Date of Birth:</label>
-                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default('', true) }}" style="border-color: #3D875F;">
             </div>
 
             <!-- Submit Button -->

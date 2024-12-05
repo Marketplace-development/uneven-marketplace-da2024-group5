@@ -34,17 +34,17 @@
         <!-- Registration Form -->
         <form action="/register" method="POST">
             <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
+                <label for="username" class="form-label">Username: <span style="color: red;">*</span></label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Email:</label>
+                <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
 
             <div class="mb-3">
-                <label for="dob" class="form-label">Date of Birth:</label>
+                <label for="dob" class="form-label">Date of Birth: <span style="color: red;">*</span></label>
                 <input type="date" class="form-control" id="dob" name="date_of_birth" required>
             </div>
 
@@ -53,27 +53,27 @@
                 <input type="tel" class="form-control" id="phone" name="phone_number">
             </div>
 
-<!-- Preferences Quiz -->
-<div class="preferences-quiz mt-4">
-    <h3 class="text-center" style="color: #2A5B3D;">Voorkeurenquiz</h3>
-    <p>Hou je meer van een vakantie in een grote stad of van een rustigere plaats zoals een huisje aan een meer tussen de bergen?</p>
-    <div>
-        <input type="radio" id="city" name="preference" value="cultuur">
-        <label for="city">Grote stad</label><br>
-        <input type="radio" id="nature" name="preference" value="natuur">
-        <label for="nature">Huisje aan een meer tussen de bergen</label><br>
-    </div>
+            <!-- Preferences Quiz -->
+            <div class="preferences-quiz mt-4">
+                <h3 class="text-center" style="color: #2A5B3D;">Voorkeurenquiz</h3>
+                <p>Hou je meer van een vakantie in een grote stad of van een rustigere plaats zoals een huisje aan een meer tussen de bergen?</p>
+                <div>
+                    <input type="radio" id="city" name="preference" value="cultuur" required>
+                    <label for="city">Grote stad</label><br>
+                    <input type="radio" id="nature" name="preference" value="natuur">
+                    <label for="nature">Huisje aan een meer tussen de bergen</label><br>
+                </div>
 
-    <p>Kies een foto die je het meest aanspreekt:</p>
-    <div>
-        <input type="radio" id="beach" name="photo_preference" value="natuur">
-        <label for="beach"><img src="/static/images/portuguese_coast.jpg" alt="Strand" style="width:100px;"></label><br>   
-        <input type="radio" id="mountain" name="photo_preference" value="avontuur">
-        <label for="mountain"><img src="/static/images/berg.jpg" alt="Berg" style="width:100px;"></label><br>
-        <input type="radio" id="city_photo" name="photo_preference" value="cultuur">
-        <label for="city_photo"><img src="/static/images/stad.jpg" alt="Stad" style="width:100px;"></label><br>
-    </div>
-</div>
+                <p>Kies een foto die je het meest aanspreekt:</p>
+                <div>
+                    <input type="radio" id="beach" name="photo_preference" value="natuur" required>
+                    <label for="beach"><img src="/static/images/portuguese_coast.jpg" alt="Strand" style="width:100px;"></label><br>   
+                    <input type="radio" id="mountain" name="photo_preference" value="avontuur">
+                    <label for="mountain"><img src="/static/images/berg.jpg" alt="Berg" style="width:100px;"></label><br>
+                    <input type="radio" id="city_photo" name="photo_preference" value="cultuur">
+                    <label for="city_photo"><img src="/static/images/stad.jpg" alt="Stad" style="width:100px;"></label><br>
+                </div>
+            </div>
             
             <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
@@ -84,4 +84,5 @@
     </div>
 </div>
 {% endblock %}
+
 
