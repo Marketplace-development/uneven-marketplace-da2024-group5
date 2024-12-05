@@ -67,10 +67,14 @@
                             <p class="card-text" style="color: #3D875F; font-weight: bold; font-size: 18px;">
                                 €{{ listing.price_listing }}
                             </p>
-                            <!-- Aantal likes -->
+                            <!-- Aantal likes en gemiddelde rating -->
                             <p class="card-text" style="color: #3D875F; font-size: 16px;">
                                 <i class="fas fa-heart" style="color: #3D875F;"></i> 
                                 {{ listing.like_count }} like{{ listing.like_count != 1 and 's' or '' }}
+                                <span class="ms-4">
+                                    <i class="fas fa-star" style="color: #FFD700;"></i> 
+                                    {{ listing.average_rating if listing.average_rating else "No ratings" }}
+                                </span>
                             </p>
                         </div>
                         <!-- Buttons Section -->

@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class="container mt-3" style="max-width: 600px;">
@@ -44,6 +45,14 @@
         <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
         <p><strong>Place:</strong> {{ listing.place if listing.place else "None" }}</p>
         <p><strong>Category:</strong> {{ listing.listing_categorie if listing.listing_categorie else "None" }}</p>
+        <p><strong>Likes:</strong> 
+            <i class="fas fa-heart" style="color: #3D875F;"></i> 
+            {{ listing.like_count }}
+        </p>
+        <p><strong>Rating:</strong> 
+            <i class="fas fa-star" style="color: #FFD700;"></i> 
+            {{ listing.average_rating if listing.average_rating else "No ratings" }}
+        </p>
 
         <!-- Like/Unlike and Buy Buttons Section -->
         <div class="text-center mt-3">
@@ -97,6 +106,8 @@
                 {% if session.get('user_id') %}
                     {% if listing.user_id == session.user_id %}
                         <p>You cannot review your own listing.</p>
+                    {% elif has_reviewed %}
+                        <p>You have already reviewed this listing.</p>
                     {% elif transaction_exists %}
                         <a href="{{ url_for('main.add_review', listing_id=listing.listing_id) }}" class="btn btn-secondary">
                             Add a Review

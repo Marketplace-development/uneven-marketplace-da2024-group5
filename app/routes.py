@@ -18,24 +18,31 @@ main = Blueprint('main', __name__)
 def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])  # Haal user info op via user_id
-        
+
         # Check of de gebruiker voorkeuren heeft ingesteld
         if user.preferences and any(user.preferences.values()):
-            # Bepaal de voorkeur met de hoogste score
             top_preference = max(user.preferences, key=user.preferences.get)
-            # Filter de listings op basis van deze voorkeur
-            listings = Listing.query.filter(Listing.listing_categorie.contains(top_preference), Listing.user_id != user.user_id).all()
+            listings = Listing.query.filter(
+                Listing.listing_categorie.contains(top_preference), 
+                Listing.user_id != user.user_id
+            ).all()
         else:
-            # Haal listings op die niet van de gebruiker zijn als er geen voorkeuren zijn ingesteld
             listings = Listing.query.filter(Listing.user_id != user.user_id).all()
     else:
-        # Als gebruiker niet is ingelogd, toon alle listings
         listings = Listing.query.all()
 
-    # Voeg aantal likes toe en rond prijzen af
+    # Voeg aantal likes, gemiddelde rating en afgeronde prijzen toe
     for listing in listings:
         listing.price_listing = round(listing.price_listing, 2)
-        listing.like_count = len(listing.likes)  # Tel aantal likes met de relatie
+        listing.like_count = len(listing.likes)  # Tel aantal likes
+        
+        # Bereken gemiddelde rating, negeer None ratings
+        reviews = listing.reviews
+        valid_ratings = [review.rating for review in reviews if review.rating is not None]
+        if valid_ratings:
+            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        else:
+            listing.average_rating = None
 
     return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
 
@@ -240,6 +247,14 @@ def my_listings():
         listing.price_listing = f"{round(listing.price_listing, 2):.2f}"  # Format price to 2 decimal places
         listing.like_count = len(Like.query.filter_by(listing_id=listing.listing_id).all())  # Count likes
 
+        # Bereken gemiddelde rating, negeer None ratings
+        reviews = Review.query.filter_by(listing_id=listing.listing_id).all()
+        valid_ratings = [review.rating for review in reviews if review.rating is not None]
+        if valid_ratings:
+            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        else:
+            listing.average_rating = None  # Geen ratings beschikbaar
+
     return render_template('my_listings.html', listings=user_listings)
 
 
@@ -247,8 +262,17 @@ def my_listings():
 def listings():
     all_listings = Listing.query.all()
     for listing in all_listings:
-        listing.price_listing = round(listing.price_listing,2)
-        listing.like_count = len(listing.likes)
+        listing.price_listing = round(listing.price_listing, 2)
+        listing.like_count = len(listing.likes)  # Tel het aantal likes
+        
+        # Bereken gemiddelde rating, negeer None ratings
+        reviews = listing.reviews
+        valid_ratings = [review.rating for review in reviews if review.rating is not None]
+        if valid_ratings:
+            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        else:
+            listing.average_rating = None  # Geen ratings beschikbaar
+    
     return render_template('listings.html', listings=all_listings)
 
 import requests
@@ -349,7 +373,7 @@ def edit_listing(listing_id):
 
 
 
-@main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
+@main.route('/listing/<int:listing_id>', methods=['GET', 'POST']) 
 def view_listing(listing_id):
     # Haal de listing op
     listing = Listing.query.get(listing_id)
@@ -360,19 +384,32 @@ def view_listing(listing_id):
     # Ronde de prijs naar twee decimalen
     listing.price_listing = round(listing.price_listing, 2)
 
-    # Haal reviews op
+    # Bereken het aantal likes
+    listing.like_count = len(listing.likes)
+
+    # Bereken gemiddelde rating, negeer None ratings
     reviews = Review.query.filter_by(listing_id=listing_id).all()
+    valid_ratings = [review.rating for review in reviews if review.rating is not None]
+    if valid_ratings:
+        listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+    else:
+        listing.average_rating = None
 
     # Controleer of de gebruiker is ingelogd en of de listing al is gekocht
     transaction_exists = None
+    has_reviewed = False
     if 'user_id' in session:
+        user_id = session['user_id']
         transaction_exists = Transaction.query.filter_by(
-            user_id=session['user_id'], 
+            user_id=user_id, 
             listing_id=listing_id, 
             status=True
         ).first()
 
-    # Check if the user is trying to like their own listing
+        # Controleer of de gebruiker al een review heeft toegevoegd
+        has_reviewed = Review.query.filter_by(user_id=user_id, listing_id=listing_id).first() is not None
+
+    # Controleer of de gebruiker zijn eigen listing probeert te liken
     can_like = True
     if 'user_id' in session and listing.user_id == session['user_id']:
         can_like = False  # Disable like if it's the user's own listing
@@ -421,9 +458,7 @@ def view_listing(listing_id):
         flash('Purchase successful! Your wallet has been debited.', 'success')
         return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists, can_like=can_like)
-
-
+    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists, can_like=can_like, has_reviewed=has_reviewed)
 
 
 
@@ -753,7 +788,15 @@ def liked_listings():
 
     for listing in liked_listings:
         listing.like_count = len(listing.likes)
-        listing.price_listing = round(listing.price_listing,2)
+        listing.price_listing = round(listing.price_listing, 2)
+        
+        # Bereken gemiddelde rating, negeer None ratings
+        reviews = listing.reviews
+        valid_ratings = [review.rating for review in reviews if review.rating is not None]
+        if valid_ratings:
+            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        else:
+            listing.average_rating = None  # Geen ratings beschikbaar
 
     return render_template('liked_listings.html', listings=liked_listings)
 
