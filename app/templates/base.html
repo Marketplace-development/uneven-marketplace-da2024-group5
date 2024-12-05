@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
     
@@ -21,7 +20,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: white; /* White background color */
+            background-color: white;
         }
 
         .content {
@@ -29,7 +28,7 @@
         }
 
         .navbar {
-            background-color: #3D875F; /* Consistent green color */
+            background-color: #3D875F;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 1);
             padding: 1rem;
         }
@@ -41,21 +40,21 @@
         }
 
         .navbar-nav .nav-link {
-            font-size: 20px; 
+            font-size: 20px;
             padding: 10px 15px;
             color: white !important;
             font-weight: 500;
         }
 
         .navbar .dropdown-toggle {
-            font-size: 20px; /* Increase font size for the username dropdown toggle */
-            font-weight: bold; /* Make it a bit more prominent if needed */
-            color: white !important; /* Ensures the color stays consistent with other links */
+            font-size: 20px;
+            font-weight: bold;
+            color: white !important;
         }
 
         .dropdown-menu .dropdown-item {
-            font-size: 18px; /* Increase font size for dropdown items */
-            padding: 8px 16px; /* Add padding for more comfortable clicking */
+            font-size: 18px;
+            padding: 8px 16px;
         }
 
         .navbar-nav .nav-link:hover {
@@ -63,31 +62,22 @@
         }
 
         .profile-img {
-            width: 48px; /* Adjust the width to make it larger */
-            height: 48px; /* Adjust the height to make it larger */
-            object-fit: cover; /* Ensures the content is cropped to fill the container */
-            object-position: center; /* Keeps the focus in the middle of the image */
-            border-radius: 50%; /* Ensures the image remains a perfect circle */
-            margin-right: 10px; /* Adds space between the image and the username */
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 50%;
+            margin-right: 10px;
         }
 
-
         footer {
-            background-color: #3D875F; /* Matching blue color for footer */
-            color: white; /* White text for contrast */
-            padding: 10px 0; /* Add some padding to the footer */
+            background-color: #3D875F;
+            color: white;
+            padding: 10px 0;
         }
 
         footer small {
-            color: white; /* Ensure text inside footer remains white for contrast */
-        }
-
-        .wallet-info {
-            display: flex;
-            align-items: center; /* Aligns content vertically */
-            margin-right: 15px; /* Space between wallet and profile dropdown */
-            color: white; /* Keeps the text color consistent */
-            font-size: 20px; /* Ensures consistent font size */
+            color: white;
         }
     </style>
 </head>
@@ -109,45 +99,40 @@
                 <!-- Default Navbar Content -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.listings') }}">Listings</a>
+                        <a class="nav-link" href="{{ url_for('main.listings') }}">All Itineraries</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Your Listings
+                            Itinerary Hub
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">add_Listing</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.liked_listings') }}">Liked Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.my_listings') }}">My Listings</a></li>
-
+                            <li><a class="dropdown-item" href="{{ url_for('main.add_listing') }}">Add Itinerary</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.liked_listings') }}">Favourites</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.my_listings') }}">My Itineraries</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Past Listings
+                            Transactions
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('main.listings') }}">Listings</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.bought_transactions') }}">bought transactions</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.sold_transactions') }}">sold transactions</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.transactions') }}">transactions</a></li>
-                            
+                            <li><a class="dropdown-item" href="{{ url_for('main.bought_transactions') }}">Bought Itineraries</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.sold_transactions') }}">Sold Itineraries</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.transactions') }}">Transactions</a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.wallet') }}">Wallet</a>
                     </li>
                 </ul>
 
-                <div class="d-flex">
+                <div class="d-flex align-items-center">
                     {% if username %}
-                        <div class="wallet-info">
+                        <!-- Wallet Button -->
+                        <a href="{{ url_for('main.wallet') }}" class="btn btn-outline-light me-3">
                             Wallet: €{{ wallet_balance }}
-                        </div>
+                        </a>
+                        <!-- Profile Dropdown -->
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ url_for('static', filename='images/default picture.jpg') }}" alt="Profile" class="profile-img me-2" >
+                                <img src="{{ url_for('static', filename='images/default picture.jpg') }}" alt="Profile" class="profile-img me-2">
                                 {{ username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
@@ -168,9 +153,7 @@
     <!-- Buttons Below Navigation Bar -->
     <div class="container mt-3">
         <div class="d-flex flex-column align-items-start">
-            <!-- Go to Home Page Button (Placed Above) -->
             <a href="{{ url_for('main.index') }}" class="btn btn-primary mb-2">Go to Home Page</a>
-            <!-- Go to Previous Page Button -->
             <a href="{{ url_for('main.go_back') }}" class="btn btn-secondary">Go to Previous Page</a>
         </div>
     </div>
@@ -188,9 +171,6 @@
             <small>&copy; {{ current_year if current_year else "2024" }} ViaVia. All rights reserved.</small>
         </div>
     </footer>
-    
-    
-    
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
