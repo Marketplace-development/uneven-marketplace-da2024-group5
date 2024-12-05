@@ -877,6 +877,22 @@ def filter_listings():
     # Get the filtered listings
     filtered_listings = query.all()
 
+    # Calculate additional data for each listing
+    for listing in filtered_listings:
+        # Round the price to 2 decimal places
+        listing.price_listing = round(listing.price_listing, 2)
+
+        # Count the likes for the listing
+        listing.like_count = len(listing.likes)
+
+        # Calculate the average rating
+        reviews = listing.reviews
+        valid_ratings = [review.rating for review in reviews if review.rating is not None]
+        if valid_ratings:
+            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        else:
+            listing.average_rating = None
+
     # Render the listings page with filtered results
     return render_template('index.html', listings=filtered_listings)
 
