@@ -3,30 +3,56 @@
 {% block title %}Transaction History - ViaVia{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center" style="color: #3D875F;">Transaction History</h1>
-    
-    {% if transactions %}
-        <table class="table table-striped mt-4">
-            <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Listing</th>
-                    <th scope="col">Amount (€)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for transaction in transactions %}
-                <tr>
-                    <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    <td>{{ transaction.listing.listing_name }}</td>
-                    <td>{{ transaction.price_transaction }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p class="text-center text-muted mt-5">No transactions found.</p>
-    {% endif %}
+
+<!-- Background Image -->
+<div class="background position-fixed w-100 vh-100 top-0 start-0" 
+     style="background-image: url('/static/images/green road.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            z-index: -1;">
 </div>
+
+<!-- Container for Content Box -->
+<div class="container-fluid d-flex justify-content-center align-items-center" 
+     style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 0px;">
+    <div class="content-box p-5" 
+         style="background: rgba(255, 255, 255, 0.85); 
+                border-radius: 10px; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                max-width: 1200px; margin: 0 auto;">
+
+        <!-- Page Title -->
+        <h2 class="text-center mb-4" style="color: #3D875F;">Transaction History</h2>
+
+        <!-- Transactions Section -->
+        {% if transactions %}
+            <table class="table table-striped">
+                <thead>
+                    <tr style="color: #3D875F; font-weight: bold;">
+                        <th scope="col">Date</th>
+                        <th scope="col">Itinerary</th>
+                        <th scope="col">Amount (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <a href="{{ url_for('main.view_listing', listing_id=transaction.listing.listing_id) }}" 
+                               style="text-decoration: none; color: #3D875F; font-weight: bold;">
+                                {{ transaction.listing.listing_name }}
+                            </a>
+                        </td>
+                        <td>{{ transaction.price_transaction }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center text-muted mt-5">No bought itineraries found.</p>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
