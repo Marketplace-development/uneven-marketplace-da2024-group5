@@ -64,6 +64,7 @@ class Review(db.Model):
     content = db.Column(db.Text, nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
+    rating = db.Column(db.Integer, nullable = False)
 
 
 class Notification(db.Model):

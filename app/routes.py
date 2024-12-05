@@ -431,7 +431,6 @@ def view_listing(listing_id):
 def add_review(listing_id):
     if 'user_id' not in session:
         flash('You need to log in to leave a review.', 'warning')
-
         return redirect(url_for('main.login'))
     
     listing = Listing.query.get(listing_id)
@@ -440,8 +439,8 @@ def add_review(listing_id):
         return redirect(url_for('main.listings'))
     
     transaction = Transaction.query.filter_by(
-    user_id=session['user_id'],
-    listing_id=listing_id
+        user_id=session['user_id'],
+        listing_id=listing_id
     ).first()
     
     if not transaction:
@@ -450,13 +449,27 @@ def add_review(listing_id):
     
     if request.method == 'POST':
         content = request.form['review_text']
-        new_review = Review( user_id=session['user_id'],listing_id=listing_id,content=content)
+        rating = int(request.form['rating'])  # Haal de rating op uit het formulier
+        
+        # Validatie van rating
+        if rating < 1 or rating > 5:
+            flash('Invalid rating. Please select a value between 1 and 5.', 'error')
+            return redirect(url_for('main.add_review', listing_id=listing_id))
+
+        # Nieuwe review aanmaken
+        new_review = Review(
+            user_id=session['user_id'],
+            listing_id=listing_id,
+            content=content,
+            rating=rating  # Rating opslaan
+        )
         db.session.add(new_review)
         db.session.commit()
         flash('Review added successfully!', 'success')
         return redirect(url_for('main.view_listing', listing_id=listing_id))
     
     return render_template('add_review.html', listing=listing)
+
 
 def transaction_exists(user_id, listing_id):
     return Transaction.query.filter_by(user_id=user_id, listing_id=listing_id).first() is not None
