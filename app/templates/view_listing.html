@@ -21,54 +21,61 @@
 {% endwith %}
 
 <!-- Background Image -->
-<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+<div class="background position-fixed w-100 vh-100 top-0 start-0" 
+     style="background-image: url('/static/images/green road.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            z-index: -1;">
 </div>
 
 <!-- Container for Content Box -->
-<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 0px;">
-    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 800px; margin: 0 auto;">
+<div class="container-fluid d-flex justify-content-center align-items-center" 
+     style="min-height: calc(100vh - 1400px); margin-top: 0px; margin-bottom: 0px;">
+    <div class="content-box p-5" 
+         style="background: rgba(255, 255, 255, 0.85); 
+                border-radius: 10px; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                max-width: 800px; margin: 0 auto;">
 
         <!-- Listing Details Section -->
         <h1 style="color: #3D875F;">{{ listing.listing_name }}</h1>
         <p><strong>Price:</strong> €{{ listing.price_listing }}</p>
         <p><strong>Description:</strong> {{ listing.description }}</p>
         <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
-        <p><strong>Place:</strong> {{ listing.place }}</p>
+        <p><strong>Place:</strong> {{ listing.place if listing.place else "None" }}</p>
+        <p><strong>Category:</strong> {{ listing.listing_categorie if listing.listing_categorie else "None" }}</p>
 
-        <!-- Like/Unlike Button -->
-        {% if session.get('user_id') %}
-            {% if listing.user_id != session.user_id %}  <!-- Prevent liking own listing -->
-                <form method="POST" action="{{ url_for('main.like_listing', listing_id=listing.listing_id) }}">
-                    {% set liked = listing.likes|selectattr('user_id', 'equalto', session.user_id)|list|length > 0 %}
-                    {% if liked %}
-                        <button type="submit" formaction="{{ url_for('main.unlike_listing', listing_id=listing.listing_id) }}" class="btn btn-danger w-100 mb-3">
-                            Unlike
-                        </button>
-                    {% else %}
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Like</button>
-                    {% endif %}
-                </form>
-            {% else %}
-                <p>You cannot like your own listing.</p>  <!-- Prevent owner from liking their own listing -->
-            {% endif %}
-        {% else %}
-            <p>Please <a href="{{ url_for('main.login') }}">log in</a> to like this listing.</p>
-        {% endif %}
-
-        <!-- Buy Now or Download Button -->
-        <div class="text-center">
+        <!-- Like/Unlike and Buy Buttons Section -->
+        <div class="text-center mt-3">
             {% if session.get('user_id') %}
-                {% if transaction_exists %}
-                <a href="{{ url_for('main.view_pdf', listing_id=listing.listing_id) }}">View PDF</a>
-
+                {% if listing.user_id == session.user_id %}
+                    <!-- Messages for own listing -->
+                    <p class="mb-2">You cannot like your own listing.</p>
+                    <p class="mb-2">You cannot buy your own listing.</p>
                 {% else %}
-                    <!-- Buy Now Button -->
-                    <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">
-                        <button type="submit" class="btn btn-success w-100">Buy Now</button>
+                    <!-- Like Button -->
+                    <form method="POST" action="{{ url_for('main.like_listing', listing_id=listing.listing_id) }}">
+                        {% set liked = listing.likes|selectattr('user_id', 'equalto', session.user_id)|list|length > 0 %}
+                        {% if liked %}
+                            <button type="submit" formaction="{{ url_for('main.unlike_listing', listing_id=listing.listing_id) }}" 
+                                    class="btn btn-danger w-100 mb-3">
+                                Unlike
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Like</button>
+                        {% endif %}
                     </form>
+                    <!-- Buy Now or Download Button -->
+                    {% if transaction_exists %}
+                        <a href="{{ url_for('main.view_pdf', listing_id=listing.listing_id) }}" class="btn btn-secondary w-100">View PDF</a>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">
+                            <button type="submit" class="btn btn-success w-100">Buy Now</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
             {% else %}
-                <p>Please <a href="{{ url_for('main.login') }}">log in</a> to purchase or download this listing.</p>
+                <p>Please <a href="{{ url_for('main.login') }}">log in</a> to like or buy this listing.</p>
             {% endif %}
         </div>
 
@@ -87,12 +94,18 @@
 
             <!-- Add Review Button -->
             <div class="mt-3 text-center">
-                {% if session.get('user_id') and transaction_exists %}
-                    <a href="{{ url_for('main.add_review', listing_id=listing.listing_id) }}" class="btn btn-secondary">
-                        Add a Review
-                    </a>
+                {% if session.get('user_id') %}
+                    {% if listing.user_id == session.user_id %}
+                        <p>You cannot review your own listing.</p>
+                    {% elif transaction_exists %}
+                        <a href="{{ url_for('main.add_review', listing_id=listing.listing_id) }}" class="btn btn-secondary">
+                            Add a Review
+                        </a>
+                    {% else %}
+                        <p>You can only review listings you have purchased.</p>
+                    {% endif %}
                 {% else %}
-                    <p>You can only review listings you have purchased.</p>
+                    <p>Please <a href="{{ url_for('main.login') }}">log in</a> to add a review.</p>
                 {% endif %}
             </div>
         </div>
