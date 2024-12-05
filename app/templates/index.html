@@ -51,19 +51,36 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for listing in listings %}
             <div class="col">
-                <a href="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}" class="text-decoration-none" style="color: inherit;">
-                    <div class="card h-100" style="border: 1px solid #3D875F; border-radius: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                <a href="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}" 
+                   class="text-decoration-none" 
+                   style="color: inherit;">
+                    <div class="card h-100" 
+                         style="border: 1px solid #3D875F; 
+                                border-radius: 15px; 
+                                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                         <div class="card-body">
-                            <h5 class="card-title text-center" style="color: #3D875F; font-size: 1.5rem; font-weight: bold;">
+                            <h5 class="card-title text-center" 
+                                style="color: #3D875F; 
+                                       font-size: 1.5rem; 
+                                       font-weight: bold;">
                                 {{ listing.listing_name }}
                             </h5>
                             <p class="card-text text-left">
-                                <i class="fas fa-map-marker-alt" style="color: #3D875F;"></i> {{ listing.place }}
+                                <i class="fas fa-map-marker-alt" style="color: #3D875F;"></i> 
+                                {{ listing.place if listing.place else "None" }}
+                            </p>
+                            <p class="card-text text-left">
+                                <i class="fas fa-tags" style="color: #3D875F;"></i> 
+                                {{ listing.listing_categorie if listing.listing_categorie else "None" }}
                             </p>
                             <p class="card-text text-center">
-                                <i class="fas fa-user" style="color: #3D875F;"></i> {{ listing.user.username }}
+                                <i class="fas fa-user" style="color: #3D875F;"></i> 
+                                {{ listing.user.username }}
                             </p>
-                            <p class="card-text text-center" style="color: #3D875F; font-size: 1.2rem; font-weight: bold;">
+                            <p class="card-text text-center" 
+                               style="color: #3D875F; 
+                                      font-size: 1.2rem; 
+                                      font-weight: bold;">
                                 €{{ listing.price_listing }}
                             </p>
                         </div>
@@ -71,19 +88,20 @@
                             <button class="btn btn-light" style="border: none;" onclick="likeListing({{ listing.listing_id }})">
                                 <i class="fas fa-heart" style="color: #3D875F;"></i>
                             </button>
-                            <span style="margin-left: 5px; color: #3D875F; font-weight: bold;">{{ listing.like_count }}</span>
+                            <span style="margin-left: 5px; color: #3D875F; font-weight: bold;">
+                                {{ listing.like_count }}
+                            </span>
                         </div>
                     </div>
                 </a>
             </div>
             {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-muted mt-5">No listings found. Be the first person to post a listing!</p>
-            {% endif %}
         </div>
-
-    </div> <!-- End of Content Box -->
-
+        {% else %}
+        <p class="text-muted mt-5">Geen listings gevonden. Wees de eerste die een listing plaatst!</p>
+        {% endif %}
+    </div>
 </div>
+</div>
+
 {% endblock %}

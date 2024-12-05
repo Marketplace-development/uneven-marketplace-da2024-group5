@@ -38,6 +38,7 @@ def index():
         listing.like_count = len(listing.likes)  # Tel aantal likes met de relatie
 
     return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
+    
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
