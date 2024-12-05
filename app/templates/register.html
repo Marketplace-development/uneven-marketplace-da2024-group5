@@ -40,7 +40,9 @@
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <input type="text" class="form-control" id="email" name="email" 
+                    pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
+                    title="Email must be valid and may contain special characters like é, ç, è, etc." required>
             </div>
 
             <div class="mb-3">
@@ -84,5 +86,3 @@
     </div>
 </div>
 {% endblock %}
-
-
