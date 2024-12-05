@@ -5,6 +5,9 @@ from .models import db, User, Listing, Transaction, Review, Notification, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
+import re
+from flask import render_template, request, redirect, flash, session, url_for
+from .models import db, User
 """
 request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
 Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
@@ -47,7 +50,13 @@ def register():
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
         
-        #Start met de basisvoorkeuren
+        # Validatie van e-mail met accenten
+        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        if not re.match(email_pattern, email):
+            flash('Invalid email address. Please enter a valid email.', 'register')
+            return redirect(url_for('main.register'))
+        
+        # Start met de basisvoorkeuren
         preferences = {"natuur": 0, "cultuur": 0, "avontuur": 0}
 
         # Update voorkeuren op basis van keuze in de eerste vraag
@@ -57,7 +66,7 @@ def register():
         elif preference_choice == "natuur":
             preferences["natuur"] += 1
 
-         # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
+        # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
         photo_preference = request.form.get('photo_preference')
         if photo_preference == "natuur":
             preferences["natuur"] += 1
@@ -615,22 +624,30 @@ def edit_profile():
     user = User.query.get(session['user_id'])
 
     if request.method == 'POST':
-        user.username = request.form.get('username', user.username)
-        user.email = request.form.get('email', user.email)
-        user.phone_number = request.form.get('phone_number', user.phone_number)
+        # Haal de ingevoerde gegevens op
+        username = request.form.get('username', user.username)
+        email = request.form.get('email', user.email)
+        phone_number = request.form.get('phone_number', user.phone_number)
+        date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
 
-        # Update date_of_birth
-        user.date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
-       
-       
+        # Validatie van e-mail met accenten
+        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        if not re.match(email_pattern, email):
+            flash('Invalid email address. Please enter a valid email.', 'error')
+            return redirect(url_for('main.edit_profile'))
+
+        # Update de gebruiker met de nieuwe gegevens
+        user.username = username
+        user.email = email
+        user.phone_number = phone_number
+        user.date_of_birth = date_of_birth
+        
         db.session.commit()
 
         flash('Profile updated successfully.', 'success')
-        return redirect(url_for('main.account'))
+        return redirect(url_for('main.account'))  # Of de gewenste pagina na succes
 
     return render_template('edit_profile.html', user=user)
-
-
 @main.route('/delete-account', methods=['POST'])
 def delete_account():
     if 'user_id' not in session:
@@ -667,6 +684,20 @@ def like_listing(listing_id):
     # Add a new like
     new_like = Like(user_id=user_id, listing_id=listing_id)
     db.session.add(new_like)
+    # Update user preferences based on the listing category
+    listing = Listing.query.get(listing_id)
+    user = User.query.get(user_id)
+    if listing and user:
+        category = listing.listing_categorie
+        if category:
+            if user.preferences and category in user.preferences:
+                user.preferences[category] += 1
+            else:
+                if user.preferences is None:
+                    user.preferences = {}
+                user.preferences[category] = 1
+
+
     db.session.commit()
 
     flash('You liked this listing!', 'success')
