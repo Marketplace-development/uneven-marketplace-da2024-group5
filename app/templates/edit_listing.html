@@ -35,11 +35,20 @@
                 <label for="listing_categorie" class="form-label" style="color: #3D875F;">Category:</label>
                 <select class="form-control" id="listing_categorie" name="listing_categorie" required style="border-color: #3D875F;">
                     <option value="">Choose a category...</option>
-                    <option value="avontuur" {% if listing.listing_categorie == "avontuur" %}selected{% endif %}>Avontuur</option>
-                    <option value="natuur" {% if listing.listing_categorie == "natuur" %}selected{% endif %}>Natuur</option>
-                    <option value="cultuur" {% if listing.listing_categorie == "cultuur" %}selected{% endif %}>Cultuur</option>
+                    <option value="Adventure" {% if listing.listing_categorie == "Adventure" %}selected{% endif %}>Adventure</option>
+                    <option value="Nature" {% if listing.listing_categorie == "Nature" %}selected{% endif %}>Nature</option>
+                    <option value="Culture" {% if listing.listing_categorie == "Culture" %}selected{% endif %}>Culture</option>
+                    <option value="Sport & Active" {% if listing.listing_categorie == "Sport & Active" %}selected{% endif %}>Sport & Active</option>
+                    <option value="Family" {% if listing.listing_categorie == "Family" %}selected{% endif %}>Family</option>
+                    <option value="Wellness & Relaxation" {% if listing.listing_categorie == "Wellness & Relaxation" %}selected{% endif %}>Wellness & Relaxation</option>
+                    <option value="Romantic" {% if listing.listing_categorie == "Romantic" %}selected{% endif %}>Romantic</option>
+                    <option value="City Trips" {% if listing.listing_categorie == "City Trips" %}selected{% endif %}>City Trips</option>
+                    <option value="Festivals & Events" {% if listing.listing_categorie == "Festivals & Events" %}selected{% endif %}>Festivals & Events</option>
+                    <option value="Budget & Backpacking" {% if listing.listing_categorie == "Budget & Backpacking" %}selected{% endif %}>Budget & Backpacking</option>
+                    <option value="Roadtrip & Multi-Destination" {% if listing.listing_categorie == "Roadtrip & Multi-Destination" %}selected{% endif %}>Roadtrip & Multi-Destination</option>
                 </select>
             </div>
+            
 
             <!-- Submit Button -->
             <div class="text-end">
