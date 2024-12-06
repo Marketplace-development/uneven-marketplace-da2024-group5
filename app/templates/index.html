@@ -26,21 +26,52 @@
         <div class="row mb-4">
             <div class="col-lg-12">
                 <form action="{{ url_for('main.filter_listings') }}" method="get" class="d-flex align-items-center gap-2">
-                    <input type="text" name="search" class="form-control" id="search" placeholder="Search itineraries..." style="border-color: #3D875F;">
+                    <!-- Search Input -->
+                    <input type="text" name="search" class="form-control" id="search" placeholder="Search listings..." style="border-color: #3D875F;">
+        
+                    <!-- Filter by Category Dropdown -->
+                    <select name="category" class="form-select" id="filter-category" style="border-color: #3D875F;">
+                        <option value="">All Categories</option>
+                        <option value="avontuur">Adventure</option>
+                        <option value="natuur">Nature</option>
+                        <option value="cultuur">Culture</option>
+                        <option value="sport">Sport & Active</option>
+                        <option value="familie">Family</option>
+                        <option value="wellness">Wellness & Relaxation</option>
+                        <option value="romantisch">Romantic</option>
+                        <option value="stad">City Trips</option>
+                        <option value="feest">Festivals & Events</option>
+                        <option value="budget">Budget & Backpacking</option>
+                        <option value="roadtrip">Roadtrip & Multi-Destination</option>
+                    </select>
+        
+                    <!-- Filter by Price Dropdown -->
                     <select name="filter-price" class="form-select" id="filter-price" style="border-color: #3D875F;">
                         <option value="">Filter by Price</option>
                         <option value="low-to-high">Low to High</option>
                         <option value="high-to-low">High to Low</option>
                     </select>
+        
+                    <!-- Filter by Date Dropdown -->
                     <select name="filter-date" class="form-select" id="filter-date" style="border-color: #3D875F;">
                         <option value="">Filter by Date</option>
                         <option value="newest">Newest First</option>
                         <option value="oldest">Oldest First</option>
                     </select>
+        
+                    <!-- Filter by Ratings Dropdown -->
+                    <select name="filter-rating" class="form-select" id="filter-rating" style="border-color: #3D875F;">
+                        <option value="">Filter by Ratings</option>
+                        <option value="high-to-low">High to Low</option>
+                        <option value="only-5-star">Only 5 Star</option>
+                    </select>
+        
+                    <!-- Search Button -->
                     <button type="submit" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Search</button>
                 </form>
             </div>
         </div>
+        
 
         <!-- Main Content -->
         <div class="content text-center">

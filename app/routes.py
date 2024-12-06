@@ -520,34 +520,6 @@ def view_reviews(listing_id):
     reviews = Review.query.filter_by(listing_id=listing_id).all()
     return render_template('view_reviews.html', listing_id=listing_id, reviews=reviews)
 
-#@main.route('/search', methods=['GET', 'POST'])
-#def search():
-    query = request.args.get('query')
-    if query:
-        listings = Listing.query.filter(Listing.listing_name.ilike(f'%{query}%')).all()
-    else:
-        listings = Listing.query.all()
-    return render_template('listings.html', listings=listings)
-
-
-#@main.route('/filter', methods=['GET'])
-#def filter_listings():
-    min_price = request.args.get('min_price', type=float)
-    max_price = request.args.get('max_price', type=float)
-
-    # Let op: de 'category'-kolom lijkt niet meer te bestaan in de huidige structuur,
-    # dus we verwijderen die filteroptie. Laat het weten als je deze wilt toevoegen.
-
-    query = Listing.query
-
-    if min_price:
-        query = query.filter(Listing.price_listing >= min_price)  # Aangepast naar 'price_listing'
-    if max_price:
-        query = query.filter(Listing.price_listing <= max_price)
-
-    listings = query.all()
-    return render_template('listings.html', listings=listings)
-
 
 # Stel de Supabase-client in
 supabase_url = Config.SUPABASE_URL
@@ -803,24 +775,25 @@ def liked_listings():
 
 
 
-from flask import request, redirect, url_for, session
+from flask import Flask, request, redirect, url_for, session
 
-@main.before_request
-def store_last_visited_url():
+
+#@main.before_request
+#def store_last_visited_url():
     # Store the current URL before processing the next request
-    if request.endpoint != 'main.go_back':  # Avoid storing the 'go-back' route itself
-        session['last_page'] = request.url
+    #if request.endpoint != 'main.go_back':  # Avoid storing the 'go-back' route itself
+        #session['last_page'] = request.url
 
-@main.route('/go-back', methods=['GET'])
-def go_back():
+
+#def go_back():
     # Attempt to get the referrer first
-    previous_page = request.referrer
+    #previous_page = request.referrer
 
     # Fallback to session-stored last visited page or index
-    if not previous_page:
-        previous_page = session.get('last_page', url_for('main.index'))
+    #if not previous_page:
+        #previous_page = session.get('last_page', url_for('main.index'))
 
-    return redirect(previous_page)
+   # return redirect(previous_page)
 
 @main.route('/quiz', methods=['GET', 'POST'])
 def quiz():
@@ -843,6 +816,8 @@ def filter_listings():
     search_query = request.args.get('search', '').strip()
     sort_by_price = request.args.get('filter-price')  # "low-to-high" or "high-to-low"
     sort_by_date = request.args.get('filter-date')  # "newest" or "oldest"
+    category = request.args.get('category', '').strip()
+    filter_rating = request.args.get('filter-rating', '').strip()  # "high-to-low" or "only-5-star"
 
     # Base query
     query = Listing.query
@@ -851,31 +826,11 @@ def filter_listings():
     if search_query:
         query = query.filter(Listing.listing_name.ilike(f"%{search_query}%"))
 
-    # Apply sorting
-    if sort_by_price:
-        # Price sorting takes priority
-        if sort_by_price == 'low-to-high':
-            if sort_by_date == 'newest':
-                query = query.order_by(Listing.price_listing.asc(), Listing.created_at.desc())
-            elif sort_by_date == 'oldest':
-                query = query.order_by(Listing.price_listing.asc(), Listing.created_at.asc())
-            else:
-                query = query.order_by(Listing.price_listing.asc())
-        elif sort_by_price == 'high-to-low':
-            if sort_by_date == 'newest':
-                query = query.order_by(Listing.price_listing.desc(), Listing.created_at.desc())
-            elif sort_by_date == 'oldest':
-                query = query.order_by(Listing.price_listing.desc(), Listing.created_at.asc())
-            else:
-                query = query.order_by(Listing.price_listing.desc())
-    elif sort_by_date:
-        # Apply date sorting only if price sorting is not specified
-        if sort_by_date == 'newest':
-            query = query.order_by(Listing.created_at.desc())
-        elif sort_by_date == 'oldest':
-            query = query.order_by(Listing.created_at.asc())
+    # Apply category filter (if provided)
+    if category:
+        query = query.filter(Listing.listing_categorie.ilike(f"%{category}%"))
 
-    # Get the filtered listings
+    # Retrieve all listings based on the current filters
     filtered_listings = query.all()
 
     # Calculate additional data for each listing
@@ -894,43 +849,31 @@ def filter_listings():
         else:
             listing.average_rating = None
 
+    # Apply rating filter (if provided)
+    if filter_rating:
+        if filter_rating == 'only-5-star':
+            # Filter listings with an average rating of 5
+            filtered_listings = [listing for listing in filtered_listings if listing.average_rating == 5]
+        elif filter_rating == 'high-to-low':
+            # Sort listings by average rating, descending
+            filtered_listings.sort(key=lambda x: (x.average_rating or 0), reverse=True)
+
+    # Apply sorting
+    if sort_by_price:
+        # Price sorting takes priority
+        if sort_by_price == 'low-to-high':
+            filtered_listings.sort(key=lambda x: (x.price_listing, -(x.created_at.timestamp())))
+        elif sort_by_price == 'high-to-low':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -(x.created_at.timestamp())))
+    elif sort_by_date:
+        # Apply date sorting only if price sorting is not specified
+        if sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: x.created_at, reverse=True)
+        elif sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: x.created_at)
+
     # Render the listings page with filtered results
     return render_template('index.html', listings=filtered_listings)
-
-
-
-@main.route('/filter_listings2', methods=['GET'])
-def filter_listings2():
-    # Get filter parameters from the request
-    search_query = request.args.get('search', '').strip()
-    min_price = request.args.get('min-price', type=float)
-    max_price = request.args.get('max-price', type=float)
-    category = request.args.get('category', '').strip()
-
-    # Base query
-    query = Listing.query
-
-    # Apply search query (if provided)
-    if search_query:
-        query = query.filter(Listing.listing_name.ilike(f"%{search_query}%"))
-
-    # Apply minimum price filter (if provided)
-    if min_price is not None:
-        query = query.filter(Listing.price_listing >= min_price)
-
-    # Apply maximum price filter (if provided)
-    if max_price is not None:
-        query = query.filter(Listing.price_listing <= max_price)
-
-    # Apply category filter (if provided and not 'all')
-    if category and category != 'all':
-        query = query.filter(Listing.listing_categorie.ilike(f"%{category}%"))
-
-    # Fetch the filtered listings
-    filtered_listings = query.all()
-
-    # Render the template with filtered results
-    return render_template('listings.html', listings=filtered_listings)
 
 
 supabase: Client = create_client(supabase_url, supabase_key)

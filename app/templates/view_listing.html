@@ -42,7 +42,7 @@
         <h1 style="color: #3D875F;">{{ listing.listing_name }}</h1>
         <p><strong>Price:</strong> €{{ listing.price_listing }}</p>
         <p><strong>Description:</strong> {{ listing.description }}</p>
-        <p><strong>Created on:</strong> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Created on:</strong> {{ listing.created_at.strftime('%d-%m-%Y') }}</p>
         <p><strong>Place:</strong> {{ listing.place if listing.place else "None" }}</p>
         <p><strong>Category:</strong> {{ listing.listing_categorie if listing.listing_categorie else "None" }}</p>
         <p><strong>Likes:</strong> 
