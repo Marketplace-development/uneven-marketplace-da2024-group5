@@ -32,8 +32,8 @@ Revenue Source: Provider (Customers use the platform to purchase, but the provid
 2. Install the OntoUML plugin: https://github.com/OntoUML/ontouml-vp-plugin
 3. Develop a platform-specific ontology: https://model-a-platform.com/applying-the-ontology/
 
-=> for our first schema: see GitHub/uneven-marketplace-da2024-group5/app/static/images/Digital Platform Ontology Class Diagram copy.jpg
-=> for our second schema: see GitHub/uneven-marketplace-da2024-group5/app/static/images/Entity-Relationship Diagram (ERD).jpg
+=> for our schema of the visual ontology, see: GitHub/uneven-marketplace-da2024-group5/app/static/images/Visual_Ontology_Class_Diagram.jpg
+=> for our schema of the entity-relationship diagram, see: see GitHub/uneven-marketplace-da2024-group5/app/static/images/Entity-Relationship_Diagram_(ERD).jpg
 
 # User stories
 
@@ -52,9 +52,9 @@ As a [User], I want to [receive notifications], so that [I am updated on activit
 https://www.figma.com/
 
 => we made the following concepts using figma: 
-We began by developing a prototype for a smartphone application. However, we later created a second prototype optimized for PC screens, as this approach was more practical for coding and testing on our laptops. 
-Eventually, we discovered that using Bootstrap could effectively address the challenge of ensuring compatibility across different devices. 
-Despite this, we chose to include both prototypes in our project to provide comprehensive insight into our development process
+We began by developing a prototype for a smartphone application. However, we later created a very simplistic second prototype optimized for PC screens, as this approach was more practical for coding and testing on our laptops. 
+However, during the process we eventually discovered that using Bootstrap could effectively address the challenge of ensuring compatibility across different devices. 
+Despite this, we decided to use both prototypes together for the design of our final platform, as we wanted to provide a comprehensive insight into our development process.
 
     link to figma app prototype: https://www.figma.com/design/CNVRhfUgGT0jt9BXYxdb3Z/ViaVia?t=e13yYlsNfRfsA2DL-1
     link to figa website prototype: https://www.figma.com/design/1H1IEsqoBhuFYVQFmsojAB/Untitled?t=XYoykXR5RwmS8Rvv-1
