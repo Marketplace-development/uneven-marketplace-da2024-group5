@@ -163,6 +163,8 @@ def add_listing():
             price = request.form.get('price', '').strip()
             place = request.form.get('place', '').strip()
             file = request.files.get('file')
+            picture = request.files.get('picture')
+
             listing_categorie = request.form.get('listing_categorie', '').strip()  # Nieuwe categorie veld
 
             # Validate form inputs
@@ -182,10 +184,6 @@ def add_listing():
                 flash("Invalid place. Please select a valid place from the suggestions.", "error")
                 return redirect(request.url)
             
-            if not file:
-                flash("A file is required.", "error")
-                return redirect(request.url)
-
             try:
                 price = float(price)  # Convert price to a float
                 if price < 0:   #Check if price is negative
@@ -195,12 +193,26 @@ def add_listing():
             except ValueError:
                 flash("Price must be a valid number.", "error")
                 return redirect(request.url)
-
+            
+            
+            if not file:
+                flash("A file is required.", "error")
+                return redirect(request.url)
+            
+            # Ensure the file is a PDF
+            if not file.filename.endswith('.pdf'):
+                flash("Only PDF files are allowed.", "error")
+                return redirect(request.url)
             # Secure the file name
-            filename = secure_filename(file.filename)
+            import uuid
+            filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
+            folder_path = f"Listing_Bestand/{uuid.uuid4().hex}_{secure_filename(file.filename)}"
 
+            file_content = file.read()
             # Upload the file to Supabase
-            response = supabase.storage.from_("pdfs").upload(filename, file.stream.read())
+            response = supabase.storage.from_("ViaVia").upload(folder_path, file_content, {
+                'content-type': 'application/pdf'
+                })
 
             # Handle the response
             if hasattr(response, "raw_response") and response.raw_response.status_code != 200:
@@ -208,8 +220,27 @@ def add_listing():
                 return redirect(request.url)
 
             # Get the public URL of the file
-            file_url = f"{supabase_url}/storage/v1/object/public/pdfs/{filename}"
+            file_url = f"{supabase_url}/storage/v1/object/public/ViaVia/{folder_path}"
 
+            
+            if picture and picture.filename.endswith(('jpg', 'jpeg', 'png')):
+                picture_filename = f"Listing_Picture/{uuid.uuid4().hex}_{secure_filename(picture.filename)}"
+                picture_content = picture.read()
+
+                # Upload the picture to Supabase
+                picture_response = supabase.storage.from_("ViaVia").upload(picture_filename, picture_content, {
+                    'content-type': picture.mimetype
+                })
+
+                if hasattr(picture_response, "raw_response") and picture_response.raw_response.status_code != 200:
+                    flash(f"Error uploading picture: {picture_response.raw_response.text}", "error")
+                    return redirect(request.url)
+
+                # Get the public URL of the picture
+                picture_url = f"{supabase_url}/storage/v1/object/public/ViaVia/{picture_filename}"
+            else:
+                flash("A valid picture file is required (jpg, jpeg, png).", "error")
+                return redirect(request.url)
             # Save listing details to the database
             new_listing = Listing(
                 listing_name=listing_name,
@@ -217,6 +248,7 @@ def add_listing():
                 price_listing=price,
                 url=file_url,  # Save the file URL
                 place=place,
+                picture=picture_url,
                 listing_categorie = listing_categorie,
                 user_id=session['user_id']
             )

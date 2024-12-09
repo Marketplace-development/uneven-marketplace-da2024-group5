@@ -3,38 +3,17 @@
 {% block title %}View PDF{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">PDF Viewer</h2>
-    <div id="pdf-viewer" style="width: 100%; height: 80vh; border: 1px solid #ddd;"></div>
-    <script>
-        const pdfUrl = "{{ pdf_url }}";
-
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
-
-        // Load the PDF
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        loadingTask.promise.then(function (pdf) {
-            // Fetch the first page
-            pdf.getPage(1).then(function (page) {
-                const scale = 1.5; // Adjust zoom level
-                const viewport = page.getViewport({ scale });
-
-                // Prepare canvas using PDF page dimensions
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                document.getElementById('pdf-viewer').appendChild(canvas);
-
-                // Render PDF page into canvas context
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                page.render(renderContext);
-            });
-        });
-    </script>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View PDF</title>
+</head>
+<body>
+    <h1>View PDF</h1>
+    <iframe src="{{ pdf_url }}" width="100%" height="600px"></iframe>
+    <p><a href="{{ pdf_url }}" target="_blank">Open PDF in a new tab</a></p>
+</body>
+</html>
 {% endblock %}
