@@ -39,7 +39,7 @@
                 <tbody>
                     {% for item in transactions %}
                     <tr style="color: {% if item.type == 'purchase' %}red{% else %}green{% endif %};">
-                        <td>{{ item.transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ item.transaction.created_at.strftime('%d-%m-%Y %H:%M:%S') }}</td>
                         <td>{{ 'Purchase' if item.type == 'purchase' else 'Sale' }}</td>
                         <td>
                             <a href="{{ url_for('main.view_listing', listing_id=item.transaction.listing.listing_id) }}" 

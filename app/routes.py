@@ -381,13 +381,16 @@ def transactions():
     return render_template('combined_transactions.html', transactions=combined_transactions)
 
 
+
+from sqlalchemy import desc
+
 @main.route('/bought_transactions')
 def bought_transactions():
     if 'user_id' not in session:
         flash('You need to log in to view your transaction history.', 'warning')
         return redirect(url_for('main.login'))
 
-    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).all()
+    user_transactions = Transaction.query.filter_by(user_id=session['user_id']).order_by(desc(Transaction.created_at)).all()
     return render_template('bought_transactions.html', transactions=user_transactions)
 
 
@@ -398,7 +401,7 @@ def sold_transactions():
         return redirect(url_for('main.login'))
 
     # Get listings where the logged-in user is the seller
-    user_sold_transactions = Transaction.query.join(Listing).filter(Listing.user_id == session['user_id']).all()
+    user_sold_transactions = Transaction.query.join(Listing).filter(Listing.user_id == session['user_id']).order_by(desc(Transaction.created_at)).all()
 
     return render_template('sold_transactions.html', transactions=user_sold_transactions)
 

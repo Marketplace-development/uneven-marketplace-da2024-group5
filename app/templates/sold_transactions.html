@@ -38,7 +38,7 @@
                 <tbody>
                     {% for transaction in transactions %}
                     <tr>
-                        <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ transaction.created_at.strftime('%d-%m-%Y %H:%M:%S') }}</td>
                         <td>{{ transaction.user.username }}</td>
                         <td>
                             <a href="{{ url_for('main.view_listing', listing_id=transaction.listing.listing_id) }}" 
