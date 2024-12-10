@@ -1,0 +1,91 @@
+During the development of our platform, we made several deliberate choices to focus on simplicity and ensure a streamlined user experience.
+
+    We decided not to differentiate between providers and customers. Creating separate interfaces for these roles would have added complexity without offering significant value, as users on our platform can seamlessly act as both providers and customers. 
+    --> To keep the design efficient, we implemented a single User class that supports all functionalities.
+
+    Trust and safety features, such as ID verification, badges, or in-app reporting, were not included in this version as they were outside the primary scope of our project. 
+    --> Instead, we focused on building a secure and functional platform and for account safety, we implemented secure login with password authentication.
+
+    While we considered generating revenue through comissions or advertisements (using algorithms to offer location-based ads for services like local guides or restaurants). 
+    --> However These features were too complicated to implement, so we decided to spend our time making sure the main functions of our platform work well. 
+    --> Thus we excluded these optios for revenue streams and focused on improving the basics, but we did include these concept in our visual ontology and ERD as a foundation for future development.
+
+    We considered adding a comparison feature to let users view two listings side by side, but we decided not to include it as we felt it didn’t add much value to the platform.
+
+    We did not create a direct messaging system between users, but we did include the concept in our visual ontology and ERD as a foundation for future development.
+    --> Instead, users can access the seller's email address after making a purchase and communicate with them directly via email.
+
+Use of Algorithms:
+
+    We developed an algorithm that tailors recommendations based on user preferences gathered from a short quiz. This personalization improves the user experience by suggesting listings that align with individual interests.
+
+    In the future, additional algorithms could be integrated to enhance functionality. 
+    --> For example, during user registration, we could collect location data (using the external GeoNames API, see additional info below) to power features like targeted recommendations and advertisements for local businesses. 
+    --> But for now, our focus remains on delivering a functional recommendation system while leaving room for these enhancements in subsequent phases.
+
+To power/develop our platform and deliver a seamless user experience/smooth operation of our platform, we rely on a combination of tools and technologies, including:
+    
+    The use of the MVC as our architectural pattern to separate application functionality and promote organized programming
+        --> Model: Defines the structure of the data and is connected to our database
+        --> View (templates): Handles the user interface and data presentation (Consists of HTML for text and CSS for the styling)
+        --> Controller (routes): Updates the model and view based on user input
+
+    The use of Flask: Flask serves as the core of our platform, offering a lightweight yet powerful framework for building the website. 
+    It manages routing, server-side logic, and the integration of various components, ensuring everything runs smoothly and efficiently.
+        --> Flask automatically separates certain components and is flexible enough to maintain a clear and organized structure.  
+        --> We chose Flask because it’s a straightforward framework for developing MVC (Model-View-Controller) software and works seamlessly with Python, making it a logical choice for our project. 
+
+    The use of Flask-SQLAlchemy: Flask-SQLAlchemy is the bridge between our Python code and the database. 
+        --> SQLAlchemy converts our Python code into SQL statements for the database. When the database returns data, SQLAlchemy translates it back into Python code.
+        --> Thanks to this ORM (Object-Relational Mapping), we don’t need to write SQL statements directly in our Flask model files.
+
+    The use of flash en flash errors: In our project, Flash messages are used to provide users with instant feedback about their actions, such as successful form submissions, account updates, or errors during interactions. 
+        --> They help enhance the user experience by delivering clear and concise notifications directly on the interface.
+        --> Flash Errors are specifically employed to alert users about issues, such as invalid input, failed authentication, or incomplete forms. 
+        --> This ensures users understand what went wrong and can take corrective action. 
+        --> Together, these tools improve communication and interactivity, making the platform more intuitive and user-friendly.
+
+    The use of Jinja and Flask-Snippets extensions: Extensions in VS Code add extra functionality to us (the editors / programmers). In this case, Jinja and Flask-Snippets specifically assist in developing web applications with Flask and Jinja2. 
+        They provide:
+            - Syntax Highlighting: This makes the code more readable.
+            - Code Autocompletion: Offers suggestions as you type, allowing for faster and more accurate development.
+
+    The use of requests: The requests library enables seamless communication with external APIs, such as fetching live data like weather updates, currency exchange rates, or travel insights. 
+        --> This enriches the platform with dynamic, real-time content. This Python library enables the platform to send HTTP requests to external APIs (like Geonames --> see further)
+
+    The use of Blueprint: We used Flask's Blueprint to break our application into smaller, modular components. 
+        --> This allowed us to organize our routes and functionality into separate files, making our code easier to maintain and scale
+    
+    The use of jsonify: We used jsonify to turn our data (like lists or information about users) into a format that can easily be sent back and forth between the server and the website. 
+        --> The jsonify module was used to easily convert Python data structures (like dictionaries or lists) into JSON format, which is the standard format for API responses
+        --> This was essential for sending data between the server and the client in a structured and readable way, allowing us to handle things like displaying user information, listings, and handling requests from the frontend in a seamless manner.
+        --> Thus, this is important because the server and website need to communicate, and jsonify makes sure the data is sent in a way that both sides can understand and display properly.
+
+    The use of the re module: We used the re (regular expressions) module to make our development process easier and more efficient while building the platform. 
+        --> By leveraging regular expressions, we were able to simplify tasks that involve searching, validating, and manipulating strings of text.
+        --> For example, we used it to validate user inputs, such as ensuring email addresses follow the correct format.
+
+    The use of psycopg2-binary: Psycopg2-binary is the key to our connection with the PostgreSQL database on supabase. 
+        --> It ensures secure, reliable, and efficient storage and retrieval of essential platform data, forming the backbone of data-driven features.
+
+    The use of buckets in our database on supabase: Supabase buckets provide a secure and scalable solution for storing and managing files like PDFs or pictures for each itinerary on our platform. 
+        --> Each PDF and picture is uploaded to a designated bucket and linked to a specific listing in the database, with the file’s URL securely stored and hidden until a successful purchase is made. 
+        --> Buyers can only access their purchased files through a "Download" button, enabled after transaction verification. Supabase policies and backend validation ensure strict access control, allowing only authenticated and eligible users to retrieve the files. 
+        --> This setup ensures seamless integration, robust security, and a user-friendly experience for both sellers and buyers.
+
+    The use of Bootstrap: Bootstrap ensures the platform looks great on all devices with its responsive, modern design components. 
+        --> From buttons to layouts, it provides a polished user interface that enhances navigation and usability.
+
+    The use of the external GeoNames API: We integrated GeoNames into our platform to enhance location-based features by providing accurate, real-time geographic data. This includes offering location suggestions through an auto-completion feature, which helps users enter valid places easily and without typos.
+        --> By leveraging GeoNames, we can validate that locations follow the correct format and actually exist, ensuring data integrity. 
+        --> however: Since we are working with a free API, GeoNames imposes a limitation of 1,000 requests per hour. This means that every time a user types more than three letters, a request is sent to the GeoNames API to retrieve location suggestions. 
+            Thus, with this limitation, we need to be mindful of how often requests are made to avoid exceeding the cap, especially during periods of high user activity. 
+    
+    The use of chatGPT: We used ChatGPT to assist with the overall programming of our platform, serving as a valuable resource throughout the development process. 
+        --> ChatGPT helped us troubleshoot errors, provided coding solutions, and guided us on how to implement features we envisioned but weren’t sure how to execute.  --> Whether it was debugging complex issues, offering suggestions for optimizing the platform, or explaining how to integrate various technologies, ChatGPT played a key role in enhancing the development workflow. Its ability to generate code snippets, offer explanations, and suggest best practices allowed us to move forward with confidence and streamline the creation of a functional and efficient platform.
+
+    We chose not to use Flask-Migrate during the development of our platform due to concerns about the potential risks associated with unintended mistakes that could negatively impact our database. 
+        --> Flask-Migrate is a powerful tool for handling database migrations, but it also comes with the possibility of making errors, especially when applying changes or rolling back migrations. 
+        --> In a development environment where constant changes were being made to the database schema, we wanted to avoid scenarios where an accidental migration could delete or corrupt important data, or cause other issues that could halt our progress. 
+            So, instead, we opted for a more manual approach to database management to maintain greater control over the changes we made, minimizing the chance of any serious setbacks. 
+            By doing so, we could carefully test each change and ensure the stability and integrity of our data throughout the development process.
