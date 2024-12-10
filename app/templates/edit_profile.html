@@ -59,6 +59,18 @@
                 <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}" style="border-color: #3D875F;">
             </div>
 
+            <!-- New Password Field -->
+            <div class="mb-3">
+                <label for="new_password" class="form-label" style="color: #3D875F;">New Password:</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Leave blank to keep current password" style="border-color: #3D875F;">
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label" style="color: #3D875F;">Confirm Password:</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter new password" style="border-color: #3D875F;">
+            </div>
+
             <!-- Submit Button -->
             <div class="text-end">
                 <button type="submit" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Save Changes</button>

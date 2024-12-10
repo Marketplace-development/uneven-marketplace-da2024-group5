@@ -29,6 +29,8 @@
         <div class="account-info mb-4">
             <p style="color: #555;">Username: <strong>{{ user.username }}</strong></p>
             <p style="color: #555;">Email: <strong>{{ user.email }}</strong></p>
+            <p style="color: #555;">Date of Birth: <strong>{{ user.date_of_birth.strftime('%d-%m-%Y') }}</strong></p>
+            <p style="color: #555;">Phone Number: <strong>{{ user.phone_number if user.phone_number else "Not provided" }}</strong></p>
         </div>
 
         <!-- Update Account Info -->

@@ -57,7 +57,12 @@ def register():
         email = request.form['email']
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
-        
+        password = request.form['password']
+
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long.', 'register')
+            return redirect(url_for('main.register'))
+
         # Validatie van e-mail met accenten
         email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
         if not re.match(email_pattern, email):
@@ -99,6 +104,7 @@ def register():
             phone_number=phone_number,
             preferences=preferences
         )
+        new_user.set_password(password) #Wachtwoord hash instellen
         
         db.session.add(new_user)
         db.session.commit()
@@ -115,16 +121,29 @@ def login():
 
     if request.method == 'POST':
         username = request.form['username']
+        password = request.form.get('password', '')  # Haal het wachtwoord op, default is een lege string
+
         user = User.query.filter_by(username=username).first()
 
         if user:
-            session['user_id'] = user.user_id  # Bewaar user_id in de sessie
-            return redirect(url_for('main.index'))
-        
-        flash('User not found. Would you like to <a href="/register">register</a>?', 'error')
-        return render_template('login.html')
+            # Check of de gebruiker een wachtwoord heeft ingesteld
+            if user.password:
+                # Controleer het ingevoerde wachtwoord
+                if user.check_password(password):
+                    session['user_id'] = user.user_id  # Bewaar user_id in de sessie
+                    return redirect(url_for('main.index'))
+                else:
+                    flash('Invalid password. Please try again.', 'error')
+            else:
+                # Gebruiker heeft geen wachtwoord (legacy account), inloggen zonder wachtwoord
+                session['user_id'] = user.user_id
+                flash('You logged in without a password. Please set a password in your account settings.', 'info')
+                return redirect(url_for('main.index'))
+        else:
+            flash('User not found. Would you like to <a href="/register">register</a>?', 'error')
 
     return render_template('login.html')
+
 
 @main.route('/account')
 def account():
@@ -685,12 +704,25 @@ def edit_profile():
         email = request.form.get('email', user.email)
         phone_number = request.form.get('phone_number', user.phone_number)
         date_of_birth = request.form.get('date_of_birth', user.date_of_birth)
+        new_password = request.form.get('new_password', '').strip()
+        confirm_password = request.form.get('confirm_password', '').strip()
 
         # Validatie van e-mail met accenten
         email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
         if not re.match(email_pattern, email):
             flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.edit_profile'))
+
+        # Validatie van wachtwoord
+        if new_password or confirm_password:
+            if len(new_password) < 8:
+                flash('Password must be at least 8 characters long.', 'error')
+                return redirect(url_for('main.edit_profile'))
+            if new_password != confirm_password:
+                flash('Passwords do not match.', 'error')
+                return redirect(url_for('main.edit_profile'))
+            # Wachtwoord updaten
+            user.set_password(new_password)
 
         # Update de gebruiker met de nieuwe gegevens
         user.username = username

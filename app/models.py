@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -15,6 +16,15 @@ class User(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0.0)  # Add this line
     preferences = db.Column(db.JSON, default=lambda: {"natuur": 0, "cultuur": 0, "avontuur": 0})
+    password = db.Column(db.String(255), nullable=True)
+
+    #Helper method to set password hash
+    def set_password(self,password):
+        self.password = generate_password_hash(password)
+
+    #Helper method to check password
+    def check_password(self,password):
+        return check_password_hash(self.password,password)
 
 
     # Relaties
