@@ -53,7 +53,15 @@
             <i class="fas fa-star" style="color: #FFD700;"></i> 
             {{ listing.average_rating if listing.average_rating else "No ratings" }}
         </p>
-
+        
+        <!-- Seller Email Section -->
+        {% if transaction_exists %}
+        <div class="mt-4">
+            <h3 style="color: #3D875F;">Seller Contact</h3>
+            <p><strong>Email:</strong> {{ seller_email }}</p>
+        </div>
+        {% endif %}
+        
         <!-- Like/Unlike and Buy Buttons Section -->
         <div class="text-center mt-3">
             {% if session.get('user_id') %}

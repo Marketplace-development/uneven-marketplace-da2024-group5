@@ -430,16 +430,22 @@ def view_listing(listing_id):
     # Controleer of de gebruiker is ingelogd en of de listing al is gekocht
     transaction_exists = None
     has_reviewed = False
+    seller_email = None  # Voeg de verkoper-email toe
     if 'user_id' in session:
         user_id = session['user_id']
-        transaction_exists = Transaction.query.filter_by(
-            user_id=user_id, 
-            listing_id=listing_id, 
+        transaction = Transaction.query.filter_by(
+            user_id=user_id,
+            listing_id=listing_id,
             status=True
         ).first()
 
         # Controleer of de gebruiker al een review heeft toegevoegd
         has_reviewed = Review.query.filter_by(user_id=user_id, listing_id=listing_id).first() is not None
+
+        # Controleer of de gebruiker de listing heeft gekocht
+        if transaction:
+            transaction_exists = True
+            seller_email = listing.user.email  # Verkrijg het e-mailadres van de verkoper
 
     # Controleer of de gebruiker zijn eigen listing probeert te liken
     can_like = True
@@ -447,11 +453,6 @@ def view_listing(listing_id):
         can_like = False  # Disable like if it's the user's own listing
 
     if request.method == 'POST':
-        # Controleer of de gebruiker is ingelogd
-        if 'user_id' not in session:
-            flash("Please log in to purchase this listing.", 'error')
-            return redirect(url_for('main.login'))
-
         # Haal koper en verkoper op
         buyer = User.query.get(session['user_id'])
         seller = User.query.get(listing.user_id)
@@ -466,31 +467,33 @@ def view_listing(listing_id):
             flash('Insufficient wallet balance to make this purchase.', 'danger')
             return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-        # Controleer of de listing al is gekocht
-        if transaction_exists:
-            flash('You have already purchased this listing.', 'info')
-            return redirect(url_for('main.view_listing', listing_id=listing_id))
-
         # Trek saldo af bij koper en voeg toe bij verkoper
         buyer.wallet_balance -= listing.price_listing
         seller.wallet_balance += listing.price_listing
 
         # Registreer de transactie
         transaction = Transaction(
-            user_id=buyer.user_id, 
-            listing_id=listing_id, 
+            user_id=buyer.user_id,
+            listing_id=listing_id,
             price_transaction=listing.price_listing,
             status=True
         )
         db.session.add(transaction)
-
-        # Commit de wijzigingen in de database
         db.session.commit()
 
         flash('Purchase successful! Your wallet has been debited.', 'success')
         return redirect(url_for('main.view_listing', listing_id=listing_id))
 
-    return render_template('view_listing.html', listing=listing, reviews=reviews, transaction_exists=transaction_exists, can_like=can_like, has_reviewed=has_reviewed)
+    return render_template(
+        'view_listing.html',
+        listing=listing,
+        reviews=reviews,
+        transaction_exists=transaction_exists,
+        can_like=can_like,
+        has_reviewed=has_reviewed,
+        seller_email=seller_email  # Pass de verkoper-email naar de template
+    )
+
 
 
 
