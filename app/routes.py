@@ -644,22 +644,7 @@ def recharge_wallet():
     flash('Wallet recharged successfully!', 'walletsuccess')
     return redirect(url_for('main.recharge_page'))
 
-#i hate my life because this doesn't work
-'''
-@main.route('/update-profile-pic', methods=['POST'])
-def update_profile_pic():
-    if 'user_id' not in session:
-        flash('You need to log in to update your profile picture.', 'error')
-        return redirect(url_for('main.login'))
-    
-    user = User.query.get(session['user_id'])
-    profile_pic_url = request.form.get('profile_pic_url', '/static/images/male default pic.jpg')
-    user.profile_pic = profile_pic_url
-    db.session.commit()
-    flash('Profile picture updated successfully.', 'success')
-    return redirect(url_for('main.account'))
 
-'''
 @main.route('/get_pdf/<int:listing_id>', methods=['GET'])
 def get_pdf(listing_id):
     # Check if the user is logged in
@@ -888,22 +873,6 @@ def liked_listings():
 from flask import Flask, request, redirect, url_for, session
 
 
-#@main.before_request
-#def store_last_visited_url():
-    # Store the current URL before processing the next request
-    #if request.endpoint != 'main.go_back':  # Avoid storing the 'go-back' route itself
-        #session['last_page'] = request.url
-
-
-#def go_back():
-    # Attempt to get the referrer first
-    #previous_page = request.referrer
-
-    # Fallback to session-stored last visited page or index
-    #if not previous_page:
-        #previous_page = session.get('last_page', url_for('main.index'))
-
-   # return redirect(previous_page)
 
 @main.route('/quiz', methods=['GET', 'POST'])
 def quiz():
