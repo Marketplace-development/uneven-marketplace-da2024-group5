@@ -1,13 +1,16 @@
 # app/routes.py
 
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Listing, Transaction, Review, Notification, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
 import re
 from flask import render_template, request, redirect, flash, session, url_for
-from .models import db, User
+from werkzeug.utils import secure_filename
+import os
+import requests
+from sqlalchemy import desc
 """
 request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
 Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
@@ -166,8 +169,7 @@ def logout():
     return render_template('logout.html')  # Toon de logout-pagina met een boodschap
 
 
-from werkzeug.utils import secure_filename
-import os
+
 
 @main.route('/add-listing', methods=['GET', 'POST'])
 def add_listing():
@@ -326,7 +328,7 @@ def listings():
     
     return render_template('listings.html', listings=all_listings)
 
-import requests
+
 
 @main.route('/search_places', methods=['GET'])
 def search_places():
@@ -382,7 +384,7 @@ def transactions():
 
 
 
-from sqlalchemy import desc
+
 
 @main.route('/bought_transactions')
 def bought_transactions():
@@ -871,9 +873,6 @@ def liked_listings():
 
 
 
-from flask import Flask, request, redirect, url_for, session
-
-
 
 @main.route('/quiz', methods=['GET', 'POST'])
 def quiz():
@@ -953,7 +952,7 @@ def filter_listings():
             filtered_listings.sort(key=lambda x: x.created_at)
 
     # Render the listings page with filtered results
-    return render_template('index.html', listings=filtered_listings)
+    return render_template('listings.html', listings=filtered_listings)
 
 
 supabase: Client = create_client(supabase_url, supabase_key)
