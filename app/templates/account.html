@@ -5,13 +5,22 @@
 {% block content %}
 
 <!-- Background Image -->
-<div class="background position-fixed w-100 vh-100 top-0 start-0" style="background-image: url('/static/images/green road.jpg'); background-size: cover; background-position: center; z-index: -1;">
+<div class="background position-fixed w-100 vh-100 top-0 start-0" 
+     style="background-image: url('/static/images/green road.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            z-index: -1;">
 </div>
 
 <!-- Container -->
-<div class="container-fluid d-flex justify-content-center align-items-start" style="min-height: calc(100vh - 120px); margin-top: 30px;">
+<div class="container-fluid d-flex justify-content-center align-items-start" 
+     style="min-height: calc(100vh - 120px); margin-top: 30px;">
     <!-- Semi-Transparent Box Wrapper -->
-    <div class="content-box p-5" style="background: rgba(255, 255, 255, 0.85); border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); max-width: 1000px; width: 100%; text-align: center;">
+    <div class="content-box p-5" 
+         style="background: rgba(255, 255, 255, 0.85); 
+                border-radius: 10px; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+                max-width: 1000px; width: 100%; text-align: center;">
 
         <!-- Header -->
         <h2 class="mb-4" style="color: #3D875F;">My Account</h2>
@@ -23,11 +32,21 @@
         </div>
 
         <!-- Update Account Info -->
-        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Edit account info</a>
+        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary" 
+           style="background-color: #3D875F; border-color: #3D875F;">Edit account info</a>
 
         <!-- Logout Option -->
         <form action="/logout" method="POST" class="mt-4">
-            <button type="submit" class="btn btn-secondary" style="background-color: #2c3e50; color: white;">Logout</button>
+            <button type="submit" class="btn btn-secondary" 
+                    style="background-color: #2c3e50; color: white;">Logout</button>
+        </form>
+
+        <!-- Delete Account Option -->
+        <form action="{{ url_for('main.delete_account') }}" method="POST" class="mt-4">
+            <button type="submit" class="btn btn-danger" 
+                    onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                Delete Account
+            </button>
         </form>
 
     </div> <!-- End of Content Box -->

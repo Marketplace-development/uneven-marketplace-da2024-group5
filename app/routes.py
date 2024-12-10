@@ -704,6 +704,7 @@ def edit_profile():
         return redirect(url_for('main.account'))  # Of de gewenste pagina na succes
 
     return render_template('edit_profile.html', user=user)
+
 @main.route('/delete-account', methods=['POST'])
 def delete_account():
     if 'user_id' not in session:
@@ -713,16 +714,58 @@ def delete_account():
     user_id = session['user_id']
     user = User.query.get(user_id)
 
-    # Verwijder alle afhankelijkheden (bijv. listings, likes, reviews)
-    Listing.query.filter_by(user_id=user_id).delete()
-    Like.query.filter_by(user_id=user_id).delete()
-    Review.query.filter_by(user_id=user_id).delete()
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('main.index'))
+
+    # Verwijder gerelateerde likes
+    likes = Like.query.filter_by(user_id=user_id).all()
+    for like in likes:
+        db.session.delete(like)
+
+    # Verwijder reviews van de gebruiker
+    reviews = Review.query.filter_by(user_id=user_id).all()
+    for review in reviews:
+        db.session.delete(review)
+
+    # Verwijder notificaties
+    notifications = Notification.query.filter_by(user_id=user_id).all()
+    for notification in notifications:
+        db.session.delete(notification)
+
+    # Verwijder transacties waarbij de gebruiker betrokken is
+    transactions = Transaction.query.filter(
+        (Transaction.user_id == user_id) |
+        (Transaction.listing_id.in_(
+            Listing.query.filter_by(user_id=user_id).with_entities(Listing.listing_id)
+        ))
+    ).all()
+    for transaction in transactions:
+        db.session.delete(transaction)
+
+    # Verwijder listings van de gebruiker
+    listings = Listing.query.filter_by(user_id=user_id).all()
+    for listing in listings:
+        # Verwijder gerelateerde likes van de listing
+        listing_likes = Like.query.filter_by(listing_id=listing.listing_id).all()
+        for listing_like in listing_likes:
+            db.session.delete(listing_like)
+        # Verwijder gerelateerde reviews van de listing
+        listing_reviews = Review.query.filter_by(listing_id=listing.listing_id).all()
+        for listing_review in listing_reviews:
+            db.session.delete(listing_review)
+        db.session.delete(listing)
+
+    # Verwijder de gebruiker
     db.session.delete(user)
     db.session.commit()
 
+    # Verwijder sessie en bevestig verwijdering
     session.pop('user_id', None)
-    flash('Your account has been deleted.', 'success')
+    flash('Your account has been deleted successfully.', 'success')
     return redirect(url_for('main.index'))
+
+
 
 @main.route('/like/<int:listing_id>', methods=['POST'])
 def like_listing(listing_id):
