@@ -64,7 +64,6 @@ class Transaction(db.Model):
     transaction_id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     price_transaction = db.Column(db.Numeric(10, 2), nullable=False)
-    status = db.Column(db.Boolean, default=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
 

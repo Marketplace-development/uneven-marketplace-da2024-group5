@@ -458,7 +458,6 @@ def view_listing(listing_id):
         transaction = Transaction.query.filter_by(
             user_id=user_id,
             listing_id=listing_id,
-            status=True
         ).first()
 
         # Controleer of de gebruiker al een review heeft toegevoegd
@@ -498,7 +497,6 @@ def view_listing(listing_id):
             user_id=buyer.user_id,
             listing_id=listing_id,
             price_transaction=listing.price_listing,
-            status=True
         )
         db.session.add(transaction)
         db.session.commit()
