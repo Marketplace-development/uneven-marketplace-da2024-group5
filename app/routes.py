@@ -590,7 +590,7 @@ def wallet():
         return redirect(url_for('main.login'))
     
     user = User.query.get(session['user_id'])
-    return render_template('wallet.html', wallet_balance=user.wallet_balance)
+    return render_template('wallet.html', wallet_balance=round(user.wallet_balance,2))
 
 from decimal import Decimal
 
@@ -601,7 +601,7 @@ def recharge_page():
         return redirect(url_for('main.login'))
     
     user = User.query.get(session['user_id'])
-    return render_template('recharge_wallet.html', wallet_balance=user.wallet_balance)
+    return render_template('recharge_wallet.html', wallet_balance=round(user.wallet_balance,2))
 
 @main.route('/wallet/recharge', methods=['POST'])
 def recharge_wallet():

@@ -18,7 +18,7 @@
                 max-width: 800px; 
                 margin: 0 auto;">
         <h1 class="mb-4" style="color: #3D875F;">Recharge Your Wallet</h1>
-        <p>Current Balance: {{ wallet_balance }}</p>
+        <p>Current Balance: €{{ wallet_balance|round(2) }}</p>
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}

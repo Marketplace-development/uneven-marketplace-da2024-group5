@@ -18,7 +18,7 @@
                 max-width: 800px; 
                 margin: 0 auto;">
         <h1 class="mb-4" style="color: #3D875F;">Your Wallet</h1>
-        <p>Balance: {{ wallet_balance }}</p>
+        <p>Balance: €{{ wallet_balance|round(2) }}</p>
         <a href="{{ url_for('main.recharge_page') }}" class="btn btn-primary">
             Recharge Wallet
         </a>

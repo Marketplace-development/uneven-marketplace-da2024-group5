@@ -127,7 +127,7 @@
                     {% if username %}
                         <!-- Wallet Button -->
                         <a href="{{ url_for('main.wallet') }}" class="btn btn-outline-light me-3">
-                            Wallet: €{{ wallet_balance }}
+                            Wallet: €{{ wallet_balance|round(2) }}
                         </a>
                         <!-- Profile Dropdown -->
                         <div class="dropdown">
