@@ -96,19 +96,19 @@
             </div>
             
             <div class="mb-3">
-                <label for="file">Upload PDF:</label>
-                <input type="file" id="file" name="file" accept="application/pdf" required><br><br> 
-             </div>
+                <label for="file" style="display: block;">Upload PDF Itinerary (visible only to customers who purchase your trip):</label>
+                <input type="file" id="file" name="file" accept="application/pdf" required>
+            </div>
             
-             <div class="mb-3">
-                <label for="picture">Upload Picture:</label>
-                <input type="file" id="picture" name="picture" accept="image/*" required><br><br> 
-             </div>
+            <div class="mb-3">
+                <label for="picture" style="display: block;">Upload Picture:</label>
+                <input type="file" id="picture" name="picture" accept="image/*" required>
+            </div>            
 
 
              <div style="position: relative;">
-                <label for="place">Place:</label>
-                <input type="text" id="place" name="place" placeholder="Search for a place..." autocomplete="off" style="width: 100%;">
+                <label for="place">Location:</label>
+                <input type="text" id="place" name="place" placeholder="Search for a location..." autocomplete="off" style="width: 100%;">
                 <ul id="place-suggestions" class="suggestions"></ul>
             </div>
 
@@ -186,9 +186,10 @@
 
 
             <!-- Submit Button -->
-            <div class="text-end">
+            <div class="text-end" style="margin-top: 15px;">
                 <button type="submit" class="btn btn-primary" style="background-color: #3D875F; border-color: #3D875F;">Add Itinerary</button>
             </div>
+
         </form>
 
     </div> <!-- End of Content Box -->
