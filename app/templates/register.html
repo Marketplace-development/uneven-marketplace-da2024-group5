@@ -40,7 +40,7 @@
 
             <div class="mb-3">
                 <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="email" name="email" 
+                <input type="email" class="form-control" id="email" name="email" 
                     pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
                     title="Email must be valid and may contain special characters like é, ç, è, etc." required>
             </div>
@@ -62,27 +62,67 @@
 
             <!-- Preferences Quiz -->
             <div class="preferences-quiz mt-4">
-                <h3 class="text-center" style="color: #2A5B3D;">Voorkeurenquiz</h3>
-                <p>Hou je meer van een vakantie in een grote stad of van een rustigere plaats zoals een huisje aan een meer tussen de bergen?</p>
-                <div>
-                    <input type="radio" id="city" name="preference" value="cultuur" required>
-                    <label for="city">Grote stad</label><br>
-                    <input type="radio" id="nature" name="preference" value="natuur">
-                    <label for="nature">Huisje aan een meer tussen de bergen</label><br>
+                <h3 class="text-center" style="color: #2A5B3D;">Preferences Quiz</h3>
+                <p>Welke foto's spreken je het meest aan? (meerdere keuzes mogelijk)</p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                    <div style="width: 48%;">
+                        <!-- Eerste 5 afbeeldingen -->
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="berg" name="photo_preference[]" value="Adventure, Nature, Sport & Active, Budget & Backpacking, Roadtrip & Multi-Destination">
+                            <label for="berg"><img src="/static/images/berglandschap.png" alt="Berglandschap" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="stadsnacht" name="photo_preference[]" value="Culture, City Trips, Romantic">
+                            <label for="stadsnacht"><img src="/static/images/stadsnacht.png" alt="Stadsnacht" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="strand" name="photo_preference[]" value="Wellness & Relaxation, Family, Romantic, Budget & Backpacking, Roadtrip & Multi-Destination">
+                            <label for="strand"><img src="/static/images/stranduitzicht.png" alt="Stranduitzicht" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="gratis_festival" name="photo_preference[]" value="Festivals & Events, Budget & Backpacking">
+                            <label for="gratis_festival"><img src="/static/images/gratis_festival.png" alt="Gratis Festival" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="duur_festival" name="photo_preference[]" value="Festivals & Events">
+                            <label for="duur_festival"><img src="/static/images/duur_festival.png" alt="Duur Festival" style="width: 100%;"></label><br>
+                        </div>
+                    </div>
+                    <div style="width: 48%;">
+                        <!-- Laatste 5 afbeeldingen -->
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="monument" name="photo_preference[]" value="Culture, City Trips">
+                            <label for="monument"><img src="/static/images/monument.png" alt="Monument" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="wandeling" name="photo_preference[]" value="Nature, Wellness & Relaxation, Adventure, Budget & Backpacking, Sport & Active">
+                            <label for="wandeling"><img src="/static/images/wandeling.png" alt="Wandeling" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="restaurant" name="photo_preference[]" value="Culture, Romantic, City Trips">
+                            <label for="restaurant"><img src="/static/images/restaurant.png" alt="Restaurant" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="roadtrip" name="photo_preference[]" value="Roadtrips & Multi-Destination, Adventure, Family">
+                            <label for="roadtrip"><img src="/static/images/roadtrip.png" alt="Roadtrip" style="width: 100%;"></label><br>
+                        </div>
+                
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="spa" name="photo_preference[]" value="Wellness & Relaxation">
+                            <label for="spa"><img src="/static/images/spa.png" alt="Spa" style="width: 100%;"></label><br>
+                        </div>
+                    </div>
                 </div>
-
-                <p>Kies een foto die je het meest aanspreekt:</p>
-                <div>
-                    <input type="radio" id="beach" name="photo_preference" value="natuur" required>
-                    <label for="beach"><img src="/static/images/portuguese_coast.jpg" alt="Strand" style="width:100px;"></label><br>   
-                    <input type="radio" id="mountain" name="photo_preference" value="avontuur">
-                    <label for="mountain"><img src="/static/images/berg.jpg" alt="Berg" style="width:100px;"></label><br>
-                    <input type="radio" id="city_photo" name="photo_preference" value="cultuur">
-                    <label for="city_photo"><img src="/static/images/stad.jpg" alt="Stad" style="width:100px;"></label><br>
-                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Register</button>
             </div>
-            
-            <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
 
         <div class="text-center mt-3">

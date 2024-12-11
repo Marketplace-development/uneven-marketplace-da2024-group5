@@ -1,6 +1,7 @@
 # app/routes.py
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Listing, Transaction, Review, Notification, Like
 from supabase import create_client, Client
 from .config import Config
@@ -11,11 +12,15 @@ from werkzeug.utils import secure_filename
 import os
 import requests
 from sqlalchemy import desc
+from sqlalchemy.orm.attributes import flag_modified
+
 """
 request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
 Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
 """
 main = Blueprint('main', __name__)
+
+
 
 @main.route('/')
 def index():
@@ -73,23 +78,21 @@ def register():
             return redirect(url_for('main.register'))
         
         # Start met de basisvoorkeuren
-        preferences = {"natuur": 0, "cultuur": 0, "avontuur": 0}
+        preferences = preferences = {"Adventure": 0, "Nature": 0, "Culture": 0, "Sport & Active": 0, "Family": 0, "Wellness & Relaxation": 0, "Romantic": 0, "City Trips": 0, "Festivals & Events": 0, "Budget & Backpacking": 0, "Roadtrip & Multi-Destination": 0}
 
         # Update voorkeuren op basis van keuze in de eerste vraag
         preference_choice = request.form.get('preference')
-        if preference_choice == "cultuur":
-            preferences["cultuur"] += 1
-        elif preference_choice == "natuur":
-            preferences["natuur"] += 1
+        if preference_choice in preferences:
+            preferences[preference_choice]+=1
+        
+        # Handle multiple photo preferences
+        photo_preferences = request.form.getlist('photo_preference[]')
+        for photo_pref in photo_preferences:
+            categories = photo_pref.split(', ')
+            for category in categories:
+                if category in preferences:
+                    preferences[category] += 1
 
-        # Update voorkeuren op basis van keuze in de tweede vraag (fotokeuze)
-        photo_preference = request.form.get('photo_preference')
-        if photo_preference == "natuur":
-            preferences["natuur"] += 1
-        elif photo_preference == "avontuur":
-            preferences["avontuur"] += 1
-        elif photo_preference == "cultuur":
-            preferences["cultuur"] += 1
 
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
@@ -809,17 +812,20 @@ def like_listing(listing_id):
     if listing and user:
         category = listing.listing_categorie
         if category:
-            if user.preferences and category in user.preferences:
-                user.preferences[category] += 1
-            else:
-                if user.preferences is None:
-                    user.preferences = {}
-                user.preferences[category] = 1
+            user.preferences[category] = user.preferences.get(category, 0) + 1
+            flag_modified(user, 'preferences')  # Expliciet aangeven dat dit veld is gewijzigd
+            print(f"Updated {category} preference to {user.preferences[category]} for user {user.username}")
+
+    try:
+        db.session.commit()
+        flash('You liked this listing!', 'success')
+        print("Database commit successful.")
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while liking the listing.', 'error')
+        print(f"Error during commit: {e}")
 
 
-    db.session.commit()
-
-    flash('You liked this listing!', 'success')
     return redirect(url_for('main.view_listing', listing_id=listing_id))
 
 
