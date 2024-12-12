@@ -17,7 +17,6 @@
     {% endif %}
 {% endwith %}
 
-
 <style>
     /* Style the suggestions dropdown */
     .suggestions {
@@ -63,22 +62,22 @@
         <!-- Form -->
         <form method="POST" action="/add-listing" enctype='multipart/form-data'>
             <div class="mb-3">
-                <label for="listing_name" class="form-label" style="color: #3D875F;">Itinerary Name:</label>
+                <label for="listing_name" class="form-label" style="color: #3D875F;">Itinerary Name: <span style="color: red;">*</span></label>
                 <input type="text" class="form-control" id="listing_name" name="listing_name" placeholder="Enter itinerary name" required style="border-color: #3D875F;">
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label" style="color: #3D875F;">Description:</label>
+                <label for="description" class="form-label" style="color: #3D875F;">Description: <span style="color: red;">*</span></label>
                 <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter a description for the itinerary" required style="border-color: #3D875F;"></textarea>
             </div>
 
             <div class="mb-3">
-                <label for="price" class="form-label" style="color: #3D875F;">Price:</label>
+                <label for="price" class="form-label" style="color: #3D875F;">Price: <span style="color: red;">*</span></label>
                 <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" placeholder="Enter the price" required style="border-color: #3D875F;">
             </div>
 
             <div class="mb-3">
-                <label for="listing_categorie" class="form-label">Category:</label>
+                <label for="listing_categorie" class="form-label">Category: <span style="color: red;">*</span></label>
                 <select class="form-control" id="listing_categorie" name="listing_categorie" required>
                     <option value="">Choose a category...</option>
                     <option value="Adventure">Adventure</option>
@@ -105,13 +104,11 @@
                 <input type="file" id="picture" name="picture" accept="image/*" required>
             </div>            
 
-
-             <div style="position: relative;">
-                <label for="place">Location:</label>
-                <input type="text" id="place" name="place" placeholder="Search for a location..." autocomplete="off" style="width: 100%;">
+            <div style="position: relative;">
+                <label for="place">Location: <span style="color: red;">*</span></label>
+                <input type="text" id="place" name="place" placeholder="Search for a location..." autocomplete="off" style="width: 100%;" required>
                 <ul id="place-suggestions" class="suggestions"></ul>
             </div>
-
 
             <script>
                 const placeInput = document.getElementById('place');
@@ -180,10 +177,7 @@
                         alert('Please select a valid place from the suggestions.');
                     }
                 });
-
             </script>
-            
-
 
             <!-- Submit Button -->
             <div class="text-end" style="margin-top: 15px;">
