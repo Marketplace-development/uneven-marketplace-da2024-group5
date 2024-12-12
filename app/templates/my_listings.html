@@ -68,6 +68,14 @@
                                class="btn btn-primary" style="width: 80%;">View</a>
                             <a href="{{ url_for('main.edit_listing', listing_id=listing.listing_id) }}" 
                                class="btn btn-secondary" style="width: 80%;">Edit</a>
+                           
+                            <!-- Delete Button (Red) -->
+                            <form method="POST" action="{{ url_for('main.delete_listing', listing_id=listing.listing_id) }}" 
+                                  style="width: 80%; margin-top: 10px;">
+                                <button type="submit" class="btn btn-danger" style="background-color: #e63946; border-color: #e63946;">
+                                    Delete Listing
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

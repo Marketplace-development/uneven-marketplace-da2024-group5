@@ -289,6 +289,35 @@ def add_listing():
 
     return render_template('add_listing.html')
 
+@main.route('/delete-listing/<int:listing_id>', methods=['POST'])
+def delete_listing(listing_id):
+    if 'user_id' not in session:
+        flash('You need to log in to delete a listing.', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Fetch the listing by ID
+    listing = Listing.query.get(listing_id)
+
+    if not listing:
+        flash('Listing not found.', 'error')
+        return redirect(url_for('main.my_listings'))  # Redirect to a page with a list of the user's listings
+
+    # Check if the logged-in user is the owner of the listing
+    if listing.user_id != session['user_id']:
+        flash('You do not have permission to delete this listing.', 'error')
+        return redirect(url_for('main.my_listings'))
+
+    try:
+        # Remove the listing from the session and commit to the database
+        db.session.delete(listing)
+        db.session.commit()
+        flash('Listing deleted successfully.', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'An error occurred while deleting the listing: {str(e)}', 'error')
+
+    return redirect(url_for('main.my_listings'))  # Redirect to a page with the user's listings
 
 @main.route('/my_listings')
 def my_listings():
@@ -957,3 +986,4 @@ def view_pdf(listing_id):
         return "No PDF available for this listing.", 404
 
     return render_template('view_pdf.html', pdf_url=pdf_url)
+
