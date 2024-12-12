@@ -878,23 +878,6 @@ def liked_listings():
     return render_template('liked_listings.html', listings=liked_listings)
 
 
-
-
-@main.route('/quiz', methods=['GET', 'POST'])
-def quiz():
-    if request.method == 'POST':
-        user_id = session['user_id']
-        user = User.query.get(user_id)
-        user.preferences = {
-            "natuur": int(request.form['natuur']),
-            "cultuur": int(request.form['cultuur']),
-            "avontuur": int(request.form['avontuur'])
-        }
-        db.session.commit()
-        return redirect(url_for('main.index'))
-    return render_template('quiz.html')
-
-
 @main.route('/filter_listings', methods=['GET', 'POST'])
 def filter_listings():
     # Get filter and search parameters from the request
