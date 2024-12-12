@@ -127,26 +127,17 @@ def login():
 
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form.get('password', '')  # Haal het wachtwoord op, default is een lege string
+        password = request.form['password']  # Haal het wachtwoord op, default is een lege string
 
         user = User.query.filter_by(username=username).first()
 
-        if user:
-            # Check of de gebruiker een wachtwoord heeft ingesteld
-            if user.password:
-                # Controleer het ingevoerde wachtwoord
-                if user.check_password(password):
-                    session['user_id'] = user.user_id  # Bewaar user_id in de sessie
-                    return redirect(url_for('main.index'))
-                else:
-                    flash('Invalid password. Please try again.', 'error')
-            else:
-                # Gebruiker heeft geen wachtwoord (legacy account), inloggen zonder wachtwoord
-                session['user_id'] = user.user_id
-                flash('You logged in without a password. Please set a password in your account settings.', 'info')
-                return redirect(url_for('main.index'))
-        else:
-            flash('User not found. Would you like to <a href="/register">register</a>?', 'error')
+        if user and user.check_password(password):
+            session['user_id'] = user.user_id
+            flash('Login successful!','success')
+            return redirect(url_for('main.index'))
+
+        flash('Invalid username or password. Please try again.','error')
+        return render_template('login.html')
 
     return render_template('login.html')
 
