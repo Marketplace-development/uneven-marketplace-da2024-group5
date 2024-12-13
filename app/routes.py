@@ -14,6 +14,8 @@ import requests
 from sqlalchemy import desc
 from sqlalchemy.orm.attributes import flag_modified
 
+#from datetime import datetime
+
 
 main = Blueprint('main', __name__)
 
@@ -64,9 +66,42 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
+        # Validatie van e-mail
+        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        if not re.match(email_pattern, email):
+            flash('Invalid email address. Please enter a valid email.', 'error')
+            return redirect(url_for('main.register'))
+        
+        # Geboortedatum validatie 
+        if not date_of_birth:
+            flash('Invalid date of birth. Please enter a valid date of birth.', 'error')
+            return redirect(url_for('main.register'))
+
+        date_parts = date_of_birth.split('-')
+        if len(date_parts) != 3: #Controleer of de datum bestaat uit drie delen (dag, maand, jaar)
+            flash('Invalid date format. Please enter the date in "dd mm yyyy" format.', 'error')
+            return redirect(url_for('main.register'))
+    
+        day, month, year = date_parts
+        if not (day.isdigit() and month.isdigit() and year.isdigit()): #--> Controleer of de dag, maand en jaar geldig zijn
+            flash('Invalid date. Day, month, and year must be numeric.', 'error')
+            return redirect(url_for('main.register'))
+        
+        if len(year) != 4 or int(year) < 1 or int(year) > 9999: #--> Controleer of het jaartal vier cijfers heeft en tussen 1 en 9999 ligt
+            flash('Year must be between 1 and 9999.', 'error')
+            return redirect(url_for('main.register'))
+
+        if int(month) < 1 or int(month) > 12: #-> Controleer of de maand binnen de geldige waardes valt
+            flash('Invalid month. Please enter a value between 01 and 12.', 'error')
+            return redirect(url_for('main.register'))
+        
+        if int(day) < 1 or int(day) > 31: #-> Controleer of de dag binnen de geldige waardes valt
+            flash('Invalid day. Please enter a value between 01 and 31.', 'error')
+            return redirect(url_for('main.register'))
+        
         #Password validation
-        if len(password) <= 8:
-            flash('Password must be at least 8 characters long.', 'error')
+        if len(password) < 8:
+            flash('Password must be more than 8 characters long.', 'error')
             return redirect(url_for('main.register'))
 
         if password != confirm_password:
@@ -76,12 +111,6 @@ def register():
         # Phone number validation (should be exactly 10 digits)
         if len(phone_number) != 10 or not phone_number.isdigit():
             flash('Phone number must be exactly 10 digits long.', 'error')
-            return redirect(url_for('main.register'))
-        
-        # Validatie van e-mail
-        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
-        if not re.match(email_pattern, email):
-            flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.register'))
         
         # Start met de basisvoorkeuren
@@ -109,7 +138,7 @@ def register():
             flash('Email already registered. Please login.', 'register')
             return redirect(url_for('main.login'))  # Redirect naar de login-pagina
         
-        # Maak een nieuwe gebruiker aan
+        # Maak na alle checks een nieuwe gebruiker aan als dus alles in orde is
         new_user = User(
             username=username,
             email=email,
