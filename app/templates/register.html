@@ -33,37 +33,48 @@
         
         <!-- Registration Form -->
         <form action="/register" method="POST">
+            <!-- Username -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username: <span style="color: red;">*</span></label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
 
+            <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
-                <input type="email" class="form-control" id="email" name="email" 
-                    pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
-                    title="Email must be valid and may contain special characters like é, ç, è, etc." required>
+                <input type="email" class="form-control" id="email" name="email"  
+                       pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
+                       title="Email must be valid and may contain special characters like é, ç, è, etc." required>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password: <span style="color: red;">*</span></label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-
+            <!-- Date of Birth -->
             <div class="mb-3">
                 <label for="dob" class="form-label">Date of Birth: <span style="color: red;">*</span></label>
                 <input type="date" class="form-control" id="dob" name="date_of_birth" required>
             </div>
 
+            <!-- Phone Number -->
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number:</label>
                 <input type="tel" class="form-control" id="phone" name="phone_number">
             </div>
 
+            <!-- Wachtwoord -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password: <span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <!-- Bevestig wachtwoord -->
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password: <span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+
             <!-- Preferences Quiz -->
             <div class="preferences-quiz mt-4">
                 <h3 class="text-center" style="color: #2A5B3D;">Preferences Quiz</h3>
-                <p>Welke foto's spreken je het meest aan? (meerdere keuzes mogelijk)</p>
+                <p>Which photos are you most drawn to? (multiple answers possible)</p>
                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
                     <div style="width: 48%;">
                         <!-- Eerste 5 afbeeldingen -->

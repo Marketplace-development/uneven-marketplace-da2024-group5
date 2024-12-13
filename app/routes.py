@@ -66,10 +66,16 @@ def register():
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
         password = request.form['password']
+        confirm_password = request.form['confirm_password']
 
         if len(password) < 8:
             flash('Password must be at least 8 characters long.', 'register')
             return redirect(url_for('main.register'))
+
+        if password != confirm_password:
+            flash('Passwords do not match. Please try again.','register')
+            return redirect(url_for('main.register'))
+
 
         # Validatie van e-mail met accenten
         email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
