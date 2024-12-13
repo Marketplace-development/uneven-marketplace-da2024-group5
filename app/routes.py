@@ -25,9 +25,15 @@ def index():
 
         # Check of de gebruiker voorkeuren heeft ingesteld
         if user.preferences and any(user.preferences.values()):
-            top_preference = max(user.preferences, key=user.preferences.get)
+            # Sorteer voorkeuren en krijg de top twee scores
+            sorted_prefs = sorted(user.preferences.values(), reverse=True)
+            top_scores = sorted(list(set(sorted_prefs[:2])), reverse=True)  # Unieke top scores
+
+            # Bepaal categorieën om te tonen
+            categories_to_show = [category for category, value in user.preferences.items() if value in top_scores[:2]]
+
             listings = Listing.query.filter(
-                Listing.listing_categorie.contains(top_preference), 
+                Listing.listing_categorie.in_(categories_to_show),
                 Listing.user_id != user.user_id
             ).all()
         else:
