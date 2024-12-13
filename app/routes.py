@@ -877,11 +877,9 @@ def unlike_listing(listing_id):
     else:
         flash('You have not liked this listing.', 'error')
 
-    # Verwerk 'next' parameter
-    next_page = request.args.get('next', url_for('main.index'))  # Default naar de homepagina
+    # Verwerk 'next' parameter of blijf op de view_listing-pagina
+    next_page = request.args.get('next', url_for('main.view_listing', listing_id=listing_id))  # Default naar view_listing
     return redirect(next_page)
-
-
 
 
 
