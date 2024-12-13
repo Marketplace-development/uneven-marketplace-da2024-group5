@@ -299,6 +299,11 @@ def delete_listing(listing_id):
         return redirect(url_for('main.my_listings'))
 
     try:
+        # Delete all associated likes for the listing
+        likes = Like.query.filter_by(listing_id=listing_id).all()
+        for like in likes:
+            db.session.delete(like)
+
         # Remove the listing from the session and commit to the database
         db.session.delete(listing)
         db.session.commit()
