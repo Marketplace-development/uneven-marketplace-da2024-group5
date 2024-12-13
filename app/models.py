@@ -18,7 +18,7 @@ class User(db.Model):
     preferences = db.Column(db.JSON, default=lambda: {"Adventure": 0, "Nature": 0, "Culture": 0, "Sport & Active": 0, "Family": 0,
         "Wellness & Relaxation": 0, "Romantic": 0, "City Trips": 0,
         "Festivals & Events": 0, "Budget & Backpacking": 0, "Roadtrip & Multi-Destination": 0})
-    password = db.Column(db.String(255), nullable=True)
+    password = db.Column(db.String(255), nullable=False)
 
     #Helper method to set password hash
     def set_password(self,password):
