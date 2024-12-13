@@ -14,8 +14,6 @@ import requests
 from sqlalchemy import desc
 from sqlalchemy.orm.attributes import flag_modified
 
-#from datetime import datetime
-
 
 main = Blueprint('main', __name__)
 
@@ -67,6 +65,10 @@ def register():
         confirm_password = request.form['confirm_password']
 
         # Validatie van e-mail
+        if ' ' in email:
+            flash('Invalid email address. Please enter a valid email (no spaces allowed).', 'error')
+            return redirect(url_for('main.register'))
+
         email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
         if not re.match(email_pattern, email):
             flash('Invalid email address. Please enter a valid email.', 'error')
