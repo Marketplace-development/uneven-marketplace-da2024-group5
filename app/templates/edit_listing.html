@@ -20,20 +20,20 @@
         <form method="POST" action="{{ url_for('main.edit_listing', listing_id=listing.listing_id) }}">
             <!-- Listing Name -->
             <div class="mb-3">
-                <label for="listing_name" class="form-label" style="color: #3D875F;">Listing Name:</label>
-                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" required style="border-color: #3D875F;">
+                <label for="listing_name" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Listing Name:</label>
+                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
             </div>
 
             <!-- Price -->
             <div class="mb-3">
-                <label for="price" class="form-label" style="color: #3D875F;">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" required style="border-color: #3D875F;">
+                <label for="price" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Price:</label>
+                <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
             </div>
 
             <!-- Category -->
             <div class="mb-3">
-                <label for="listing_categorie" class="form-label" style="color: #3D875F;">Category:</label>
-                <select class="form-control" id="listing_categorie" name="listing_categorie" required style="border-color: #3D875F;">
+                <label for="listing_categorie" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Category:</label>
+                <select class="form-control" id="listing_categorie" name="listing_categorie" required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
                     <option value="">Choose a category...</option>
                     <option value="Adventure" {% if listing.listing_categorie == "Adventure" %}selected{% endif %}>Adventure</option>
                     <option value="Nature" {% if listing.listing_categorie == "Nature" %}selected{% endif %}>Nature</option>
