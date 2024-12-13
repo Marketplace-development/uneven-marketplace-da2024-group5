@@ -21,12 +21,10 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    {% if category == 'register' %}
-                        <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
-                            {{ message|safe }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endif %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
+                        {{ message|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
@@ -36,39 +34,43 @@
             <!-- Username -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username: <span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <input type="text" class="form-control" id="username" name="username" title="Please fill in this field." required value="{{ request.form.get('username', '') }}">
             </div>
 
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
-                <input type="email" class="form-control" id="email" name="email"  
-                       pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
-                       title="Email must be valid and may contain special characters like é, ç, è, etc." required>
+                <input type="email" class="form-control" id="email" name="email" 
+                    pattern="^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$" 
+                    title="Email must be valid and may contain special characters like é, ç, è, etc." 
+                    required value="{{ request.form.get('email', '') }}">
             </div>
 
             <!-- Date of Birth -->
             <div class="mb-3">
                 <label for="dob" class="form-label">Date of Birth: <span style="color: red;">*</span></label>
-                <input type="date" class="form-control" id="dob" name="date_of_birth" required>
+                <input type="date" class="form-control" id="dob" name="date_of_birth" title="Please fill in this field." required value="{{ request.form.get('date_of_birth', '') }}">
             </div>
+
 
             <!-- Phone Number -->
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number:</label>
-                <input type="tel" class="form-control" id="phone" name="phone_number">
+                <input type="tel" class="form-control" id="phone" name="phone_number" 
+                    title="phone number must be exact 10 character and without country code" value="{{ request.form.get('phone_number', '') }}">
             </div>
 
             <!-- Wachtwoord -->
             <div class="mb-3">
                 <label for="password" class="form-label">Password: <span style="color: red;">*</span></label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <input type="password" class="form-control" id="password" name="password" 
+                    title="password must be at least 8 characters." required>
             </div>
 
             <!-- Bevestig wachtwoord -->
             <div class="mb-3">
                 <label for="confirm_password" class="form-label">Confirm Password: <span style="color: red;">*</span></label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" title="Please fill in this field to confirm your password." title="Please fill in this field to confirm your password." required>
             </div>
 
             <!-- Preferences Quiz -->

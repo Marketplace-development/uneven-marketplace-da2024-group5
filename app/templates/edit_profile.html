@@ -59,37 +59,37 @@
             <!-- Username Field -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username: <span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" title="Please fill in this field if you want to change your username." required>
             </div>
 
             <!-- Email Field -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email: <span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}" title="Please fill in this field if you want to change your email." required>
             </div>
 
             <!-- Date of Birth Field -->
             <div class="mb-3">
                 <label for="date_of_birth" class="form-label">Date of Birth: <span style="color: red;">*</span></label>
-                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default('', true) }}" required>
+                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default('', true) }}" title="Please fill in this field if you want to change your date of birth." required>
             </div>
 
             <!-- Phone Number Field -->
             <div class="mb-3">
                 <label for="phone_number" class="form-label">Phone Number:</label>
-                <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}" title="Please fill in this field if you want to change your phone number.">
             </div>
 
             <!-- New Password Field -->
             <div class="mb-3">
                 <label for="new_password" class="form-label">New Password:</label>
-                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Leave blank to keep current password" title="Please fill in this field if you want to change your password.">
             </div>
 
             <!-- Confirm Password Field -->
             <div class="mb-3">
                 <label for="confirm_password" class="form-label">Confirm Password:</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter new password">
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter new password" title="Please fill in this field if you want to confirm you want to change your password.">
             </div>
 
             <!-- Submit Button -->

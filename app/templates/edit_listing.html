@@ -21,13 +21,13 @@
             <!-- Listing Name -->
             <div class="mb-3">
                 <label for="listing_name" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Listing Name:</label>
-                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
+                <input type="text" class="form-control" id="listing_name" name="listing_name" value="{{ listing.listing_name }}" title="Please fill in this field if you want to change the name." required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
             </div>
 
             <!-- Price -->
             <div class="mb-3">
                 <label for="price" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
+                <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" title="Please fill in this field if you want to change the price." required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
             </div>
 
             <!-- Category -->

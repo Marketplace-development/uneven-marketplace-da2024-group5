@@ -88,22 +88,22 @@
         <form method="POST" action="/add-listing" enctype='multipart/form-data'>
             <div class="mb-3">
                 <label for="listing_name" class="form-label">Itinerary Name: <span style="color: red;">*</span></label>
-                <input type="text" class="form-control" id="listing_name" name="listing_name" placeholder="Enter itinerary name" required>
+                <input type="text" class="form-control" id="listing_name" name="listing_name" placeholder="Enter itinerary name" title="Please fill in this field." required>
             </div>
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description: <span style="color: red;">*</span></label>
-                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter a description for the itinerary" required></textarea>
+                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter a description for the itinerary" title="Please fill in this field." required></textarea>
             </div>
 
             <div class="mb-3">
                 <label for="price" class="form-label">Price: <span style="color: red;">*</span></label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" placeholder="Enter the price" required>
+                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" placeholder="Enter the price" title="Please fill in this field." required>
             </div>
 
             <div class="mb-3">
                 <label for="listing_categorie" class="form-label">Category: <span style="color: red;">*</span></label>
-                <select class="form-control" id="listing_categorie" name="listing_categorie" required>
+                <select class="form-control" id="listing_categorie" name="listing_categorie" title="Please fill in this field." required>
                     <option value="">Choose a category...</option>
                     <option value="Adventure">Adventure</option>
                     <option value="Nature">Nature</option>
@@ -120,13 +120,13 @@
             </div>
             
             <div class="mb-3">
-                <label for="file" class="form-label">Upload PDF Itinerary (visible only to customers who purchase your trip):</label>
-                <input type="file" id="file" name="file" class="form-control" accept="application/pdf" required>
+                <label for="file" class="form-label">Upload PDF Itinerary (visible only to customers who purchase your trip): <span style="color: red;">*</span></label>
+                <input type="file" id="file" name="file" class="form-control" accept="application/pdf" title="Please add a file." required>
             </div>
             
             <div class="mb-3">
-                <label for="picture" class="form-label">Upload Picture:</label>
-                <input type="file" id="picture" name="picture" class="form-control" accept="image/*" required>
+                <label for="picture" class="form-label">Upload Picture: <span style="color: red;">*</span></label>
+                <input type="file" id="picture" name="picture" class="form-control" accept="image/*" title="Please add a picture." required>
             </div>            
 
             <div style="position: relative;">

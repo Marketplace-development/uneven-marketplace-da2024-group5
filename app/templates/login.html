@@ -16,6 +16,7 @@
 <div class="container h-100 d-flex justify-content-center align-items-center">
     <div class="login-box" style="background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
         <h2 class="text-center mb-4" style="color: #2A5B3D;">Login</h2>
+        
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -27,15 +28,16 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+
         <!-- Login Form -->
         <form action="/login" method="POST">
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <label for="username" class="form-label">Username: <span style="color: red;">*</span></label>
+                <input type="text" class="form-control" id="username" name="username" title="Please fill in this field to confirm your password." title="Please fill in your username." required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <label for="password" class="form-label">Password: <span style="color: red;">*</span></label>
+                <input type="password" class="form-control" id="password" name="password" title="Please fill in your username." required>
             </div>
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>

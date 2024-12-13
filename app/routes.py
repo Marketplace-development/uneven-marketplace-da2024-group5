@@ -14,12 +14,8 @@ import requests
 from sqlalchemy import desc
 from sqlalchemy.orm.attributes import flag_modified
 
-"""
-request geeft je toegang tot inkomende HTTP-verzoeken die door een gebruiker naar je server worden gestuurd.
-Hiermee kun je gegevens ophalen die door een gebruiker naar je route zijn verzonden, bijvoorbeeld bestanden, formulierdata, of queryparameters.
-"""
-main = Blueprint('main', __name__)
 
+main = Blueprint('main', __name__)
 
 
 @main.route('/')
@@ -68,19 +64,24 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
-        if len(password) < 8:
-            flash('Password must be at least 8 characters long.', 'register')
+        #Password validation
+        if len(password) <= 8:
+            flash('Password must be at least 8 characters long.', 'error')
             return redirect(url_for('main.register'))
 
         if password != confirm_password:
-            flash('Passwords do not match. Please try again.','register')
+            flash('Passwords do not match. Please try again.','error')
             return redirect(url_for('main.register'))
 
-
-        # Validatie van e-mail met accenten
+        # Phone number validation (should be exactly 10 digits)
+        if len(phone_number) != 10 or not phone_number.isdigit():
+            flash('Phone number must be exactly 10 digits long.', 'error')
+            return redirect(url_for('main.register'))
+        
+        # Validatie van e-mail
         email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
         if not re.match(email_pattern, email):
-            flash('Invalid email address. Please enter a valid email.', 'register')
+            flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.register'))
         
         # Start met de basisvoorkeuren
@@ -139,10 +140,10 @@ def login():
 
         if user and user.check_password(password):
             session['user_id'] = user.user_id
-            flash('Login successful!','success')
+            flash('Login successful!','info')
             return redirect(url_for('main.index'))
 
-        flash('Invalid username or password. Please try again.','error')
+        flash('Incorrect username or password. Please try again.','error')
         return render_template('login.html')
 
     return render_template('login.html')
@@ -551,8 +552,6 @@ def view_listing(listing_id):
     )
 
 
-
-
 @main.route('/add-review/<int:listing_id>', methods=['GET', 'POST'])
 def add_review(listing_id):
     if 'user_id' not in session:
@@ -735,6 +734,11 @@ def edit_profile():
             flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.edit_profile'))
 
+        # Phone number validation (should be exactly 10 digits)
+        if len(phone_number) != 10 or not phone_number.isdigit():
+            flash('Phone number must be exactly 10 digits long.', 'register')
+            return redirect(url_for('main.register'))
+        
         # Validatie van wachtwoord
         if new_password or confirm_password:
             if len(new_password) < 8:
