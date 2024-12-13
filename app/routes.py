@@ -919,6 +919,16 @@ def unlike_listing(listing_id):
     # Zoek de like in de database
     like = Like.query.filter_by(user_id=user_id, listing_id=listing_id).first()
     if like:
+        # Haal de listing op om de categorie te krijgen
+        listing = Listing.query.get(listing_id)
+        if listing and listing.listing_categorie:
+            category = listing.listing_categorie
+            user = User.query.get(user_id)
+            if user.preferences.get(category, 0) > 0:
+                user.preferences[category] -= 1
+                flag_modified(user, 'preferences')  # Markeer 'preferences' als gewijzigd
+                print(f"Decreased {category} preference to {user.preferences[category]} for user {user.username}")
+ 
         db.session.delete(like)
         db.session.commit()
         flash('Listing unliked successfully.', 'success')
