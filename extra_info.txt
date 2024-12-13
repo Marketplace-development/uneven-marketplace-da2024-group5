@@ -68,10 +68,18 @@ To power/develop our platform and deliver a seamless user experience/smooth oper
     The use of psycopg2-binary: Psycopg2-binary is the key to our connection with the PostgreSQL database on supabase. 
         --> It ensures secure, reliable, and efficient storage and retrieval of essential platform data, forming the backbone of data-driven features.
 
+    The use of supabase for as the database for our website (also see marketplace_ideation.txt file):
+        --> We use a database in our website to efficiently store and manage structured data, such as user information, itineraries, transactions... This ensures our data is organized, easily accessible, and secure. 
+        --> A database is crucial for providing dynamic content and scaling as our user base grows.
+        --> We chose Supabase because it offers a powerful and developer-friendly backend solution built on PostgreSQL. 
+        --> Its open-source nature and ease of integration made it the perfect choice for our needs, allowing us to focus on building the core functionality of our platform without worrying about complex backend setups.
+
     The use of buckets in our database on supabase: Supabase buckets provide a secure and scalable solution for storing and managing files like PDFs or pictures for each itinerary on our platform. 
         --> Each PDF and picture is uploaded to a designated bucket and linked to a specific listing in the database, with the file’s URL securely stored and hidden until a successful purchase is made. 
+        --> We wanted to implement an automatic solution to ensure uploaded images are rectangular, but this proved too complex and not core to our project. For our example itineraries, we manually adjusted images to maintain the layout. 
+        Currently, users can still upload images of various formats, which can disrupt the design, but in the future, we aim to restrict this to preserve visual consistency.
         --> Buyers can only access their purchased files through a "Download" button, enabled after transaction verification. Supabase policies and backend validation ensure strict access control, allowing only authenticated and eligible users to retrieve the files. 
-        --> This setup ensures seamless integration, robust security, and a user-friendly experience for both sellers and buyers.
+        This setup ensures seamless integration, robust security, and a user-friendly experience for both sellers and buyers.
 
     The use of Bootstrap: Bootstrap ensures the platform looks great on all devices with its responsive, modern design components. 
         --> From buttons to layouts, it provides a polished user interface that enhances navigation and usability.
