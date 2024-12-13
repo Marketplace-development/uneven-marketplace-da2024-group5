@@ -645,10 +645,20 @@ def view_listing(listing_id):
             price_transaction=listing.price_listing,
         )
         db.session.add(transaction)
-        db.session.commit()
-
-        flash('Purchase successful! Your wallet has been debited.', 'success')
-        return redirect(url_for('main.view_listing', listing_id=listing_id))
+        # Update preferences based on category [Wijziging 1]
+        category = listing.listing_categorie
+        if category:
+            buyer.preferences[category] = buyer.preferences.get(category, 0) + 2
+            flag_modified(buyer, 'preferences')  # Mark the preferences field as modified [Wijziging 2]
+                                
+        try:
+            db.session.commit()
+            flash('Purchase successful! Your wallet has been debited.', 'success')
+            return redirect(url_for('main.view_listing', listing_id=listing_id))
+        except Exception as e:
+                db.session.rollback()
+                flash(f'An error occurred while processing your purchase: {e}', 'error')
+                return redirect(url_for('main.view_listing', listing_id=listing_id))      
 
     return render_template(
         'view_listing.html',
