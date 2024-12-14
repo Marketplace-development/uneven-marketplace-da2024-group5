@@ -62,7 +62,7 @@
 
             <!-- Wachtwoord -->
             <div class="mb-3">
-                <label for="password" class="form-label">Password: <span style="color: red;">*</span></label>
+                <label for="password" class="form-label">Password (min. 8 characters): <span style="color: red;">*</span></label>
                 <input type="password" class="form-control" id="password" name="password" 
                     title="password must be at least 8 characters." required>
             </div>
@@ -135,68 +135,69 @@
                 </div>
             <!-- Preferences Quiz for additional questions -->
             <div class="additional-preferences mt-4">
-                <!-- Vraag 1: Travel Pace Preference -->
-                <h3 class="text-center" style="color: #2A5B3D;">How do you prefer to travel in a new place?</h3>
-                <div>
+                <!-- Vraag 1: Travel Place Preference -->
+                <h3 style="color: #2A5B3D; margin-top: 20px;">How do you prefer to travel in a new destination?</h3>
+                <div style="margin-bottom: 20px;">
                     <input type="radio" id="relaxed" name="travel_pace" value="Wellness & Relaxation, Romantic">
                     <label for="relaxed">At a relaxed pace, with plenty of time to soak in each experience.</label><br>
-            
+
                     <input type="radio" id="active" name="travel_pace" value="Adventure, Sport & Active">
                     <label for="active">Packed with activities, I want to see and do as much as possible!</label><br>
-            
+
                     <input type="radio" id="balanced" name="travel_pace" value="Family, Roadtrip & Multi-Destination">
                     <label for="balanced">Balanced, with a mix of sightseeing and leisure time.</label>
                 </div>
                 
                 <!-- Vraag 2: Accommodation Preference -->
-                <h3 class="text-center" style="color: #2A5B3D;">What type of accommodation do you prefer on vacation?</h3>
-                <div>
+                <h3 style="color: #2A5B3D; margin-top: 20px;">What type of accommodation do you prefer on vacation?</h3>
+                <div style="margin-bottom: 20px;">
                     <input type="radio" id="luxury" name="accommodation_type" value="Romantic, Wellness & Relaxation">
                     <label for="luxury">Luxury hotels or resorts.</label><br>
-            
+
                     <input type="radio" id="budget" name="accommodation_type" value="Budget & Backpacking">
                     <label for="budget">Budget hostels or guesthouses.</label><br>
-            
+
                     <input type="radio" id="rentals" name="accommodation_type" value="Family, City Trips">
                     <label for="rentals">Vacation rentals or apartments.</label>
                 </div>
-            
+
                 <!-- Vraag 3: Activity Preference -->
-                <h3 class="text-center" style="color: #2A5B3D;">Which of these activities excites you the most?</h3>
-                <div>
-                    <input type="checkbox" id="hiking" name="activity_preference" value="Adventure, Nature, Sport & Active">
+                <h3 style="color: #2A5B3D; margin-top: 20px;">Which of these activities excites you the most?</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="radio" id="hiking" name="activity_preference" value="Adventure, Nature, Sport & Active">
                     <label for="hiking">Hiking in nature and outdoor adventures.</label><br>
-            
-                    <input type="checkbox" id="exploring" name="activity_preference" value="Culture, City Trips">
+
+                    <input type="radio" id="exploring" name="activity_preference" value="Culture, City Trips">
                     <label for="exploring">Exploring local culture, museums, and historic sites.</label><br>
-            
-                    <input type="checkbox" id="festivals" name="activity_preference" value="Festivals & Events, Culture">
+
+                    <input type="radio" id="festivals" name="activity_preference" value="Festivals & Events, Culture">
                     <label for="festivals">Attending festivals and local events.</label>
                 </div>
-            
+
                 <!-- Vraag 4: Dining Preference -->
-                <h3 class="text-center" style="color: #2A5B3D;">What's your approach to food and dining when traveling?</h3>
-                <div>
+                <h3 style="color: #2A5B3D; margin-top: 20px;">What is your approach to food and dining when traveling?</h3>
+                <div style="margin-bottom: 20px;">
                     <input type="radio" id="local_food" name="dining_preference" value="Culture, Budget & Backpacking">
                     <label for="local_food">I love trying local and street foods.</label><br>
-            
+
                     <input type="radio" id="fine_dining" name="dining_preference" value="Romantic, City Trips">
                     <label for="fine_dining">I prefer fine dining and famous restaurants.</label>
                 </div>
-            
+
                 <!-- Vraag 5: Travel Motivation -->
-                <h3 class="text-center" style="color: #2A5B3D;">What motivates you to travel?</h3>
-                <div>
-                    <input type="checkbox" id="relaxation" name="travel_motivation" value="Wellness & Relaxation, Romantic">
+                <h3 style="color: #2A5B3D; margin-top: 20px;">What motivates you to travel?</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="radio" id="relaxation" name="travel_motivation" value="Wellness & Relaxation, Romantic">
                     <label for="relaxation">To relax and escape from my daily routine.</label><br>
-            
-                    <input type="checkbox" id="adventure" name="travel_motivation" value="Adventure, Sport & Active">
+
+                    <input type="radio" id="adventure" name="travel_motivation" value="Adventure, Sport & Active">
                     <label for="adventure">To challenge myself with new adventures and experiences.</label><br>
-            
-                    <input type="checkbox" id="culture" name="travel_motivation" value="Culture, City Trips">
+
+                    <input type="radio" id="culture" name="travel_motivation" value="Culture, City Trips">
                     <label for="culture">To learn about new cultures and histories.</label>
                 </div>
             </div>
+
                 
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
