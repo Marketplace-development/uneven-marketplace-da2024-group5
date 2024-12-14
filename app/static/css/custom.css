@@ -124,3 +124,12 @@ a:hover {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+
+.content-box-common {
+    background: rgba(255, 255, 255, 0.85); 
+    border-radius: 10px;                  
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+    margin: 0 auto;                       
+    padding: 20px;                        
+}
