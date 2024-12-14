@@ -139,6 +139,31 @@ def register():
                 if category in preferences:
                     preferences[category] += 1
 
+        # Verwerking van de overige vragen
+        travel_pace = request.form.get('travel_pace')
+        if travel_pace:
+            for category in travel_pace.split(', '):
+                preferences[category] += 1
+
+        accommodation_type = request.form.get('accommodation_type')
+        if accommodation_type:
+            for category in accommodation_type.split(', '):
+                preferences[category] += 1
+
+        activity_preferences = request.form.getlist('activity_preference')
+        for activity in activity_preferences:
+            for category in activity.split(', '):
+                preferences[category] += 1
+
+        dining_preference = request.form.get('dining_preference')
+        if dining_preference:
+            for category in dining_preference.split(', '):
+                preferences[category] += 1
+
+        travel_motivations = request.form.getlist('travel_motivation')
+        for motivation in travel_motivations:
+            for category in motivation.split(', '):
+                preferences[category] += 1
 
         # Controleer of de username of email al bestaan
         if User.query.filter_by(username=username).first() is not None:
