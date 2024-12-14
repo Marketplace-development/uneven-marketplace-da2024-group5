@@ -57,7 +57,7 @@
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number:</label>
                 <input type="tel" class="form-control" id="phone" name="phone_number" 
-                    title="phone number must be exact 10 character and without country code" value="{{ request.form.get('phone_number', '') }}">
+                    title="Phone number must be exactly 10 digits long and should not include the country code." value="{{ request.form.get('phone_number', '') }}">
             </div>
 
             <!-- Wachtwoord -->
