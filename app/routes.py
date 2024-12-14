@@ -116,8 +116,8 @@ def register():
             flash('Passwords do not match. Please try again.','error')
             return redirect(url_for('main.register'))
 
-        # Phone number validation (should be exactly 10 digits)
-        if len(phone_number) != 10 or not phone_number.isdigit():
+        # Phone number validation (should be null or exactly 10 digits)
+        if phone_number and (len(phone_number) != 10 or not phone_number.isdigit()):
             flash('Phone number must be exactly 10 digits long.', 'error')
             return redirect(url_for('main.register'))
         
