@@ -270,16 +270,17 @@ def edit_profile():
         new_password = request.form.get('new_password', '').strip()
         confirm_password = request.form.get('confirm_password', '').strip()
 
-        # Validatie van e-mail met accenten
-        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+        # Validatie van e-mail (Unicode-compatibele regex)
+        email_pattern = r'^[\w\.\+\-À-ÿ]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_pattern, email):
             flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.edit_profile'))
 
         # Phone number validation (should be exactly 10 digits)
-        if len(phone_number) != 10 or not phone_number.isdigit():
-            flash('Phone number must be exactly 10 digits long.', 'register')
-            return redirect(url_for('main.register'))
+        if phone_number and (len(phone_number) != 10 or not phone_number.isdigit()):
+            flash('Phone number must be exactly 10 digits long.', 'error')
+            return redirect(url_for('main.edit_profile'))
+
         
         # Validatie van wachtwoord
         if new_password or confirm_password:
