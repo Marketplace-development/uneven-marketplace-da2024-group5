@@ -133,6 +133,7 @@
                         </div>
                     </div>
                 </div>
+
             <!-- Preferences Quiz for additional questions -->
             <div class="additional-preferences mt-4">
                 <!-- Vraag 1: Travel Place Preference -->
@@ -162,15 +163,15 @@
                 </div>
 
                 <!-- Vraag 3: Activity Preference -->
-                <h3 style="color: #2A5B3D; margin-top: 20px;">Which of these activities excites you the most?</h3>
+                <h3 style="color: #2A5B3D; margin-top: 20px;">Which of these activities excites you the most? (multiple answers possible)</h3>
                 <div style="margin-bottom: 20px;">
-                    <input type="radio" id="hiking" name="activity_preference" value="Adventure, Nature, Sport & Active">
+                    <input type="checkbox" id="hiking" name="activity_preference" value="Adventure, Nature, Sport & Active">
                     <label for="hiking">Hiking in nature and outdoor adventures.</label><br>
 
-                    <input type="radio" id="exploring" name="activity_preference" value="Culture, City Trips">
+                    <input type="checkbox" id="exploring" name="activity_preference" value="Culture, City Trips">
                     <label for="exploring">Exploring local culture, museums, and historic sites.</label><br>
 
-                    <input type="radio" id="festivals" name="activity_preference" value="Festivals & Events, Culture">
+                    <input type="checkbox" id="festivals" name="activity_preference" value="Festivals & Events, Culture">
                     <label for="festivals">Attending festivals and local events.</label>
                 </div>
 
@@ -185,21 +186,18 @@
                 </div>
 
                 <!-- Vraag 5: Travel Motivation -->
-                <h3 style="color: #2A5B3D; margin-top: 20px;">What motivates you to travel?</h3>
+                <h3 style="color: #2A5B3D; margin-top: 20px;">What motivates you to travel? (multiple answers possible)</h3>
                 <div style="margin-bottom: 20px;">
-                    <input type="radio" id="relaxation" name="travel_motivation" value="Wellness & Relaxation, Romantic">
+                    <input type="checkbox" id="relaxation" name="travel_motivation" value="Wellness & Relaxation, Romantic">
                     <label for="relaxation">To relax and escape from my daily routine.</label><br>
 
-                    <input type="radio" id="adventure" name="travel_motivation" value="Adventure, Sport & Active">
+                    <input type="checkbox" id="adventure" name="travel_motivation" value="Adventure, Sport & Active">
                     <label for="adventure">To challenge myself with new adventures and experiences.</label><br>
 
-                    <input type="radio" id="culture" name="travel_motivation" value="Culture, City Trips">
+                    <input type="checkbox" id="culture" name="travel_motivation" value="Culture, City Trips">
                     <label for="culture">To learn about new cultures and histories.</label>
                 </div>
             </div>
-
-                
-
                 <button type="submit" class="btn btn-primary w-100">Register</button>
             </div>
         </form>
