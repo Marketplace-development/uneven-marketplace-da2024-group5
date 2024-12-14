@@ -53,7 +53,7 @@
             <i class="fas fa-star" style="color: #FFD700;"></i> 
             {{ listing.average_rating if listing.average_rating else "No ratings" }}
         </p>
-        
+
         <!-- Seller Email Section -->
         {% if transaction_exists %}
         <div class="mt-4">
@@ -61,7 +61,7 @@
             <p><strong>Email:</strong> {{ seller_email }}</p>
         </div>
         {% endif %}
-        
+
         <!-- Like/Unlike and Buy Buttons Section -->
         <div class="text-center mt-3">
             {% if session.get('user_id') %}
@@ -86,9 +86,9 @@
                     {% if transaction_exists %}
                         <a href="{{ url_for('main.view_pdf', listing_id=listing.listing_id) }}" class="btn btn-secondary w-100">View PDF</a>
                     {% else %}
-                        <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">
-                            <button type="submit" class="btn btn-success w-100">Buy Now</button>
-                        </form>
+                        <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#confirmPurchaseModal">
+                            Buy Now
+                        </button>
                     {% endif %}
                 {% endif %}
             {% else %}
@@ -126,6 +126,27 @@
                 {% else %}
                     <p>Please <a href="{{ url_for('main.login') }}">log in</a> to add a review.</p>
                 {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Purchase Confirmation Modal -->
+<div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-labelledby="confirmPurchaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmPurchaseModalLabel">Confirm Purchase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to buy this itinerary for €{{ listing.price_listing }}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">
+                    <button type="submit" class="btn btn-success">Confirm Purchase</button>
+                </form>
             </div>
         </div>
     </div>
