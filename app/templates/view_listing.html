@@ -145,11 +145,28 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <form method="POST" action="{{ url_for('main.view_listing', listing_id=listing.listing_id) }}">
-                    <button type="submit" class="btn btn-success">Confirm Purchase</button>
+                    <button type="submit" id="confirm-purchase-btn" class="btn btn-success">Confirm Purchase</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const confirmPurchaseButton = document.getElementById('confirm-purchase-btn');
+        
+        confirmPurchaseButton.addEventListener('click', function (event) {
+            // Disable the button immediately
+            confirmPurchaseButton.disabled = true;
+
+            // Optional: Update button text to provide user feedback
+            confirmPurchaseButton.textContent = "Processing...";
+
+            // Allow the form to be submitted
+            confirmPurchaseButton.form.submit();
+        });
+    });
+</script>
 
 {% endblock %}
