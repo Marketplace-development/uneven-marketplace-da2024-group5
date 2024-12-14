@@ -75,10 +75,12 @@ def register():
             flash('Invalid email address. Please enter a valid email (no spaces allowed).', 'error')
             return redirect(url_for('main.register'))
 
-        email_pattern = r"^[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç._%-]+@[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+\.[a-zA-Zàáâäãåçèéêëìíîïòóôöõùúûüÿñç.-]+$"
+         # Validatie van e-mail (Unicode-compatibele regex)
+        email_pattern = r'^[\w\.\+\-À-ÿ]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_pattern, email):
             flash('Invalid email address. Please enter a valid email.', 'error')
             return redirect(url_for('main.register'))
+
         
         # Geboortedatum validatie 
         if not date_of_birth:
