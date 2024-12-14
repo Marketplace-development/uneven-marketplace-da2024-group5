@@ -15,6 +15,8 @@ During the development of our platform, we made several deliberate choices to fo
     We did not create a direct messaging system between users, but we did include the concept in our visual ontology and ERD as a foundation for future development.
     --> Instead, users can access the seller's email address after making a purchase and communicate with them directly via email.
 
+    We considered implementing an automatic background switch for our website (which is why we have multiple photos in our image files), but it wasn't our main priority at the moment. It's something we may explore in future developments.
+
 Use of Algorithms:
 
     We developed an algorithm that tailors recommendations based on user preferences gathered from a short quiz. This personalization improves the user experience by suggesting listings that align with individual interests.
