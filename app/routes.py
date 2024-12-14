@@ -90,7 +90,7 @@ def register():
             flash('Invalid date format. Please enter the date in "dd mm yyyy" format.', 'error')
             return redirect(url_for('main.register'))
     
-        day, month, year = date_parts
+        year, month, day = date_parts
         if not (day.isdigit() and month.isdigit() and year.isdigit()): #--> Controleer of de dag, maand en jaar geldig zijn
             flash('Invalid date. Day, month, and year must be numeric.', 'error')
             return redirect(url_for('main.register'))
