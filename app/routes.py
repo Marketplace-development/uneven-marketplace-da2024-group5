@@ -45,17 +45,17 @@ def index():
     for listing in listings:
         listing.price_listing = round(listing.price_listing, 2)
         listing.like_count = len(listing.likes)  # Tel aantal likes
-        
-        # Bereken gemiddelde rating, negeer None ratings
-        reviews = listing.reviews
-        valid_ratings = [review.rating for review in reviews if review.rating is not None]
-        if valid_ratings:
-            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+
+        # Haal gemiddelde rating uit Supabase
+        response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
+
+        if response.data and response.data.get("average_rating") is not None:
+            listing.average_rating = round(float(response.data["average_rating"]), 1)
         else:
-            listing.average_rating = None
+            listing.average_rating = None  # Stel in op None als er geen data is
 
+    # Render de template met opgehaalde data
     return render_template('index.html', username=user.username if 'user_id' in session else None, listings=listings)
-
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -554,37 +554,52 @@ def my_listings():
     user_listings = Listing.query.filter_by(user_id=user_id).all()
 
     for listing in user_listings:
-        listing.price_listing = f"{round(listing.price_listing, 2):.2f}"  # Format price to 2 decimal places
-        listing.like_count = len(Like.query.filter_by(listing_id=listing.listing_id).all())  # Count likes
+        # Format price to 2 decimal places
+        listing.price_listing = f"{round(listing.price_listing, 2):.2f}"
+        
+        # Tel het aantal likes voor deze listing
+        listing.like_count = len(Like.query.filter_by(listing_id=listing.listing_id).all())
 
-        # Bereken gemiddelde rating, negeer None ratings
-        reviews = Review.query.filter_by(listing_id=listing.listing_id).all()
-        valid_ratings = [review.rating for review in reviews if review.rating is not None]
-        if valid_ratings:
-            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        # Haal gemiddelde rating op uit Supabase
+        response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
+        
+        if response.data and response.data.get("average_rating") is not None:
+            listing.average_rating = round(float(response.data["average_rating"]), 1)
         else:
-            listing.average_rating = None  # Geen ratings beschikbaar
+            listing.average_rating = None  # Geen gemiddelde rating beschikbaar
 
     return render_template('my_listings.html', listings=user_listings)
 
 
+
 @main.route('/listings')
 def listings():
+    # Verkrijg alle listings uit de lokale database
     all_listings = Listing.query.all()
+
     for listing in all_listings:
+        # Ronde de prijs af naar 2 decimalen
         listing.price_listing = round(listing.price_listing, 2)
-        listing.like_count = len(listing.likes)  # Tel het aantal likes
         
-        # Bereken gemiddelde rating, negeer None ratings
+        # Tel het aantal likes
+        listing.like_count = len(listing.likes)
+
+        # Bereken gemiddelde rating uit de lokale database (reviews)
         reviews = listing.reviews
         valid_ratings = [review.rating for review in reviews if review.rating is not None]
         if valid_ratings:
             listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
         else:
             listing.average_rating = None  # Geen ratings beschikbaar
-    
-    return render_template('listings.html', listings=all_listings)
 
+        # Verkrijg de gemiddelde rating uit Supabase (optioneel)
+        response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
+        if response.data and response.data.get("average_rating") is not None:
+            listing.average_rating = round(float(response.data["average_rating"]), 1)
+        else:
+            listing.average_rating = None  # Stel in op None als er geen data is
+
+    return render_template('listings.html', listings=all_listings)
 
 
 @main.route('/edit-listing/<int:listing_id>', methods=['GET', 'POST'])
@@ -607,7 +622,7 @@ def edit_listing(listing_id):
 
 
 
-@main.route('/listing/<int:listing_id>', methods=['GET', 'POST']) 
+@main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
 def view_listing(listing_id):
     # Haal de listing op
     listing = Listing.query.get(listing_id)
@@ -621,13 +636,15 @@ def view_listing(listing_id):
     # Bereken het aantal likes
     listing.like_count = len(listing.likes)
 
-    # Bereken gemiddelde rating, negeer None ratings
-    reviews = Review.query.filter_by(listing_id=listing_id).all()
-    valid_ratings = [review.rating for review in reviews if review.rating is not None]
-    if valid_ratings:
-        listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+    # Haal gemiddelde rating op uit Supabase
+    response = supabase.table("Listing").select("average_rating").eq("listing_id", listing_id).single().execute()
+    if response.data and response.data.get("average_rating") is not None:
+        listing.average_rating = round(float(response.data["average_rating"]), 1)
     else:
         listing.average_rating = None
+
+    # Haal alle reviews op
+    reviews = Review.query.filter_by(listing_id=listing_id).all()
 
     # Controleer of de gebruiker is ingelogd en of de listing al is gekocht
     transaction_exists = None
@@ -679,20 +696,21 @@ def view_listing(listing_id):
             price_transaction=listing.price_listing,
         )
         db.session.add(transaction)
-        # Update preferences based on category [Wijziging 1]
+
+        # Update preferences based on category
         category = listing.listing_categorie
         if category:
             buyer.preferences[category] = buyer.preferences.get(category, 0) + 2
-            flag_modified(buyer, 'preferences')  # Mark the preferences field as modified [Wijziging 2]
+            flag_modified(buyer, 'preferences')  # Mark the preferences field as modified
                                 
         try:
             db.session.commit()
             flash('Purchase successful! Your wallet has been debited.', 'success')
             return redirect(url_for('main.view_listing', listing_id=listing_id))
         except Exception as e:
-                db.session.rollback()
-                flash(f'An error occurred while processing your purchase: {e}', 'error')
-                return redirect(url_for('main.view_listing', listing_id=listing_id))      
+            db.session.rollback()
+            flash(f'An error occurred while processing your purchase: {e}', 'error')
+            return redirect(url_for('main.view_listing', listing_id=listing_id))      
 
     return render_template(
         'view_listing.html',
@@ -995,19 +1013,18 @@ def liked_listings():
     liked_listings = Listing.query.join(Like).filter(Like.user_id == user_id).all()
 
     for listing in liked_listings:
+        # Haal het aantal likes en prijs
         listing.like_count = len(listing.likes)
         listing.price_listing = round(listing.price_listing, 2)
-        
-        # Bereken gemiddelde rating, negeer None ratings
-        reviews = listing.reviews
-        valid_ratings = [review.rating for review in reviews if review.rating is not None]
-        if valid_ratings:
-            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+
+        # Haal gemiddelde rating op uit Supabase
+        response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
+        if response.data and response.data.get("average_rating") is not None:
+            listing.average_rating = round(float(response.data["average_rating"]), 1)
         else:
             listing.average_rating = None  # Geen ratings beschikbaar
 
     return render_template('liked_listings.html', listings=liked_listings)
-
 
 @main.route('/filter_listings', methods=['GET', 'POST'])
 def filter_listings():
@@ -1032,7 +1049,7 @@ def filter_listings():
     # Retrieve all listings based on the current filters
     filtered_listings = query.all()
 
-    # Calculate additional data for each listing
+    # Fetch average ratings for all listings from Supabase
     for listing in filtered_listings:
         # Round the price to 2 decimal places
         listing.price_listing = round(listing.price_listing, 2)
@@ -1040,11 +1057,10 @@ def filter_listings():
         # Count the likes for the listing
         listing.like_count = len(listing.likes)
 
-        # Calculate the average rating
-        reviews = listing.reviews
-        valid_ratings = [review.rating for review in reviews if review.rating is not None]
-        if valid_ratings:
-            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
+        # Haal gemiddelde rating uit Supabase
+        response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
+        if response.data and response.data.get("average_rating") is not None:
+            listing.average_rating = round(float(response.data["average_rating"]), 1)
         else:
             listing.average_rating = None
 
@@ -1073,6 +1089,3 @@ def filter_listings():
 
     # Render the listings page with filtered results
     return render_template('listings.html', listings=filtered_listings)
-
-
-
