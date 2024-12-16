@@ -604,13 +604,7 @@ def listings():
         # Tel het aantal likes
         listing.like_count = len(listing.likes)
 
-        # Bereken gemiddelde rating uit de lokale database (reviews)
-        reviews = listing.reviews
-        valid_ratings = [review.rating for review in reviews if review.rating is not None]
-        if valid_ratings:
-            listing.average_rating = round(sum(valid_ratings) / len(valid_ratings), 1)
-        else:
-            listing.average_rating = None  # Geen ratings beschikbaar
+      
 
         # Verkrijg de gemiddelde rating uit Supabase (optioneel)
         response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
