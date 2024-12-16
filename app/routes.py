@@ -575,10 +575,10 @@ def my_listings():
 
     for listing in user_listings:
         # Format price to 2 decimal places
-        listing.price_listing = f"{round(listing.price_listing, 2):.2f}"
+        listing.price_listing = round(listing.price_listing, 2)
         
         # Tel het aantal likes voor deze listing
-        listing.like_count = len(Like.query.filter_by(listing_id=listing.listing_id).all())
+        listing.like_count = len(listing.likes)
 
         # Haal gemiddelde rating op uit Supabase
         response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
@@ -604,9 +604,7 @@ def listings():
         # Tel het aantal likes
         listing.like_count = len(listing.likes)
 
-      
-
-        # Verkrijg de gemiddelde rating uit Supabase (optioneel)
+        # Verkrijg de gemiddelde rating uit Supabase
         response = supabase.table("Listing").select("average_rating").eq("listing_id", listing.listing_id).single().execute()
         if response.data and response.data.get("average_rating") is not None:
             listing.average_rating = round(float(response.data["average_rating"]), 1)
