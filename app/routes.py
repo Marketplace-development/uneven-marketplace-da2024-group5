@@ -204,7 +204,7 @@ def login():
 
         if user and user.check_password(password):
             session['user_id'] = user.user_id
-            flash('Login successful!','info')
+            
             return redirect(url_for('main.index'))
 
         flash('Incorrect username or password. Please try again.','error')
@@ -391,7 +391,79 @@ def delete_account():
     flash('Your account has been deleted successfully.', 'success')
     return redirect(url_for('main.index'))
 
+#add listing helpers for cleaner code
+def flash_error(message):
+    flash(message, "error")
+    return redirect(request.url)
 
+def validate_price(price):
+    try:
+        price = float(price)
+        if price < 0:
+            return None, "Price cannot be negative."
+        return round(price, 2), None
+    except ValueError:
+        return None, "Price must be a valid number."
+
+def validate_place(place):
+    if ',' not in place:
+        return "Invalid place format. Please select a valid place from the suggestions."
+    validation_url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={place}&maxRows=1'
+    validation_response = requests.get(validation_url)
+    if validation_response.status_code != 200 or not validation_response.json().get('geonames'):
+        return "Invalid place. Please select a valid place from the suggestions."
+    return None  # Place is valid
+
+@main.route('/search_places', methods=['GET'])
+def search_places():
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify([])
+
+    url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={query}&maxRows=10'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        # Extract relevant data
+        suggestions = [
+            {
+                'name': place['name'],
+                'country': place.get('countryName', ''),
+                'lat': place.get('lat'),
+                'lng': place.get('lng')
+            }
+            for place in data.get('geonames', [])
+        ]
+        return jsonify(suggestions)
+    else:
+        return jsonify({'error': 'Failed to fetch places from GeoNames'}), 500
+
+
+
+def validate_price(price):
+    try:
+        price = float(price)
+        if price < 0:
+            return None, "Price cannot be negative."
+        return round(price, 2), None
+    except ValueError:
+        return None, "Price must be a valid number."
+
+def handle_file_upload(file, folder_prefix, allowed_extensions, mime_type):
+    if not file or not file.filename.endswith(tuple(allowed_extensions)):
+        return None, f"Invalid file. Allowed extensions are: {', '.join(allowed_extensions)}."
+    
+    import uuid
+    filename = f"{folder_prefix}/{uuid.uuid4().hex}_{secure_filename(file.filename)}"
+    file_content = file.read()
+    response = supabase.storage.from_("ViaVia").upload(filename, file_content, {'content-type': mime_type})
+
+    if hasattr(response, "raw_response") and response.raw_response.status_code != 200:
+        return None, f"Error uploading file: {response.raw_response.text}"
+    
+    file_url = f"{supabase_url}/storage/v1/object/public/ViaVia/{filename}"
+    return file_url, None
 
 
 @main.route('/add-listing', methods=['GET', 'POST'])
@@ -408,83 +480,31 @@ def add_listing():
             place = request.form.get('place', '').strip()
             file = request.files.get('file')
             picture = request.files.get('picture')
-
             listing_categorie = request.form.get('listing_categorie', '').strip()  # Nieuwe categorie veld
 
             # Validate form inputs
             if not listing_name or not description or not price or not place or not listing_categorie:
-                flash("All fields are required (name, description, price,place, category).", "error")
-                return redirect(request.url)
-            
-             # Check if place is in the format "place, country"
-            if ',' not in place:
-                flash("Invalid place format. Please select a valid place from the suggestions.", "error")
-                return redirect(request.url)
-            # Validate the place with GeoNames API
-            username = 'bertdr1'  # Replace with your GeoNames username
-            validation_url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={place}&maxRows=1'
-            validation_response = requests.get(validation_url)
-            if validation_response.status_code != 200 or not validation_response.json().get('geonames'):
-                flash("Invalid place. Please select a valid place from the suggestions.", "error")
-                return redirect(request.url)
-            
-            try:
-                price = float(price)  # Convert price to a float
-                if price < 0:   #Check if price is negative
-                    flash("Price cannot be negative.","error")
-                    return redirect(request.url)
-                price = round(price,2)  #Round price to two decimal places
-            except ValueError:
-                flash("Price must be a valid number.", "error")
-                return redirect(request.url)
-            
-            
-            if not file:
-                flash("A file is required.", "error")
-                return redirect(request.url)
-            
-            # Ensure the file is a PDF
-            if not file.filename.endswith('.pdf'):
-                flash("Only PDF files are allowed.", "error")
-                return redirect(request.url)
-            # Secure the file name
-            import uuid
-            filename = f"{uuid.uuid4().hex}_{secure_filename(file.filename)}"
-            folder_path = f"Listing_Bestand/{uuid.uuid4().hex}_{secure_filename(file.filename)}"
-
-            file_content = file.read()
-            # Upload the file to Supabase
-            response = supabase.storage.from_("ViaVia").upload(folder_path, file_content, {
-                'content-type': 'application/pdf'
-                })
-
-            # Handle the response
-            if hasattr(response, "raw_response") and response.raw_response.status_code != 200:
-                flash(f"Error uploading file to Supabase: {response.raw_response.text}", "error")
-                return redirect(request.url)
-
-            # Get the public URL of the file
-            file_url = f"{supabase_url}/storage/v1/object/public/ViaVia/{folder_path}"
+                return flash_error("All fields are required (name, description, price, place, category).")
 
             
-            if picture and picture.filename.endswith(('jpg', 'jpeg', 'png')):
-                picture_filename = f"Listing_Picture/{uuid.uuid4().hex}_{secure_filename(picture.filename)}"
-                picture_content = picture.read()
+            error = validate_place(place)
+            if error:
+                return flash_error(error)
 
-                # Upload the picture to Supabase
-                picture_response = supabase.storage.from_("ViaVia").upload(picture_filename, picture_content, {
-                    'content-type': picture.mimetype
-                })
+            
+            price, error = validate_price(price)
+            if error:
+                return flash_error(error)
 
-                if hasattr(picture_response, "raw_response") and picture_response.raw_response.status_code != 200:
-                    flash(f"Error uploading picture: {picture_response.raw_response.text}", "error")
-                    return redirect(request.url)
+            
+            file_url, error = handle_file_upload(file, "Listing_Bestand", ['pdf'], 'application/pdf')
+            if error:
+                return flash_error(error)
 
-                # Get the public URL of the picture
-                picture_url = f"{supabase_url}/storage/v1/object/public/ViaVia/{picture_filename}"
-            else:
-                flash("A valid picture file is required (jpg, jpeg, png).", "error")
-                return redirect(request.url)
+            picture_url, error = handle_file_upload(picture, "Listing_Picture", ['jpg', 'jpeg', 'png'], picture.mimetype)
+            if error:
+                return flash_error(error)
+
             # Save listing details to the database
             new_listing = Listing(
                 listing_name=listing_name,
@@ -722,32 +742,6 @@ def view_listing(listing_id):
         seller_email=seller_email  # Pass de verkoper-email naar de template
     )
 
-
-@main.route('/search_places', methods=['GET'])
-def search_places():
-    query = request.args.get('q', '')
-    username = 'bertdr1'  # Replace with your GeoNames username
-    if not query:
-        return jsonify([])
-
-    url = f'http://api.geonames.org/searchJSON?username=bertdr1&q={query}&maxRows=10'
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        # Extract relevant data
-        suggestions = [
-            {
-                'name': place['name'],
-                'country': place.get('countryName', ''),
-                'lat': place.get('lat'),
-                'lng': place.get('lng')
-            }
-            for place in data.get('geonames', [])
-        ]
-        return jsonify(suggestions)
-    else:
-        return jsonify({'error': 'Failed to fetch places from GeoNames'}), 500
 
 
 
