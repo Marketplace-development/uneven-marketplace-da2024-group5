@@ -62,9 +62,8 @@ Use of Algorithms:
     Future Directions: To further refine our recommendations, we plan to integrate advanced predictive analytics, considering user behavior patterns over time. 
     This will let us proactively adjust preferences even before explicit actions are made by the user (besides liking and buying travel guides).
 
-
     In the future, additional algorithms could be integrated to enhance functionality. 
-    --> For example, during user registration, we could collect location data (using the external GeoNames API, see additional info below) to power features like targeted recommendations and advertisements for local businesses. 
+    --> For example, during user registration, we could collect location data (using the external GeoNames API, see additional info below) to power features like targeted recommendations, advertisements for local businesses or even location-based listing filters (such as radius filtering, travel time filters, ...)
     --> But for now, our focus remains on delivering a functional recommendation system while leaving room for these enhancements in subsequent phases.
 
 To power/develop our platform and deliver a seamless user experience/smooth operation of our platform, we rely on a combination of tools and technologies, including:
@@ -112,7 +111,7 @@ To power/develop our platform and deliver a seamless user experience/smooth oper
     The use of psycopg2-binary: Psycopg2-binary is the key to our connection with the PostgreSQL database on supabase. 
         --> It ensures secure, reliable, and efficient storage and retrieval of essential platform data, forming the backbone of data-driven features.
 
-    The use of supabase for as the database for our website (also see marketplace_ideation.txt file):
+    The use of supabase for the database of our website (also see marketplace_ideation.txt file):
         --> We use a database in our website to efficiently store and manage structured data, such as user information, itineraries, transactions... This ensures our data is organized, easily accessible, and secure. 
         --> A database is crucial for providing dynamic content and scaling as our user base grows.
         --> We chose Supabase because it offers a powerful and developer-friendly backend solution built on PostgreSQL. 

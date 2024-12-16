@@ -4,6 +4,18 @@
 
 {% block content %}
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
 <!-- Container -->
 <div class="container-fluid d-flex justify-content-center align-items-start" style="min-height: calc(100vh - 120px); margin-top: 30px;">
@@ -15,6 +27,7 @@
         
         <h2 class="section-title">Edit Listing: {{ listing.listing_name }}</h2>
 
+        
         <!-- Form -->
         <form method="POST" action="{{ url_for('main.edit_listing', listing_id=listing.listing_id) }}">
             <!-- Listing Name -->
@@ -27,6 +40,12 @@
             <div class="mb-3">
                 <label for="price" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Price:</label>
                 <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ listing.price_listing }}" title="Please fill in this field if you want to change the price." required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;">
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label" style="color: #3D875F; font-weight: bold; font-size: 1rem;">Description:</label>
+                <textarea class="form-control" id="description" name="description" rows="4" title="Please fill in this field if you want to change the description." required style="border-color: #3D875F; border-width: 2px; border-radius: 5px; padding: 10px; font-size: 1rem;"> {{ listing.description }}</textarea>
             </div>
 
             <!-- Category -->

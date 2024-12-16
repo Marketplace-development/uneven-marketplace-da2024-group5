@@ -626,10 +626,12 @@ def edit_listing(listing_id):
     if request.method == 'POST':
         listing.listing_name = request.form['listing_name']
         listing.price_listing = float(request.form['price'])
+        listing.description = request.form['description']
         listing.listing_categorie = request.form['listing_categorie']
         db.session.commit()
-        return redirect(url_for('main.listings'))
+        return redirect(url_for('main.my_listings'))
     
+    flash('Listing successfully updated!', 'success')
     return render_template('edit_listing.html', listing=listing)
 
 
@@ -951,7 +953,6 @@ def like_listing(listing_id):
         db.session.rollback()
         flash('An error occurred while liking the listing.', 'error')
         print(f"Error during commit: {e}")
-
 
     return redirect(url_for('main.view_listing', listing_id=listing_id))
 
