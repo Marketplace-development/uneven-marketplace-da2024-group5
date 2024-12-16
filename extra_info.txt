@@ -8,7 +8,7 @@ During the development of our platform, we made several deliberate choices to fo
 
     While we considered generating revenue through comissions or advertisements (using algorithms to offer location-based ads for services like local guides or restaurants). 
     --> However These features were too complicated to implement, so we decided to spend our time making sure the main functions of our platform work well. 
-    --> Thus we excluded these optios for revenue streams and focused on improving the basics, but we did include these concept in our visual ontology and ERD as a foundation for future development.
+    --> Thus we excluded these options for revenue streams and focused on improving the basics, but we did include these concept in our visual ontology and ERD as a foundation for future development.
 
     We considered adding a comparison feature to let users view two listings side by side, but we decided not to include it as we felt it didn’t add much value to the platform.
 
@@ -17,7 +17,51 @@ During the development of our platform, we made several deliberate choices to fo
 
 Use of Algorithms:
 
-    We developed an algorithm that tailors recommendations based on user preferences gathered from a short quiz. This personalization improves the user experience by suggesting listings that align with individual interests.
+    We developed an algorithm that tailors recommendations based on user preferences gathered from a short questionnaire. This personalization improves the user experience by suggesting listings that align with individual interests.
+    This algorithm is crucial for helping users discover listings that are most relevant to their interests, thereby improving engagement and satisfaction.
+
+    Our algorithm is based on 3 pillars: gathering user preferences, storing these preferences and displaying the personalized suggestions.
+    
+    1 Gathering user preferences: At the time of registration, we prompt users to participate in what we have called the "Travel Preferences" section.
+    This section consists of a variety of travel-related pictures followed by a questionnaire.
+    
+    Each listing on our platform is categorized under one of the following tags: "Family," "Nature," "Culture," "Romantic," "Adventure," "City Trips," "Sport & Active," "Festivals & Events," "Budget & Backpacking," "Wellness & Relaxation," or "Roadtrip & Multi-Destination." 
+    These tags are essential for aligning users with itineraries that best match their preferences.
+    Upon registration, a user's preferences for these categories are initially set to zero. 
+    We employ a JSONB data type within our database to efficiently monitor and update these preferences based on user interactions. This approach ensures that the travel listings displayed to each user are personalized, enhancing their likelihood of finding appealing experiences.
+
+
+    So our first way to update the user preferences is with the question "Which photos are you most drawn to? (multiple answers possible)". the answer options are 10 photos (ranging from a mountain landscape to a breathtaking spa).
+    All these options have a checkbox (square), because a checkbox allows multiple answers to be selected. 
+    All these photos are linked to 1 or more categories (for example, the mountain scenery is linked to the categories: “Adventure”, “Nature”, “Sport & Active”, “Budget & Backpacking” and “Roadtrip & Multi-Destination”, while the picture of Tomorrowland is only linked to the category "Festivals & Events").
+    After these photo-related question, there are 5 more questions to gauge people's interests. Some of these questions (1,2 and 4) make use of radiobuttons (circles) what prevents people to select multiple answers and the other questions (3 and 5) make use of checkboxes.
+    As with the pictures, each answer option for each question is always linked to 1 or more categories. 
+    When you are ready to register and press the green button "Register" at the bottom of the page, all categories linked to the selected photos and other choices will be increased by 1.
+    this way a user has specific preferences even before he likes or buys listings and we can already give him suggestions (on the ViaVia page, our homescreen)
+    
+    We all know that buying behavior and interests can change and to support this we have made the process agile.
+    Every time a user likes a listing, the value of the category linked to this listing will be increased by 1, and when a listing gets unliked, the value will be reduced by 1.
+    We believe that buying a listing should be more decisive than liking it and for this reason the value is increased by 2 on a purchase.
+
+    2 Storing the preferences: These preferences are stored as a JSON object in our database under each user's profile. 
+    This JSON object contains key-value pairs where the keys represent the travel categories and the values denote the strength of interest in that category, based on actions already explained (1 Gathering user preferences).
+
+    3 Displaying the personalized suggestions:
+    The algorithm first retrieves the preference scores for each category from the user's profile.
+    Based on these scores, the algorithm identifies the top categories. This involves sorting the categories by their preference scores in descending order.
+    If only one category has the highest score, the algorithm then finds the second highest score and includes categories with this score as well.
+
+    Short explanation of which categories will be displayed:
+    Only the categories with the highest and the second-highest scores are included if there's a single winner.
+    Case 1: If the highest score is shared by multiple categories, all categories with this score are displayed, ignoring the second-highest score.
+    Case 2: If there's a clear highest score but a tie at the second place, both the highest score category and all categories tied for the second place are displayed.
+
+    Fetching and Displaying Listings: For each selected category, listings associated with these categories are fetched from the database.
+    Listings are displayed on the homepage, categorized or tagged according to the determined preferences. This personalized display helps users quickly find listings that are likely to be of interest, enhancing the user experience
+
+    Future Directions: To further refine our recommendations, we plan to integrate advanced predictive analytics, considering user behavior patterns over time. 
+    This will let us proactively adjust preferences even before explicit actions are made by the user (besides liking and buying travel guides).
+
 
     In the future, additional algorithms could be integrated to enhance functionality. 
     --> For example, during user registration, we could collect location data (using the external GeoNames API, see additional info below) to power features like targeted recommendations and advertisements for local businesses. 
