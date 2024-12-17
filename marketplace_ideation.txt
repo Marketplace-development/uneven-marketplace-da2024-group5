@@ -22,7 +22,7 @@ Price Calculation: By Quantity (no feature-based pricing, as our platform does n
 Conversation System: Transaction Conversation
 Review by: By Customer
 Review of: Of Listing
-Trust and Safety: N/A (Not Applicable)
+Trust and Safety: ID verification
 Revenue Stream: Commission
 Revenue Source: Provider (Customers use the platform to purchase, but the providers are the ones paying the commission, making them the direct revenue source.)
 
@@ -40,7 +40,7 @@ Revenue Source: Provider (Customers use the platform to purchase, but the provid
 As a [Platform visitor], I want to [register], so that [I become a user] | Prio 1
 As a [User], I want to [login], so that [I can make a transaction/booking]. | Prio 2
 As a [User], I want to [add a listing/itinerary], so that [I can offer/sell itineraries]. | Prio 3
-As a [Platform visitor], I want to [search lsitings/itineraries], so that [I can find itineraries based on my preferences]. | Prio 4
+As a [Platform visitor], I want to [search listings/itineraries], so that [I can find itineraries based on my preferences]. | Prio 4
 As a [User], I want to [search lsitings/itineraries], so that [I can buy itineraries]. | Prio 4
 As a [User], I want to [write a review], so that [I can express my feelings]. | Prio 5
 As a [Platform visitor], I want to [read other people's reviews], so that [I know that I can trust the provider and get a qualitative itinerary]. | Prio 5

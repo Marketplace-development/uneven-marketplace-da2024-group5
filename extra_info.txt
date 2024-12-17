@@ -5,6 +5,7 @@ During the development of our platform, we made several deliberate choices to fo
 
     Trust and safety features, such as ID verification, badges, or in-app reporting, were not included in this version as they were outside the primary scope of our project. 
     --> Instead, we focused on building a secure and functional platform and for account safety, we implemented secure login with password authentication.
+    --> in future development, we would like to add ID-verification by using facial recognition.
 
     While we considered generating revenue through comissions or advertisements (using algorithms to offer location-based ads for services like local guides or restaurants). 
     --> However These features were too complicated to implement, so we decided to spend our time making sure the main functions of our platform work well. 
