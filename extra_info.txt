@@ -13,10 +13,6 @@ During the development of our platform, we made several deliberate choices to fo
     --> Adding a Company class would introduce unnecessary complexity without adding value (Revenue or fees can be calculated directly in the Transaction class or at the application level)
     --> The company’s role (earning commissions or facilitating transactions) can be embedded into the business logic without needing an explicit representation in the database.
     --> By avoiding an extra table, we simplify queries and reduce overhead, keeping the database efficient and easier to maintain.
-    --> While we don’t need a Company class now, it would be useful in the future if we wanted to enhance our system’s flexibility and prepare for growth:
-            - Expand to support multiple companies.
-            - Require advanced revenue management.
-            - Need custom business logic or scalability.
 
     While we considered generating revenue through comissions or advertisements (using algorithms to offer location-based ads for services like local guides or restaurants). 
     --> However These features were too complicated to implement, so we decided to spend our time making sure the main functions of our platform work well. 
