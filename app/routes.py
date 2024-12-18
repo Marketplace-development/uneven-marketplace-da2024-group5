@@ -2,7 +2,7 @@
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Transaction, Review, Notification, Like
+from .models import db, User, Listing, Transaction, Review, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
@@ -353,11 +353,6 @@ def delete_account():
     reviews = Review.query.filter_by(user_id=user_id).all()
     for review in reviews:
         db.session.delete(review)
-
-    # Verwijder notificaties
-    notifications = Notification.query.filter_by(user_id=user_id).all()
-    for notification in notifications:
-        db.session.delete(notification)
 
     # Verwijder transacties waarbij de gebruiker betrokken is
     transactions = Transaction.query.filter(
