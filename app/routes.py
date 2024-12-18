@@ -1061,18 +1061,29 @@ def filter_listings():
             filtered_listings.sort(key=lambda x: (x.average_rating or 0), reverse=True)
 
     # Apply sorting
-    if sort_by_price:
-        # Price sorting takes priority
+    if sort_by_price and sort_by_date:
+        # Combine price sorting with date sorting
+        if sort_by_price == 'low-to-high' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'low-to-high' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, x.created_at.timestamp()))
+    elif sort_by_price:
+        # Default price sorting without date sort
         if sort_by_price == 'low-to-high':
-            filtered_listings.sort(key=lambda x: (x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
         elif sort_by_price == 'high-to-low':
-            filtered_listings.sort(key=lambda x: (-x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
     elif sort_by_date:
-        # Apply date sorting only if price sorting is not specified
+        # Default date sorting without price sort
         if sort_by_date == 'newest':
-            filtered_listings.sort(key=lambda x: x.created_at, reverse=True)
+            filtered_listings.sort(key=lambda x: -x.created_at.timestamp())
         elif sort_by_date == 'oldest':
-            filtered_listings.sort(key=lambda x: x.created_at)
+            filtered_listings.sort(key=lambda x: x.created_at.timestamp())
+
 
     # Render the listings page with filtered results
     return render_template('listings.html', listings=filtered_listings)
