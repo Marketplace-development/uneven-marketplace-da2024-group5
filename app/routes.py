@@ -2,7 +2,7 @@
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Transaction, Review, Notification, Like
+from .models import db, User, Listing, Transaction, Review, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
@@ -354,11 +354,6 @@ def delete_account():
     for review in reviews:
         db.session.delete(review)
 
-    # Verwijder notificaties
-    notifications = Notification.query.filter_by(user_id=user_id).all()
-    for notification in notifications:
-        db.session.delete(notification)
-
     # Verwijder transacties waarbij de gebruiker betrokken is
     transactions = Transaction.query.filter(
         (Transaction.user_id == user_id) |
@@ -626,10 +621,12 @@ def edit_listing(listing_id):
     if request.method == 'POST':
         listing.listing_name = request.form['listing_name']
         listing.price_listing = float(request.form['price'])
+        listing.description = request.form['description']
         listing.listing_categorie = request.form['listing_categorie']
         db.session.commit()
-        return redirect(url_for('main.listings'))
+        return redirect(url_for('main.my_listings'))
     
+    flash('Listing successfully updated!', 'success')
     return render_template('edit_listing.html', listing=listing)
 
 
@@ -952,7 +949,6 @@ def like_listing(listing_id):
         flash('An error occurred while liking the listing.', 'error')
         print(f"Error during commit: {e}")
 
-
     return redirect(url_for('main.view_listing', listing_id=listing_id))
 
 
@@ -1060,18 +1056,29 @@ def filter_listings():
             filtered_listings.sort(key=lambda x: (x.average_rating or 0), reverse=True)
 
     # Apply sorting
-    if sort_by_price:
-        # Price sorting takes priority
+    if sort_by_price and sort_by_date:
+        # Combine price sorting with date sorting
+        if sort_by_price == 'low-to-high' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'low-to-high' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, x.created_at.timestamp()))
+    elif sort_by_price:
+        # Default price sorting without date sort
         if sort_by_price == 'low-to-high':
-            filtered_listings.sort(key=lambda x: (x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
         elif sort_by_price == 'high-to-low':
-            filtered_listings.sort(key=lambda x: (-x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
     elif sort_by_date:
-        # Apply date sorting only if price sorting is not specified
+        # Default date sorting without price sort
         if sort_by_date == 'newest':
-            filtered_listings.sort(key=lambda x: x.created_at, reverse=True)
+            filtered_listings.sort(key=lambda x: -x.created_at.timestamp())
         elif sort_by_date == 'oldest':
-            filtered_listings.sort(key=lambda x: x.created_at)
+            filtered_listings.sort(key=lambda x: x.created_at.timestamp())
+
 
     # Render the listings page with filtered results
     return render_template('listings.html', listings=filtered_listings)

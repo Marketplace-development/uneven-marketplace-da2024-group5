@@ -27,16 +27,12 @@ class User(db.Model):
     #Helper method to check password
     def check_password(self,password):
         return check_password_hash(self.password,password)
-
-
-    # Relaties
+    
+     # Relaties
     listings = db.relationship('Listing', backref='user', lazy=True)
     transactions = db.relationship('Transaction', backref='user', lazy=True)
-    notifications = db.relationship('Notification', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
     likes = db.relationship('Like', backref='user', lazy=True)
-
-
 
 class Listing(db.Model):
     __tablename__ = 'Listing'  # Let op hoofdlettergebruik
@@ -50,16 +46,11 @@ class Listing(db.Model):
     place = db.Column(db.String(100), nullable=True)  # New field for place as a string
     listing_categorie = db.Column(db.String(255))
     picture = db.Column(db.String, nullable=True)
-
-
-
+    
     # Relaties
     transactions = db.relationship('Transaction', backref='listing', lazy=True)
     reviews = db.relationship('Review', backref='listing', lazy=True)
-    notifications = db.relationship('Notification', backref='listing', lazy=True)
     likes = db.relationship('Like', backref='listing', lazy=True)
-
-
 
 class Transaction(db.Model):
     __tablename__ = 'Transaction'
@@ -69,7 +60,6 @@ class Transaction(db.Model):
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
 
-
 class Review(db.Model):
     __tablename__ = 'Review'
     review_id = db.Column(db.Integer, primary_key=True)
@@ -78,16 +68,6 @@ class Review(db.Model):
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     rating = db.Column(db.Integer, nullable = False)
-
-
-class Notification(db.Model):
-    __tablename__ = 'Notification'
-    notification_id = db.Column(db.Integer, primary_key=True)
-    viewed = db.Column(db.Boolean, default=False)
-    time_of_notification = db.Column(db.DateTime, default=datetime.utcnow)
-    listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-
 
 class Like(db.Model):
     __tablename__ = 'Like'
