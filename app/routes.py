@@ -1,13 +1,13 @@
 # app/routes.py
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, User, Listing, Transaction, Review, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
 import re
-from flask import render_template, request, redirect, flash, session, url_for
+from flask import render_template, request, redirect, session, url_for
 from werkzeug.utils import secure_filename
 import os
 import requests
@@ -326,8 +326,6 @@ def edit_profile():
         user.date_of_birth = date_of_birth
         
         db.session.commit()
-
-        flash('Profile updated successfully.', 'success')
         return redirect(url_for('main.account'))  # Of de gewenste pagina na succes
 
     return render_template('edit_profile.html', user=user)
@@ -340,7 +338,6 @@ def delete_account():
 
     user_id = session['user_id']
     user = User.query.get(user_id)
-
     if not user:
         flash('User not found.', 'error')
         return redirect(url_for('main.index'))
@@ -384,7 +381,6 @@ def delete_account():
 
     # Verwijder sessie en bevestig verwijdering
     session.pop('user_id', None)
-    flash('Your account has been deleted successfully.', 'success')
     return redirect(url_for('main.index'))
 
 #add listing helpers for cleaner code
