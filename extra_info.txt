@@ -5,6 +5,14 @@ During the development of our platform, we made several deliberate choices to fo
 
     Trust and safety features, such as ID verification, badges, or in-app reporting, were not included in this version as they were outside the primary scope of our project. 
     --> Instead, we focused on building a secure and functional platform and for account safety, we implemented secure login with password authentication.
+    --> in future development, we would like to add ID-verification by using facial recognition.
+
+    We decided not to include a Company class in our web application because the company (our marketplace) does not need to exist as a separate entity in the database.
+    --> Our application represents only one company (the marketplace operator). 
+    --> Since there is no need to manage multiple companies, we can hardcode the platform’s identity and logic directly into the system.
+    --> Adding a Company class would introduce unnecessary complexity without adding value (Revenue or fees can be calculated directly in the Transaction class or at the application level)
+    --> The company’s role (earning commissions or facilitating transactions) can be embedded into the business logic without needing an explicit representation in the database.
+    --> By avoiding an extra table, we simplify queries and reduce overhead, keeping the database efficient and easier to maintain.
 
     While we considered generating revenue through comissions or advertisements (using algorithms to offer location-based ads for services like local guides or restaurants). 
     --> However These features were too complicated to implement, so we decided to spend our time making sure the main functions of our platform work well. 

@@ -2,7 +2,7 @@
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Transaction, Review, Like, ArchivedListing
+from .models import db, User, Listing, Transaction, Review, ArchivedListing, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
@@ -1071,17 +1071,27 @@ def filter_listings():
             filtered_listings.sort(key=lambda x: (x.average_rating or 0), reverse=True)
 
     # Apply sorting
-    if sort_by_price:
-        # Price sorting takes priority
+    if sort_by_price and sort_by_date:
+        # Combine price sorting with date sorting
+        if sort_by_price == 'low-to-high' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'low-to-high' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (x.price_listing, x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'newest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
+        elif sort_by_price == 'high-to-low' and sort_by_date == 'oldest':
+            filtered_listings.sort(key=lambda x: (-x.price_listing, x.created_at.timestamp()))
+    elif sort_by_price:
+        # Default price sorting without date sort
         if sort_by_price == 'low-to-high':
-            filtered_listings.sort(key=lambda x: (x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (x.price_listing, -x.created_at.timestamp()))
         elif sort_by_price == 'high-to-low':
-            filtered_listings.sort(key=lambda x: (-x.price_listing, -(x.created_at.timestamp())))
+            filtered_listings.sort(key=lambda x: (-x.price_listing, -x.created_at.timestamp()))
     elif sort_by_date:
-        # Apply date sorting only if price sorting is not specified
+        # Default date sorting without price sort
         if sort_by_date == 'newest':
             filtered_listings.sort(key=lambda x: x.created_at, reverse=True)
-        elif sort_by_date == 'oldest':  
+        elif sort_by_date == 'oldest':
             filtered_listings.sort(key=lambda x: x.created_at)
 
     # Render the listings page with filtered results
