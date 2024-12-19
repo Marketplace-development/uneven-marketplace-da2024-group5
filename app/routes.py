@@ -722,7 +722,13 @@ def view_listing(listing_id):
             return redirect(url_for('main.view_listing', listing_id=listing_id))      
 
     # Gebruik de correcte template afhankelijk van of de listing actief of gearchiveerd is
-    return render_template('view_listing.html')
+    return render_template(
+        'view_listing.html', 
+        listing=listing, 
+        reviews=reviews, 
+        can_like=can_like, 
+        has_reviewed=has_reviewed
+    )
 
 
 @main.route('/transactions')
