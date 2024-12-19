@@ -35,12 +35,12 @@ def index():
             listings = Listing.query.filter(
                 Listing.listing_categorie.in_(categories_to_show),
                 Listing.user_id != user.user_id,
-                Listing.is_active == True # Voeg enkel actieve listings toe
+                
             ).all()
         else:
-            listings = Listing.query.filter(Listing.user_id != user.user_id, Listing.is_active == True).all()  
+            listings = Listing.query.filter(Listing.user_id != user.user_id).all()  
     else:
-        listings = Listing.query.filter(Listing.is_active == True).all()
+        listings = Listing.query.all()
 
     # Voeg aantal likes, gemiddelde rating en afgeronde prijzen toe
     for listing in listings:
@@ -520,41 +520,7 @@ def add_listing():
 
     return render_template('add_listing.html')
 
-@main.route('/delete-listing/<int:listing_id>', methods=['POST'])
-def delete_listing(listing_id):
-    if 'user_id' not in session:
-        flash('You need to log in to delete a listing.', 'warning')
-        return redirect(url_for('main.login'))
 
-    # Fetch the listing by ID
-    listing = Listing.query.get(listing_id)
-
-    if not listing:
-        flash('Listing not found.', 'error')
-        return redirect(url_for('main.my_listings'))  # Redirect to a page with a list of the user's listings
-
-    # Check if the logged-in user is the owner of the listing
-    if listing.user_id != session['user_id']:
-        flash('You do not have permission to delete this listing.', 'error')
-        return redirect(url_for('main.my_listings'))
-
-    # Check if the listing has been purchased
-    transactions = Transaction.query.filter_by(listing_id=listing_id).first()    
-    if not transactions:
-        # Delete all associated likes for the listing
-        likes = Like.query.filter_by(listing_id=listing_id).all()
-        for like in likes:
-            db.session.delete(like)
-        # Delete the listing entirely
-        db.session.delete(listing)
-
-    try:
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        flash(f'An error occurred while deleting the listing: {str(e)}', 'error')
-
-    return redirect(url_for('main.my_listings'))  # Redirect to a page with the user's listings
 
 @main.route('/my_listings')
 def my_listings():
@@ -563,7 +529,7 @@ def my_listings():
         return redirect(url_for('main.login'))
 
     user_id = session['user_id']
-    user_listings = Listing.query.filter_by(user_id=user_id, is_active=True).all()
+    user_listings = Listing.query.filter_by(user_id=user_id).all()
 
     for listing in user_listings:
         # Format price to 2 decimal places
@@ -587,7 +553,7 @@ def my_listings():
 @main.route('/listings')
 def listings():
     # Verkrijg alle actieve listings
-    all_listings = Listing.query.filter(Listing.is_active==True).all()
+    all_listings = Listing.query.all()
 
     for listing in all_listings:
         # Ronde de prijs af naar 2 decimalen
@@ -623,7 +589,7 @@ def edit_listing(listing_id):
         db.session.commit()
         return redirect(url_for('main.my_listings'))
     
-    flash('Listing successfully updated!', 'success')
+    
     return render_template('edit_listing.html', listing=listing)
 
 
@@ -631,7 +597,7 @@ def edit_listing(listing_id):
 @main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
 def view_listing(listing_id):
     # Bekijk enkel actieve listings
-    listing = Listing.query.filter_by(listing_id=listing_id, is_active=True).first()
+    listing = Listing.query.get(listing_id)
     if not listing:              
         return redirect(url_for('main.listings'))
 
@@ -722,8 +688,10 @@ def view_listing(listing_id):
         'view_listing.html', 
         listing=listing, 
         reviews=reviews, 
+        transaction_exists=transaction_exists,
         can_like=can_like, 
-        has_reviewed=has_reviewed
+        has_reviewed=has_reviewed,
+        seller_email=seller_email
     )
 
 
@@ -786,7 +754,6 @@ def add_review(listing_id):
     
     listing = Listing.query.get(listing_id)
     if not listing:
-        flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
     
     transaction = Transaction.query.filter_by(
@@ -825,7 +792,6 @@ def add_review(listing_id):
 def view_reviews(listing_id):
     listing = Listing.query.get(listing_id)
     if not listing:
-        flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
     
     reviews = Review.query.filter_by(listing_id=listing_id).all()
@@ -873,7 +839,6 @@ def get_pdf(listing_id):
     # Check if the listing exists
     listing = Listing.query.get(listing_id)
     if not listing:
-        flash('Listing not found.', 'error')
         return redirect(url_for('main.listings'))
     
     # Check if the user has purchased the listing
@@ -1011,7 +976,7 @@ def filter_listings():
     filter_rating = request.args.get('filter-rating', '').strip()  # "high-to-low" or "only-5-star"
 
     # Base query
-    query = Listing.query.filter(Listing.is_active == True)
+    query = Listing.query
 
     # Apply search query (if provided)
     if search_query:

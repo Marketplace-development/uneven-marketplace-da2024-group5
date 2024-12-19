@@ -48,7 +48,7 @@ class Listing(db.Model):
     place = db.Column(db.String(100), nullable=True)  # New field for place as a string
     listing_categorie = db.Column(db.String(255))
     picture = db.Column(db.String, nullable=True)
-    is_active = db.Column(db.Boolean, default=True)
+    
 
 
 
