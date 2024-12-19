@@ -12,9 +12,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
     phone_number = db.Column(db.String(15), nullable=True)
-    #profile_pic = db.Column(db.String(255), nullable = True, default='static/images/default.jpg') #default pic.
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
-    wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0.0)  # Add this line
+    wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0.0)
     preferences = db.Column(db.JSON, default=lambda: {"Adventure": 0, "Nature": 0, "Culture": 0, "Sport & Active": 0, "Family": 0,
         "Wellness & Relaxation": 0, "Romantic": 0, "City Trips": 0,
         "Festivals & Events": 0, "Budget & Backpacking": 0, "Roadtrip & Multi-Destination": 0})
