@@ -1,13 +1,13 @@
 # app/routes.py
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, User, Listing, Transaction, Review, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
 import re
-from flask import render_template, request, redirect, flash, session, url_for
+from flask import render_template, request, redirect, session, url_for
 from werkzeug.utils import secure_filename
 import os
 import requests
@@ -34,12 +34,13 @@ def index():
 
             listings = Listing.query.filter(
                 Listing.listing_categorie.in_(categories_to_show),
-                Listing.user_id != user.user_id
+                Listing.user_id != user.user_id,
+                Listing.is_active == True # Voeg enkel actieve listings toe
             ).all()
         else:
-            listings = Listing.query.filter(Listing.user_id != user.user_id).all()
+            listings = Listing.query.filter(Listing.user_id != user.user_id, Listing.is_active == True).all()  
     else:
-        listings = Listing.query.all()
+        listings = Listing.query.filter(Listing.is_active == True).all()
 
     # Voeg aantal likes, gemiddelde rating en afgeronde prijzen toe
     for listing in listings:
@@ -325,8 +326,6 @@ def edit_profile():
         user.date_of_birth = date_of_birth
         
         db.session.commit()
-
-        flash('Profile updated successfully.', 'success')
         return redirect(url_for('main.account'))  # Of de gewenste pagina na succes
 
     return render_template('edit_profile.html', user=user)
@@ -339,7 +338,6 @@ def delete_account():
 
     user_id = session['user_id']
     user = User.query.get(user_id)
-
     if not user:
         flash('User not found.', 'error')
         return redirect(url_for('main.index'))
@@ -383,7 +381,6 @@ def delete_account():
 
     # Verwijder sessie en bevestig verwijdering
     session.pop('user_id', None)
-    flash('Your account has been deleted successfully.', 'success')
     return redirect(url_for('main.index'))
 
 #add listing helpers for cleaner code
@@ -514,7 +511,6 @@ def add_listing():
             db.session.add(new_listing)  # Add the listing to the session
             db.session.commit()  # Commit the changes to the database
 
-            flash("Listing added successfully.", "success")
             return redirect(url_for('main.add_listing'))
 
         except Exception as e:
@@ -542,17 +538,18 @@ def delete_listing(listing_id):
         flash('You do not have permission to delete this listing.', 'error')
         return redirect(url_for('main.my_listings'))
 
-    try:
+    # Check if the listing has been purchased
+    transactions = Transaction.query.filter_by(listing_id=listing_id).first()    
+    if not transactions:
         # Delete all associated likes for the listing
         likes = Like.query.filter_by(listing_id=listing_id).all()
         for like in likes:
             db.session.delete(like)
-
-        # Remove the listing from the session and commit to the database
+        # Delete the listing entirely
         db.session.delete(listing)
-        db.session.commit()
-        flash('Listing deleted successfully.', 'success')
 
+    try:
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         flash(f'An error occurred while deleting the listing: {str(e)}', 'error')
@@ -566,7 +563,7 @@ def my_listings():
         return redirect(url_for('main.login'))
 
     user_id = session['user_id']
-    user_listings = Listing.query.filter_by(user_id=user_id).all()
+    user_listings = Listing.query.filter_by(user_id=user_id, is_active=True).all()
 
     for listing in user_listings:
         # Format price to 2 decimal places
@@ -589,8 +586,8 @@ def my_listings():
 
 @main.route('/listings')
 def listings():
-    # Verkrijg alle listings uit de lokale database
-    all_listings = Listing.query.all()
+    # Verkrijg alle actieve listings
+    all_listings = Listing.query.filter(Listing.is_active==True).all()
 
     for listing in all_listings:
         # Ronde de prijs af naar 2 decimalen
@@ -633,10 +630,9 @@ def edit_listing(listing_id):
 
 @main.route('/listing/<int:listing_id>', methods=['GET', 'POST'])
 def view_listing(listing_id):
-    # Haal de listing op
-    listing = Listing.query.get(listing_id)
-    if not listing:
-        flash('Listing not found.', 'error')
+    # Bekijk enkel actieve listings
+    listing = Listing.query.filter_by(listing_id=listing_id, is_active=True).first()
+    if not listing:              
         return redirect(url_for('main.listings'))
 
     # Ronde de prijs naar twee decimalen
@@ -721,17 +717,14 @@ def view_listing(listing_id):
             flash(f'An error occurred while processing your purchase: {e}', 'error')
             return redirect(url_for('main.view_listing', listing_id=listing_id))      
 
+    # Gebruik de correcte template afhankelijk van of de listing actief of gearchiveerd is
     return render_template(
-        'view_listing.html',
-        listing=listing,
-        reviews=reviews,
-        transaction_exists=transaction_exists,
-        can_like=can_like,
-        has_reviewed=has_reviewed,
-        seller_email=seller_email  # Pass de verkoper-email naar de template
+        'view_listing.html', 
+        listing=listing, 
+        reviews=reviews, 
+        can_like=can_like, 
+        has_reviewed=has_reviewed
     )
-
-
 
 
 @main.route('/transactions')
@@ -1018,7 +1011,7 @@ def filter_listings():
     filter_rating = request.args.get('filter-rating', '').strip()  # "high-to-low" or "only-5-star"
 
     # Base query
-    query = Listing.query
+    query = Listing.query.filter(Listing.is_active == True)
 
     # Apply search query (if provided)
     if search_query:
@@ -1075,10 +1068,10 @@ def filter_listings():
     elif sort_by_date:
         # Default date sorting without price sort
         if sort_by_date == 'newest':
-            filtered_listings.sort(key=lambda x: -x.created_at.timestamp())
+            filtered_listings.sort(key=lambda x: x.created_at, reverse=True)
         elif sort_by_date == 'oldest':
-            filtered_listings.sort(key=lambda x: x.created_at.timestamp())
-
+            filtered_listings.sort(key=lambda x: x.created_at)
 
     # Render the listings page with filtered results
     return render_template('listings.html', listings=filtered_listings)
+
