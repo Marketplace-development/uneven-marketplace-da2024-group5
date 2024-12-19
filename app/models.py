@@ -84,16 +84,3 @@ class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('Listing.listing_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-class ArchivedListing(db.Model):
-    __tablename__ = 'ArchivedListing'  # Define the table name for archived listings
-    listing_id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    listing_name = db.Column(db.String(100), nullable=False)
-    price_listing = db.Column(db.Numeric(10, 2), nullable=False)
-    url = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
-    place = db.Column(db.String(100), nullable=True)
-    listing_categorie = db.Column(db.String(255))
-    picture = db.Column(db.String, nullable=True)

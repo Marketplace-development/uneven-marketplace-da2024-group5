@@ -2,7 +2,7 @@
 
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, session, flash
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
-from .models import db, User, Listing, Transaction, Review, ArchivedListing, Like
+from .models import db, User, Listing, Transaction, Review, Like
 from supabase import create_client, Client
 from .config import Config
 from flask import jsonify, request
@@ -544,23 +544,7 @@ def delete_listing(listing_id):
 
     # Check if the listing has been purchased
     transactions = Transaction.query.filter_by(listing_id=listing_id).first()    
-    if transactions:
-        # Archive the listing
-        archived_listing = ArchivedListing(
-            created_at=listing.created_at,
-            listing_name=listing.listing_name,
-            price_listing=listing.price_listing,
-            url=listing.url,    
-            description=listing.description,
-            user_id=listing.user_id,
-            place=listing.place,
-            listing_categorie=listing.listing_categorie,
-            picture=listing.picture,
-            listing_id=listing.listing_id            
-        )
-        db.session.add(archived_listing)
-        listing.is_active = False
-    else:
+    if not transactions:
         # Delete all associated likes for the listing
         likes = Like.query.filter_by(listing_id=listing_id).all()
         for like in likes:
@@ -738,15 +722,7 @@ def view_listing(listing_id):
             return redirect(url_for('main.view_listing', listing_id=listing_id))      
 
     # Gebruik de correcte template afhankelijk van of de listing actief of gearchiveerd is
-    return render_template(
-        'view_listing.html',
-        listing=listing,
-        transaction_exists=transaction_exists,
-        can_like=can_like,
-        has_reviewed=has_reviewed,
-        seller_email=seller_email # Pass de verkoper-email naar de template
-    )
-
+    return render_template('view_listing.html')
 
 
 @main.route('/transactions')
