@@ -4,6 +4,9 @@ To understand the overall concept of our project, including our taxonomy, busine
 
 For more details on how everything works and how we developed and programmed the platform (e.g the thought proces of our platform, the algorithm we used, the tools and technologies used ...), please refer to the extra_info.txt file.
 
+We faced difficulties in enabling users to delete listings while preserving historical data, particularly for purchased listings. Since we couldn’t ensure flawless functionality, we decided to disable this feature for now. The button remains on the website for future implementation. 
+--> However, we had no issues deleting a user, but doing so does result in the loss of historical data.
+
 To make sure our platform runs: we followed the following steps
     
     # Create and activate virtual environment
